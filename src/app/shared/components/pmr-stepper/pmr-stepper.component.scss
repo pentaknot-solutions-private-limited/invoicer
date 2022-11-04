@@ -1,0 +1,64 @@
+// @import '../../../../assets/style/partials/variables.scss';
+@import '../../../../assets/style/partials/variables.scss';
+
+:host ::ng-deep {
+    .rm-horizontal-default-stepper {
+        &.mat-stepper-horizontal {
+            .mat-stepper-horizontal-line {
+                border-top: 2px solid #c2c2c2 !important;
+                margin: 0 0 !important;
+                height: 2px !important;
+            }
+            .mat-horizontal-stepper-header[ng-reflect-state=edit] + .mat-stepper-horizontal-line {
+                border-top: 2px solid $global-theme !important;
+            }
+            background-color: transparent;
+            .mat-horizontal-stepper-header-container {
+                background-color: white;
+                padding: 15px 0px;
+                border-bottom: 1px solid #e0e0e0;
+                .mat-step-header {
+                    width: max-content !important;
+                    &:hover {
+                        background-color: transparent;
+                    }
+                    .mat-step-icon {
+                        border-radius: 10px;
+                        height: 50px;
+                        width: 50px;
+                        border: 2px solid $global-theme;
+                        color: $global-theme;
+                        background-color: transparent;
+                        font-size: 18px;
+                        &-selected {
+                            background-color: transparent;
+                        }
+                        &-state-edit, &-state-done {
+                            background-color: $global-theme;
+                            color: white;
+                        }
+                    }
+                    .mat-step-label {
+                        color: #5c5c5c !important;
+                        &-active {
+                            &.mat-step-label-selected {
+                                color: #191919 !important;
+                                font-weight: 600;
+                            }
+                            &:not(.mat-step-label-selected) {
+                                color: #5c5c5c !important;
+                            }
+                        }
+                    }
+                    
+                }
+                .mat-stepper-horizontal-line {
+                    max-width: 200px;
+                    // border: 1px solid $global-theme;
+                    // background-color: $global-theme;
+                    // margin-right: -24px;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,536 @@
+<div class="drawer-body">
+  <div class="invoice-generation">
+    <pmr-stepper
+      #stepper
+      [(stepIndex)]="currentStepIndex"
+      [config]="stepperConfig"
+    ></pmr-stepper>
+    <!-- Step 1. Company Details -->
+    <ng-template #companyDetails>
+      <div class="row mt-4 mb-4">
+        <!-- Title -->
+        <div class="col-12">
+          <h3>Organization Details</h3>
+        </div>
+        <!-- Org Select -->
+        <div class="col-3">
+          <vsa-select
+            [config]="companyDetailConfig?.organizationConfig"
+            [dataModel]="companyDetailsModel"
+            (onSelectionChange)="selectionChanged('org')"
+          >
+          </vsa-select>
+        </div>
+        <ng-container *ngIf="companyDetailsModel?.organizationId">
+          <!-- Branch Select -->
+          <div class="col-3">
+            <vsa-select
+              [config]="companyDetailConfig?.branchSelectorConfig"
+              [dataModel]="companyDetailsModel"
+            >
+            </vsa-select>
+          </div>
+        </ng-container>
+      </div>
+      <hr class="dashed-divider" />
+      <div class="row mt-4">
+        <!-- Title -->
+        <div class="col-12">
+          <h3>Bill to Customer Details</h3>
+        </div>
+        <!-- Bill to Customer Selection -->
+        <div class="col-3">
+          <vsa-select
+            [config]="companyDetailConfig?.customerSelectorConfig"
+            [dataModel]="companyDetailsModel"
+            (onSelectionChange)="selectionChanged('customer')"
+          >
+          </vsa-select>
+        </div>
+        <ng-container *ngIf="companyDetailsModel?.customerId">
+          <!-- Customer Branch Select -->
+          <div class="col-3">
+            <vsa-select
+              [config]="companyDetailConfig?.customerBranchSelectorConfig"
+              [dataModel]="companyDetailsModel"
+            >
+            </vsa-select>
+          </div>
+        </ng-container>
+      </div>
+    </ng-template>
+    <!-- Step 2. Shipment Details -->
+    <ng-template #shipmentDetails>
+      <form class="shipmentDetailsForm" [formGroup]="shipmentDetailsForm">
+        <div class="row mt-4 mb-4">
+          <!-- Title -->
+          <div class="col-12">
+            <h3>Package Details</h3>
+          </div>
+          <!-- MAWB No -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.mawbNo"
+              formControlName="mawbNo"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- HAWB No -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.hawbNo"
+              formControlName="hawbNo"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- SB No -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.sbNo"
+              formControlName="sbNo"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Package (Qty) -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.packageQty"
+              formControlName="packageQty"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Second Row -->
+
+          <!-- Chargeable (Wt) -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.chargeableWt"
+              formControlName="chargeableWt"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Gross (Wt) -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.grossWt"
+              formControlName="grossWt"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Net (Wt) -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.netWt"
+              formControlName="netWt"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Volume -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.volume"
+              formControlName="volume"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+        </div>
+        <hr class="dashed-divider" />
+        <div class="row mt-4">
+          <!-- Title -->
+          <div class="col-12">
+            <h3>Airline Details</h3>
+          </div>
+          <!-- Date 1 -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.date1"
+              formControlName="date1"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Date 2 -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.date2"
+              formControlName="date2"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Arrival Date  -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.arrivalDate"
+              formControlName="arrivalDate"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Cargo Type Select -->
+          <div class="col-3">
+            <vsa-select
+              [config]="shipmentDetailConfig?.cargoTypeConfig"
+              [dataModel]="shipmentDetailsModel"
+              (onSelectionChange)="selectionChanged('cargoType')"
+            >
+            </vsa-select>
+          </div>
+          <!-- Second Row (Airline) -->
+
+          <!-- Airline Select -->
+          <div class="col-3">
+            <vsa-select
+              [config]="shipmentDetailConfig?.airlineConfig"
+              [dataModel]="shipmentDetailsModel"
+              (onSelectionChange)="selectionChanged('airline')"
+            >
+            </vsa-select>
+          </div>
+          <!-- Flight No  -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.flightNo"
+              formControlName="flightNo"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Shipper Ref  -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.shipperRef"
+              formControlName="shipperRef"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Inco Terms  -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.incoTerms"
+              formControlName="incoTerms"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+        </div>
+      </form>
+    </ng-template>
+    <!-- Step 3. Consignment Details -->
+    <ng-template #consignmentDetails>
+      <form class="consignmentDetailsForm" [formGroup]="consignmentDetailsForm">
+        <div class="row mt-4 mb-4">
+          <!-- Title -->
+          <div class="col-12">
+            <h3>Consignment Details</h3>
+          </div>
+          <!-- Shipper Select -->
+          <div class="col-3">
+            <vsa-input
+              [config]="consignmentDetailConfig?.shipper"
+              formControlName="shipper"
+              [dataModel]="consignmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Consignee -->
+          <div class="col-3">
+            <vsa-input
+              [config]="consignmentDetailConfig?.consignee"
+              formControlName="consignee"
+              [dataModel]="consignmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Place of Reciept -->
+          <div class="col-3">
+            <vsa-input
+              [config]="consignmentDetailConfig?.placeOfReciept"
+              formControlName="placeOfReciept"
+              [dataModel]="consignmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Place of Delivery -->
+          <div class="col-3">
+            <vsa-input
+              [config]="consignmentDetailConfig?.placeOfDelivery"
+              formControlName="placeOfDelivery"
+              [dataModel]="consignmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Loading Port -->
+          <div class="col-3">
+            <vsa-input
+              [config]="consignmentDetailConfig?.loadingPort"
+              formControlName="loadingPort"
+              [dataModel]="consignmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Discharge Port -->
+          <div class="col-3">
+            <vsa-input
+              [config]="consignmentDetailConfig?.dischargePort"
+              formControlName="dischargePort"
+              [dataModel]="consignmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Destination Port -->
+          <div class="col-3">
+            <vsa-input
+              [config]="consignmentDetailConfig?.destinationPort"
+              formControlName="destinationPort"
+              [dataModel]="consignmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+        </div>
+      </form>
+    </ng-template>
+    <!-- Step 4. Rates Details -->
+    <ng-template #rates>
+      <form class="rateDetailsForm container" [formGroup]="rateDetailsForm">
+        <div class="row mt-4 mb-4">
+          <!-- Title -->
+          <div class="col-12">
+            <h3>Rate Setup</h3>
+          </div>
+          <!-- Service Type Select -->
+          <div class="col-4">
+            <vsa-select
+              [config]="rateDetailsConfig?.serviceTypeConfig"
+              [dataModel]="rateDetailsModel"
+              (onSelectionChange)="selectionChanged('serviceType')"
+            >
+            </vsa-select>
+          </div>
+          <!-- HSN -->
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.hsnCode"
+              formControlName="hsnCode"
+              [dataModel]="rateDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Currency -->
+          <div class="col-4">
+            <vsa-select
+              [config]="rateDetailsConfig?.currencyConfig"
+              [dataModel]="rateDetailsModel"
+              (onSelectionChange)="selectionChanged('currency')"
+            >
+            </vsa-select>
+          </div>
+
+          <!-- Second Row -->
+          <!-- Quantity (in Kgs) -->
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.quantity"
+              formControlName="quantity"
+              [dataModel]="rateDetailsModel"
+              (onBlur)="valueChanged('quantity')"
+            >
+            </vsa-input>
+          </div>
+          <!-- <span>x</span> -->
+          <!-- Rate -->
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.rate"
+              formControlName="rate"
+              [dataModel]="rateDetailsModel"
+              (onBlur)="valueChanged('rate')"
+            >
+            </vsa-input>
+          </div>
+          <!-- <span>=</span> -->
+          <!-- Amount -->
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.amount"
+              formControlName="amount"
+              [dataModel]="rateDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Third Row -->
+          <!-- GST  -->
+          <!-- CSGT -->
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.cgstRate"
+              formControlName="cgstRate"
+              [dataModel]="rateDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- SGST -->
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.sgstRate"
+              formControlName="sgstRate"
+              [dataModel]="rateDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- IGST -->
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.igstRate"
+              formControlName="igstRate"
+              [dataModel]="rateDetailsModel"
+            >
+            </vsa-input>
+          </div>
+
+          <!-- Single Row -->
+          <!-- Taxable Amount -->
+          <!-- dummy -->
+          <div class="col-8">
+            <!-- empty -->
+          </div>
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.taxableAmount"
+              formControlName="taxableAmount"
+              [dataModel]="rateDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Final Row -->
+          <!-- Total Amount ($CURRENCY$) -->
+          <div class="col-4">
+            <vsa-input
+              [config]="rateDetailsConfig?.totalAmount"
+              formControlName="totalAmount"
+              [dataModel]="rateDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <div class="col-8">
+            <vsa-input
+              [config]="rateDetailsConfig?.amountInWords"
+              formControlName="amountInWords"
+              [dataModel]="rateDetailsModel"
+            >
+            </vsa-input>
+          </div>
+        </div>
+      </form>
+    </ng-template>
+    <!-- Step 5. Bank Details -->
+    <ng-template #bankDetails>
+      <form class="bankDetailsForm" [formGroup]="bankDetailsForm">
+        <div class="row mt-4 mb-4">
+          <!-- Title -->
+          <div class="col-12">
+            <h3>Bank Details</h3>
+          </div>
+          <!-- Bank Name -->
+          <div class="col-3">
+            <vsa-input
+              [config]="bankDetailsConfig?.bankName"
+              formControlName="bankName"
+              [dataModel]="bankDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Bank Branch -->
+          <div class="col-3">
+            <vsa-input
+              [config]="bankDetailsConfig?.bankBranch"
+              formControlName="bankBranch"
+              [dataModel]="bankDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- A/C No. -->
+          <div class="col-3">
+            <vsa-input
+              [config]="bankDetailsConfig?.acNo"
+              formControlName="acNo"
+              [dataModel]="bankDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- IFSC Code -->
+          <div class="col-3">
+            <vsa-input
+              [config]="bankDetailsConfig?.ifscCode"
+              formControlName="ifscCode"
+              [dataModel]="bankDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Swift Code -->
+          <div class="col-3">
+            <vsa-input
+              [config]="bankDetailsConfig?.swiftCode"
+              formControlName="swiftCode"
+              [dataModel]="bankDetailsModel"
+            >
+            </vsa-input>
+          </div>
+        </div></form
+    ></ng-template>
+    <!-- Step 6. Preview -->
+    <ng-template #preview>
+      <div class="row mt-4 mb-4">
+        <!-- Title -->
+        <div class="col-12">
+          <h3>Preview</h3>
+        </div>
+        <div>
+          {{ companyDetailsModel | json }}
+          {{ shipmentDetailsModel | json }}
+          {{ consignmentDetailsModel | json }}
+          {{ rateDetailsModel | json }}
+          {{ bankDetailsModel | json }}
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<div class="drawer-footer">
+  <div class="left">
+    <vsa-button
+      [type]="'button'"
+      [role]="'tertiary'"
+      size="small"
+      customColor="red"
+      (onClick)="actionEvent('cancel')"
+      >Close</vsa-button
+    >
+  </div>
+  <div class="right">
+    <vsa-button
+      *ngIf="currentStepIndex != 0"
+      [type]="'button'"
+      [role]="'secondary'"
+      size="small"
+      (onClick)="actionEvent('previous')"
+      >Previous</vsa-button
+    >
+    <vsa-button
+      [type]="'button'"
+      [role]="'primary'"
+      size="small"
+      (onClick)="actionEvent('next')"
+      >Next</vsa-button
+    >
+  </div>
+</div>

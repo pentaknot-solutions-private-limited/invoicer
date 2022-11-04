@@ -1,0 +1,24 @@
+<!-- linear -->
+<mat-horizontal-stepper
+  [@.disabled]="true"
+  (selectionChange)="changeStep($event)"
+  [disableRipple]="true"
+  class="rm-horizontal-default-stepper"
+  #stepper
+>
+  <ng-template matStepperIcon="edit">
+    <mat-icon>check</mat-icon>
+  </ng-template>
+  <ng-template matStepperIcon="pending">
+    <mat-icon>insert_drive_file</mat-icon>
+  </ng-template>
+  <ng-container *ngFor="let step of config.steps">
+    <mat-step
+      [stepControl]="step?.formGroup"
+      [optional]="step?.isOptional"
+      [label]="step.stepLabel"
+    >
+      <ng-container *ngTemplateOutlet="step.stepTemplate"></ng-container>
+    </mat-step>
+  </ng-container>
+</mat-horizontal-stepper>

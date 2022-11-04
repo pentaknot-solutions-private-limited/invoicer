@@ -1,0 +1,88 @@
+<ng-template #simpleBtn>
+    <button
+      [type]="type"
+      [style.color]="customColor"
+      (click)="clickBtn($event)"
+      [disabled]="disabled"
+      matRipple
+      [matRippleDisabled]="disabled"
+      class="vsa-btn"
+      [ngClass]="{
+        primary: role == 'primary',
+        secondary: role == 'secondary',
+        tertiary: role == 'tertiary',
+        customColor: role == 'custom',
+        blue: color == 'blue',
+        orange: color == 'orange',
+        red: color == 'red',
+        light-orange: color == 'light-orange',
+        defaultSize: size == 'default',
+        mediumSize: size == 'medium',
+        smallSize: size == 'small',
+        customSize: size == 'customSize',
+        noLabel: onlyIconButton,
+        mobButton: noTextInMobileView == true,
+        fullWidth: fullWidth
+      }"
+    >
+      <vsa-icon
+        [hidden]="icon == null || role == 'primary'"
+        [color]="
+          role == 'secondary' && !disabled
+            ? 'theme'
+            : disabled
+            ? '#a8a8a8'
+            : 'gray'
+        "
+        [size]="'medium'"
+        [ngClass]="{
+          btnIcon: role != 'tertiary',
+          smallIconSize: iconSize == 'small',
+          defaultIconSize: iconSize == 'default',
+          mobIcon: noTextInMobileView == true
+        }"
+        [icon]="icon"
+      ></vsa-icon>
+      <span
+        *ngIf="!onlyIconButton"
+        [ngClass]="{
+          btnValue: icon != null,
+          noBtnValue: noTextInMobileView == true
+        }"
+        class="align-center"
+      >
+        <ng-container *ngTemplateOutlet="content"></ng-container>
+      </span>
+    </button>
+  </ng-template>
+  
+  <!-- Loading Btn -->
+  <ng-template #loadingBtn>
+    <button
+      [type]="type"
+      [style.color]="customColor"
+      [disabled]="true"
+      matRipple
+      [matRippleDisabled]="true"
+      class="vsa-btn vsa-btn__loader"
+      [ngClass]="{
+        primary: role == 'primary',
+        secondary: role == 'secondary',
+        tertiary: role == 'tertiary',
+        customColor: role == 'custom',
+        blue: color == 'blue',
+        orange: color == 'orange',
+        red: color == 'red',
+        light-orange: color == 'light-orange',
+        defaultSize: size == 'default',
+        mediumSize: size == 'medium',
+        smallSize: size == 'small',
+        customSize: size == 'customSize',
+        fullWidth: fullWidth
+      }"
+    >
+      <mat-progress-spinner [color]="customColor" [mode]="'indeterminate'">
+      </mat-progress-spinner>
+      <span class="btn-spinner__text">Loading...</span>
+    </button>
+  </ng-template>

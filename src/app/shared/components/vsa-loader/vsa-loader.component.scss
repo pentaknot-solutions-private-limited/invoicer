@@ -1,0 +1,38 @@
+@import "../../../../assets/style/partials/variables.scss";
+
+:host::ng-deep {
+  .vsa-loader-cnt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: white;
+  }
+  .vsa-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 165px;
+    height: 80px;
+    border: 1px solid $border-color;
+    box-shadow: 0px 0px 15px rgb(0 0 0 / 20%);
+    border-radius: 4px;
+    .loading-text {
+      margin-left: 10px;
+    }
+
+    mat-progress-spinner {
+      width: 32px !important;
+      height: 32px !important;
+      margin-right: 4px !important;
+
+      > svg {
+        width: 32px !important;
+        height: 32px !important;
+        > circle {
+          stroke-width: 15% !important;
+        }
+      }
+    }
+  }
+}

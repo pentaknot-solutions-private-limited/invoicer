@@ -1,0 +1,127 @@
+<div class="action" [ngSwitch]="params.type">
+  <ng-container *ngSwitchCase="'reset-delete'">
+    <vsa-icon
+      icon="{{ params.icon }}"
+      size="medium"
+      [matMenuTriggerFor]="actionMenu"
+      state="hover"
+    ></vsa-icon>
+    <mat-menu #actionMenu="matMenu" xPosition="before">
+      <ng-container *ngFor="let item of params.actions">
+        <button
+          mat-menu-item
+          class="actionButton"
+          (click)="onBtnClick(item.action, params.row)"
+        >
+          <vsa-icon
+            [icon]="item.icon"
+            size="small"
+            customColor="#5E6871"
+          ></vsa-icon>
+          &nbsp;&nbsp;{{ item.title }}
+        </button>
+      </ng-container>
+    </mat-menu>
+  </ng-container>
+  <ng-container *ngSwitchCase="'simple-text'">
+    <a
+      href="javascript:void(0)"
+      (click)="onBtnClick(params.actions[0].action, params.row)"
+      class="simple-text"
+      >{{ params.actions[0].title }}</a
+    >
+  </ng-container>
+  <ng-container *ngSwitchCase="'text-icon'">
+    <div class="textIconAction">
+      <div class="left" (click)="onBtnClick(params.action, params.row)">
+        <vsa-icon
+          *ngIf="params.icon"
+          icon="{{ params.icon }}"
+          size="small"
+          state="solid"
+          customColor="{{ params.color }}"
+        ></vsa-icon>
+        &nbsp;<span
+          class="icon-text {{ params?.class }}"
+          [ngStyle]="{ color: params.color }"
+        >
+          {{ params.text }}</span
+        >
+      </div>
+      <div class="right">
+        <vsa-icon
+          *ngIf="params?.actions[0].icon && !params.actions[0].actions"
+          icon="{{ params?.actions[0].icon }}"
+          size="small"
+          state="hover"
+          customColor="{{ params.actions[0].color }}"
+          [enableTooltip]="params?.actions[0].comment ? true : false"
+          tooltipContent="{{ params?.actions[0].comment }}"
+          (click)="onBtnClick(params?.actions[0].action, params.row)"
+        ></vsa-icon>
+        <vsa-icon
+          *ngIf="params.actions[0].icon && params.actions[0].actions"
+          icon="{{ params.actions[0].icon }}"
+          size="small"
+          state="hover"
+          [enableTooltip]="params?.actions[0].comment ? true : false"
+          tooltipContent="{{ params?.actions[0].comment }}"
+          [matMenuTriggerFor]="retryMenu"
+          customColor="{{ params.actions[0].color }}"
+        ></vsa-icon>
+      </div>
+    </div>
+
+    <mat-menu #retryMenu="matMenu" xPosition="before">
+      <ng-container *ngFor="let item of params.actions[0].actions">
+        <button
+          mat-menu-item
+          class="actionButton"
+          (click)="onBtnClick(item.action, params.row)"
+        >
+          {{ item.title }}
+        </button>
+      </ng-container>
+    </mat-menu>
+  </ng-container>
+  <ng-container *ngSwitchCase="'simple'">
+    <div class="textIconAction">
+      <div class="left" (click)="onBtnClick(params.action, params.row)">
+        <vsa-icon
+          *ngIf="params.icon"
+          icon="{{ params.icon }}"
+          size="small"
+          state="solid"
+          customColor="{{ params.color }}"
+          [enableTooltip]="params?.actions.tooltip ? true : false"
+          tooltipContent="{{ params?.actions.tooltip }}"
+          [disabled]="params?.actions.disabled || hideAction"
+        ></vsa-icon>
+      </div>
+      <div class="">
+        <vsa-icon
+          *ngIf="params?.actions[0].icon && !params.actions[0].actions"
+          icon="{{ params?.actions[0].icon }}"
+          size="small"
+          state="hover"
+          customColor="{{ params.actions[0].color }}"
+          [enableTooltip]="params?.actions[0].tooltip ? true : false"
+          tooltipContent="{{ params?.actions[0].tooltip }}"
+          (onClick)="onBtnClick(params?.actions[0].action, params.row)"
+          [disabled]="params?.actions[0].disabled || hideAction"
+        ></vsa-icon>
+        <vsa-icon
+          *ngIf="params.actions[0].icon && params.actions[0].actions"
+          icon="{{ params.actions[0].icon }}"
+          size="small"
+          state="hover"
+          [enableTooltip]="params?.actions[0].tooltip ? true : false"
+          tooltipContent="{{ params?.actions[0].tooltip }}"
+          customColor="{{ params.actions[0].color }}"
+          [disabled]="params?.actions[0].disabled || hideAction"
+        ></vsa-icon>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="'empty'"> </ng-container>
+</div>

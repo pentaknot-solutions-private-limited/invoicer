@@ -1,0 +1,57 @@
+<div class="vsa-stepper">
+  <mat-stepper [linear]="isLinear" #stepper>
+    <!-- <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Fill out your name</ng-template>
+        <mat-form-field appearance="fill">
+          <mat-label>Name</mat-label>
+          <input
+            matInput
+            placeholder="Last name, First name"
+            formControlName="firstCtrl"
+            required
+          />
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
+      <form [formGroup]="secondFormGroup">
+        <mat-form-field appearance="fill">
+          <mat-label>Address</mat-label>
+          <input
+            matInput
+            formControlName="secondCtrl"
+            placeholder="Ex. 1 Main St, New York, NY"
+            required
+          />
+        </mat-form-field>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button matStepperNext>Next</button>
+        </div>
+      </form>
+    </mat-step> -->
+    <ng-container *ngFor="let step of steps; let i=index;">
+      <mat-step>
+        <ng-template matStepLabel>{{ step!.label }}</ng-template>
+        <!-- Content -->
+        <p>You are now done.</p>
+        <!-- Footer Action -->
+        <div>
+          <button mat-button matStepperPrevious *ngIf="i != 0">Back</button>
+          <button mat-button matStepperNext *ngIf="i != steps?.length - 1">Next</button>
+        </div>
+      </mat-step>
+    </ng-container>
+  </mat-stepper>
+</div>
+
+<!-- Next/ Prev -->
+<!-- <button mat-button matStepperNext>Next</button> -->
+<!-- <button mat-button matStepperPrevious>Back</button> -->
+
+<!-- Reset -->
+<!-- <button mat-button (click)="stepper.reset()">Reset</button> -->

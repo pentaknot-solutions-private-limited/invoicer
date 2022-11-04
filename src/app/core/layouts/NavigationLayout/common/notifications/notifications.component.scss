@@ -1,0 +1,34 @@
+.notification {
+    padding: 20px;
+  }
+  
+  :host::ng-deep {
+    .drawer-footer {
+      padding: 13px 20px !important;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+  
+  .empty-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    height: calc(100vh - 230px);
+    img {
+      width: 20%;
+    }
+    span.title {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 24px;
+      padding: 1em 0em;
+    }
+    span.description {
+      padding-bottom: 15px;
+    }
+  }
+  

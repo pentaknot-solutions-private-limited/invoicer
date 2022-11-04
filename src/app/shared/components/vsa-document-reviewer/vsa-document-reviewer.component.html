@@ -1,0 +1,60 @@
+<div class="document-layout">
+  <!-- Saving Indicator -->
+  <div [style.visibility]="!saving ? 'hidden' : 'visible'">
+    <span class="saving"> Saving... </span>
+  </div>
+  <div
+    style="display: none"
+    joyrideStep="startTutorialStep"
+    [stepContent]="startTutorialTemplate"
+    stepPosition="center"
+    [nextTemplate]="nextButton"
+    [doneTemplate]="doneButton"
+  ></div>
+  <div class="content">
+    <div class="left">
+      <variables-panel 
+      #variablePanel
+      (onVariableSelectionChange)="onVariableOrDeviceChange($event)" 
+      [docVariablesList]="docVariablesList"></variables-panel>
+    </div>
+    <div class="right" [style.width]="variablePanel.collapse ? 'calc(100vw - 210px)' : 'calc(100vw - 530px)'">
+      <p-splitter [style]="{ height: 'calc(100vh - 150px)' }" [panelSizes]="[60,40]" layout="vertical">
+        <ng-template pTemplate>
+          <!-- <sscp-panel [title]="'SSCP Modified Document'" [mode]="'edit'"></sscp-panel> -->
+
+          <!-- Editable instead of edit -->
+          <sscp-panel
+            #destination
+            [currentVariableAndDevice]="selectedVariableAndDevice"
+            (currentVariableAndDeviceChange)="onVariableOrDeviceChange($event)"
+            (documentAction)="onDocumentAction($event)"
+            [allVariables]="docVariablesList"
+            [title]="'SSCP Modified Document'"
+            [(loading)]="saving"
+            (variableTextValueChange)="handleVariableTextChanged($event)"
+          ></sscp-panel>
+        </ng-template>
+        <ng-template pTemplate>
+          <cer-panel #source [title]="'CER Document'"></cer-panel>
+        </ng-template>
+      </p-splitter>
+      <!-- <sscp-panel [title]="'CER Preview'" [mode]="'view'"></sscp-panel> -->
+    </div>
+  </div>
+</div>
+
+<!-- Tutorial Templates -->
+<ng-template #startTutorialTemplate>
+  <div class="tutorial-body">
+    <p class="tutorial-body__title">Looks like this is your first time depositing a document with the Medtech Databank! </p>
+    <img src="../../../../assets/img/tutorial/start.png" alt="" />
+  </div>
+</ng-template>
+
+<ng-template #nextButton>
+  <vsa-button role="primary" size="medium">Next</vsa-button>
+</ng-template>
+<ng-template #doneButton>
+  <vsa-button role="primary" size="medium">Skip</vsa-button>
+</ng-template>

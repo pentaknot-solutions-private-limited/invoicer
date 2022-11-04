@@ -1,0 +1,104 @@
+.owl-dt-container {
+  &-info {
+    padding: 15px;
+    padding-bottom: 0px;
+  }
+  &-control {
+    &-button {
+      font-weight: 500;
+      font-style: normal;
+      font-size: 14px;
+      color: var(--global-theme);
+      line-height: 16px;
+      padding: 9px 15px;
+      width: 84px;
+      height: 34px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: auto 0;
+      border-radius: 4px;
+    }
+  }
+  &-buttons {
+    height: 55px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 15px;
+    .secondary-btn {
+      border: 1px solid var(--global-theme);
+      margin-right: 10px;
+    }
+    .primary-btn {
+      background: var(--global-theme);
+      color: white;
+    }
+  }
+}
+// Range Picker
+.range-value-display {
+  display: flex;
+  justify-content: center;
+  border-bottom: none;
+  .start-date {
+    width: 50;
+  }
+  .end-date {
+    width: 50%;
+  }
+  .owl-dt-container {
+    &-range:last-child {
+      border-top: none;
+    }
+    &-info {
+      &-active {
+        .owl-dt-container-info-value {
+          background: var(--global-theme);
+          color: white;
+        }
+      }
+      &-value {
+        width: 140px;
+        height: 34px;
+        text-align: center;
+        line-height: 16px;
+        font-size: 14px;
+        font-weight: 400;
+        border-radius: 4px;
+        padding: 8px;
+        border: 1px solid var(--global-theme);
+        color: var(--global-theme);
+        &.start-value {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+          //   position: relative;
+          //   top: 1px;
+        }
+        &.end-value {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+        }
+      }
+      &:not(.owl-dt-container-info-value) {
+        color: var(--global-theme);
+        background-color: white;
+      }
+    }
+  }
+}
+
+// Range Picker Selected Days (text)
+.date-range-label {
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  margin: 0 15px;
+  color: #5c5c5c;
+  font-size: 14px;
+  font-weight: 400;
+  p {
+    margin: 0;
+  }
+}

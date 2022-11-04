@@ -1,0 +1,37 @@
+<div class="full-width">
+  <p-table [value]="data" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+      <tr>
+        <ng-container *ngFor="let item of config">
+          <th class="{{ item?.align }}-align {{ item?.customWidth ? 'flex-none' : '' }}"
+          [style.width]="item.width"
+          >{{ item.headerName }}</th>
+        </ng-container>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row let-rowIndex="rowIndex">
+      <tr class="custom-border">
+        <td class="{{ config[0]?.customWidth ? 'flex-none' : '' }}" [style.width]="config[0].width">{{ rowIndex+1 }}</td>
+        <td class="{{ config[0]?.customWidth ? 'flex-none' : '' }}" [style.width]="config[1].width">{{ row.type }}</td>
+        <td class="{{ config[1]?.customWidth ? 'flex-none' : '' }}" [style.width]="config[2].width">
+          <span
+            [ngClass]="{
+              green: row.status == 'Complete',
+              blue: row.status == 'In-progress'
+            }"
+            >{{ row.status }}</span
+          >
+        </td>
+        <td class="{{ config[2]?.customWidth ? 'flex-none' : '' }}" [style.width]="config[3].width">{{ row.confidence }}</td>
+        <td class="{{ config[3]?.customWidth ? 'flex-none' : '' }}" [style.width]="config[4].width">
+          <a
+            *ngIf="row.status == 'Complete'"
+            href="javascript:void(0)"
+            (click)="onActionClicked(row, 'view')"
+            >View</a
+          >
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

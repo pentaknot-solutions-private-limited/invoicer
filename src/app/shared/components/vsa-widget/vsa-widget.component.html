@@ -1,0 +1,133 @@
+<div
+  class="vsa-widget"
+  #widgetElementRef
+  [ngClass]="{ 'full-screen': fullscreenView }"
+>
+  <!-- Header -->
+  <div class="vsa-widget__header">
+    <!-- Header Title -->
+    <span class="title">
+      {{ config?.title }}
+    </span>
+    <!-- Header Action (Right) -->
+    <!-- <div class="action">
+      <ng-container
+        *ngTemplateOutlet="
+          config?.additionalActionTemplate;
+          context: { $implicit: config }
+        "
+      ></ng-container>
+      <ng-container *ngIf="config?.additionalActionTemplate">
+        <span class="mx10 pipe"> | </span>
+      </ng-container>
+      <mat-button-toggle-group *ngIf="config?.actions">
+        <ng-container *ngFor="let action of config?.actions">
+          <mat-button-toggle
+            (change)="toggleBtn(config?.widgetId,action.value)"
+            [checked]="action.checked"
+            [disabled]="action.disabled"
+            [value]="action.value"
+            >{{ action.label }}</mat-button-toggle
+          >
+        </ng-container>
+      </mat-button-toggle-group>
+    </div> -->
+  </div>
+  <!-- Body/ Content -->
+  <div class="vsa-widget__body">
+    <!-- {{config | json}} -->
+    <!-- Filter/ View By -->
+    <div class="filter-type" [ngSwitch]="config?.filterType">
+      <div class="view pt20" *ngSwitchCase="'viewBy'">
+        <span>View by:</span>
+        <div class="view-options">
+
+          <ng-container *ngFor="let option of config?.filterOptions">
+            <div
+              class="vsa-filter-chip"
+              [ngClass]="{ active: config?.selectedOption == option }"
+              (click)="selectionChange('viewBy', option)"
+            >
+              {{ option?.label }}
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <div *ngSwitchCase="'template'">
+        <ng-container
+          *ngTemplateOutlet="
+            filterTemplaterRef;
+            context: { $implicit: dataConfig }
+          "
+        ></ng-container>
+      </div>
+    </div>
+
+    <!-- Widget/ Chart -->
+    <div class="row pb20">
+      <div class="col-12 chart-view">
+        <vsa-chart
+          *ngIf="
+            !dataConfig?.customChartConfig ||
+            dataConfig?.customChartConfig?.viewType == 'chart'
+          "
+          #widgetChart
+          style="width: 100%"
+          [loading]="loading"
+          [chartType]="'bar'"
+          [config]="chartConfig"
+          (chartClicked)="onChartClick($event)"
+        ></vsa-chart>
+        <ng-container
+          *ngIf="config?.customLegendTemplateRef; else customlegendText"
+        >
+          <ng-container
+            *ngTemplateOutlet="
+              config?.customLegendTemplateRef;
+              context: { $implicit: dataConfig }
+            "
+          ></ng-container>
+        </ng-container>
+        <ng-template #customlegendText>
+          <p *ngIf="config?.customLegend" class="customLegend">
+            {{ config?.customLegend }}
+          </p>
+        </ng-template>
+        <ng-container *ngIf="dataConfig?.customChartConfig?.viewType == 'grid'">
+          <!-- <vsa-grid class="grid" #grid [config]="config?.gridConfig" [rowData]="config?.gridRows"></vsa-grid> -->
+          <vsa-grid class="grid" #grid [rowData]="dataConfig?.gridConfig?.rows" [config]="dataConfig?.gridConfig"></vsa-grid>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer/ Breadcrumb -->
+  <ng-container *ngIf="config?.breadcrumbs && config.maxLevel > 0">
+    <div class="vsa-widget__footer pt20">
+      <div class="widget-breadcrumb">
+        <!-- <vsa-icon class="mr10" icon="Info" size="small" customColor="#0060c9"></vsa-icon> -->
+        <!-- Current Viewing: -->
+        <span>Currently Viewing:&nbsp;</span>
+        <ng-container *ngFor="let crumb of config?.breadcrumbs; let i = index">
+          <ng-container *ngIf="crumb?.isActive; else navigatableCrumbTemplate">
+            <span class="title">{{ crumb?.title }}</span>
+          </ng-container>
+          <ng-template #navigatableCrumbTemplate>
+            <a
+              (click)="gotoView(i)"
+              href="javascript:void(0);"
+              [disabled]="crumb?.isActive"
+            >
+              {{ crumb?.title }}
+            </a>
+          </ng-template>
+          <span
+            class="breadcrumb-seperator"
+            *ngIf="i != config?.breadcrumbs?.length - 1"
+            >/
+          </span>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</div>

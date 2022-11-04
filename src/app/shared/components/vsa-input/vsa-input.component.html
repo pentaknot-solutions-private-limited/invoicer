@@ -1,0 +1,167 @@
+<div class="vsa-input">
+  <p
+    class="title"
+    *ngIf="config?.attributes?.title"
+    [ngClass]="{
+      moreMargin: showError,
+      title2: !config?.attributes?.showBorder
+    }"
+  >
+    {{ config?.attributes?.title }}
+  </p>
+  <!-- <ng-container *ngIf="config?.attributes?.errorMessage">
+    <span class="error-custom"
+      ><vsa-icon
+      icon="delete-circle"
+      [color]="'#DF3030'"
+      size="small"
+    ></vsa-icon>
+    &nbsp;&nbsp;{{ config?.attributes?.errorMessage }}</span
+    >
+  </ng-container> -->
+  <mat-form-field
+    [ngClass]="{
+      readonly: config?.attributes?.readonly,
+      'no-label': !config?.attributes?.label,
+      small: config?.attributes?.isSmall,
+      hasError: showError,
+      valid: valid,
+      showBorder: !config?.attributes?.showBorder,
+      prefixField: config.attributes?.prefixIcon
+    }"
+    [floatLabel]="'never'"
+  >
+    <!-- <mat-error *ngIf="showError && !config?.attributes?.readonly">
+    {{ errors }}
+  </mat-error> -->
+    <!-- [appearance]="config?.attributes?.appearance || 'outline'" -->
+    <mat-label *ngIf="config?.attributes?.label">{{
+      config?.attributes?.label
+    }}</mat-label>
+
+    <ng-container
+      *ngIf="config?.attributes?.type !== 'datepicker'"
+      class="test"
+    >
+      <input
+        [readonly]="config?.attributes?.readonly"
+        matInput
+        [pattern]="config?.attributes?.pattern"
+        [type]="config?.attributes?.type || 'text'"
+        [placeholder]="config?.attributes?.placeholder"
+        [ngClass]="{
+          password: config?.attributes?.togglePassword,
+          prefixInput: config.attributes?.prefixIcon
+        }"
+        [required]="
+          config?.attributes?.isMandatory && !config?.attributes?.readonly
+        "
+        [disabled]="config?.attributes?.disable"
+        [autocomplete]="
+          config?.attributes?.disableNativeAutoComplete ? 'off' : 'on'
+        "
+        [(ngModel)]="dataModel[config?.fieldKey]"
+        (input)="onChange()"
+        (change)="onChange()"
+        (blur)="onTouchedFn()"
+      />
+    </ng-container>
+    <ng-container *ngIf="config?.attributes?.type === 'datepicker'">
+      <input
+        [readonly]="config?.attributes?.readonly"
+        matInput
+        [pattern]="config?.attributes?.pattern"
+        [type]="config?.attributes?.type || 'text'"
+        [placeholder]="config?.attributes?.placeholder"
+        [required]="
+          config?.attributes?.isMandatory && !config?.attributes?.readonly
+        "
+        [disabled]="config?.attributes?.disable"
+        [(ngModel)]="dataModel[config?.fieldKey]"
+        [min]="config?.attributes?.minDate ? config?.attributes?.minDate : null"
+        [max]="config?.attributes?.maxDate ? config?.attributes?.maxDate : null"
+        (input)="onChange()"
+        (change)="onChange()"
+        (blur)="onTouchedFn()"
+        [selectMode]="config?.pickerConfig?.selectMode || 'single'"
+        [owlDateTimeTrigger]="date_component"
+        [owlDateTime]="date_component"
+      />
+    </ng-container>
+    <mat-error *ngIf="showError && !config?.attributes?.readonly">
+      {{ errors }}
+    </mat-error>
+    <vsa-icon
+      matSuffix
+      (onClick)="togglePassword()"
+      [state]="'solid'"
+      class="passwordToggle showEye"
+      *ngIf="config?.attributes?.togglePassword"
+      [icon]="showPassowrd ? 'edit-view-off' : 'edit-view'"
+      size="small"
+    ></vsa-icon>
+    <span
+      matPrefix
+      *ngIf="config.attributes?.prefixIcon"
+      class="passwordToggle showEye showIcon svg_icon vsa-icon_{{
+        config.attributes?.prefixIcon
+      }}"
+    >
+    </span>
+
+    <!-- <span matSuffix *ngIf="config.attributes?.suffixIcon" [ngClass]="config.attributes?.suffixIcon"></span> -->
+    <!-- <mat-error *ngIf="showError && !config?.attributes?.readonly">
+      <vsa-icon
+        icon="delete-circle"
+        [color]="'#DF3030'"
+        size="small"
+      ></vsa-icon>
+      &nbsp;&nbsp;{{ errors || config?.attributes?.errorMessage }}
+    </mat-error> -->
+
+    <!-- <vsa-icon
+      matSuffix
+      *ngIf="
+        config?.attributes?.type === 'datepicker' &&
+        !config?.attributes?.readonly &&
+        !config?.attributes?.disable
+      "
+      [state]="'hover'"
+      class="passwordToggle"
+      [icon]="'calendar'"
+      [owlDateTimeTrigger]="date_component"
+    ></vsa-icon>
+    <vsa-icon matSuffix [icon]="config?.attributes?.suffixIcon"></vsa-icon>
+    <vsa-icon
+      [ngClass]="{
+        'enable-prefix':
+          config?.attributes?.prefixIcon && !config?.attributes?.isSmall
+      }"
+      matPrefix
+      [icon]="config?.attributes?.prefixIcon"
+      [size]="
+        config?.attributes?.iconSize ? config?.attributes?.iconSize : 'medium'
+      "
+    ></vsa-icon> -->
+
+    <span
+      *ngIf="
+        config?.attributes?.readonly &&
+        !dataModel[config.fieldKey] &&
+        dataModel[config.fieldKey] != ''
+      "
+      style="position: absolute; left: 10px"
+    >
+      N/A
+    </span>
+    <mat-hint>{{ config?.attributes?.hint }}</mat-hint>
+
+    <vsa-date-time
+      #date_component
+      [hour12Timer]="config?.pickerConfig?.hour12Timer || false"
+      [pickerType]="config?.pickerConfig?.pickerType || 'calendar'"
+      (dateSelected)="onDateSelected($event)"
+    ></vsa-date-time>
+    <!-- (afterPickerClosed)="onDateSelected($event)" -->
+  </mat-form-field>
+</div>

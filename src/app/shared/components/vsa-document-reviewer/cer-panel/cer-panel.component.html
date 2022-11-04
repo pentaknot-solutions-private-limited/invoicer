@@ -1,0 +1,32 @@
+<div
+  class="doc-panel"
+  joyrideStep="previewPanelStep"
+  [stepContent]="previewPanelTemplate"
+  stepPosition="center"
+>
+  <p class="title">
+    <vsa-icon icon="Info" size="small" customColor="#51aadf"
+    [enableTooltip]="'true'"
+    tooltipContent="This is CER/Preview panel."
+    ></vsa-icon
+    ><span class="title">{{ title }}</span>
+  </p>
+  <div class="cer-body" [ngClass]="{ 'no-scroll': loading }">
+    <ng-container *ngIf="loading">
+      <div class="content">
+        <document-skeleton-loader id="2"></document-skeleton-loader>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!loading">
+      <div class="content" #documentPlaceholder>
+        <document-skeleton-loader id="2"></document-skeleton-loader>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #previewPanelTemplate>
+  <div class="tutorial-body">
+    <img src="../../../../assets/img/tutorial/step6.png" alt="" />
+  </div>
+</ng-template>

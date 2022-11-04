@@ -1,0 +1,40 @@
+@import '../../../../../../assets/style/partials/variables.scss';
+
+.search {
+  display: flex;
+  // border: 2px solid #51abde;
+  padding: 5px 15px;
+  margin-bottom: 1em;
+  border-radius: 4px;
+  height: 40px;
+  background: white;
+  border: 1px solid #e0e0e0;
+  vsa-icon {
+    margin-top: 3px;
+  }
+  .search-data {
+    width: 100%;
+    border: 0px;
+    background: transparent;
+    padding-left: 1em;
+    color: #5e6871;
+    font-family: $primary_font-family;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 140%;
+  }
+
+  input.search-data::placeholder {
+    color: #5e6871;
+    font-family: $primary_font-family;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 140%;
+  }
+  input.search-data:focus-visible {
+    border: none !important;
+    outline: none;
+  }
+}

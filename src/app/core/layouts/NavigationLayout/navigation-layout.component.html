@@ -1,0 +1,185 @@
+<vsa-drawer-panel
+  [footerTemplate]="drawerPanelConfig.footerTemplate"
+  [useCustomTemplate]="drawerPanelConfig.useCustomTemplate"
+  [showCloseButton]="drawerPanelConfig.showCloseButton"
+  [drawerTitle]="drawerPanelConfig.drawerTitle"
+  [drawerContainer]="drawerPanelConfig.drawerContainer"
+  [isActive]="drawerPanelConfig.isActive"
+  [isRightSide]="drawerPanelConfig.isRightSide"
+  [hasBackdrop]="drawerPanelConfig.hasBackdrop"
+  (isActiveChange)="drawerTest($event)"
+  [escClose]="true"
+  [drawerMode]="drawerPanelConfig.drawerMode"
+  [drawerSize]="drawerPanelConfig.drawerSize"
+  #drawer
+>
+  <!-- (isActiveChange)="drawerActiveChange($event)" [escClose]="drawerPanelConfig.escClose"  -->
+  <div
+    class="app-wrapper"
+    [ngClass]="{
+      'sidebar-is-expanded': !sideBarToggle
+    }"
+  >
+    <!-- 'sidebar-is-reduced': sideBarToggle -->
+    <header class="l-header">
+      <div class="l-header__inner clearfix">
+        <!-- <div class="c-header-icon js-hamburger">
+      <div class="c-header-icon js-hamburger">
+        <div
+          class="hamburger-toggle"
+          [ngClass]="{
+            'is-opened': !sideBarToggle,
+            '': sideBarToggle
+          }"
+          (click)="closeMenu()"
+        >
+          <span class="bar-top"></span><span class="bar-mid"></span
+          ><span class="bar-bot"></span>
+        </div>
+      </div> -->
+        <div class="row header">
+          <div class="col-8 text-left">
+            <!-- <ng-container *ngTemplateOutlet="template"> </ng-container> -->
+            <p class="centerTitle">Invoicer</p>
+          </div>
+          <!-- <div class="col-3 text-left">
+            <p class="centerTitle">Invoicer</p>
+          </div> -->
+          <div class="col-4">
+            <div class="header-icons-group">
+              <div class="c-header-icon logout">
+                Hi,&nbsp;{{ loggedInUserData?.firstName }} {{loggedInUserData?.lastName}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="left">
+        <ng-container *ngTemplateOutlet="template"> </ng-container>
+        
+      </div>
+
+      <div class="center">
+        <ng-container *ngTemplateOutlet="template"> </ng-container>
+        
+      </div> -->
+      </div>
+    </header>
+    <!-- <div class="l-sidebar" (mouseover)="sideBarToggle=false" (mouseout)="sideBarToggle=true"> -->
+
+    <div
+      class="l-sidebar"
+      (mouseover)="sideBarToggle = false"
+      (mouseout)="sideBarToggle = true"
+    >
+      <div class="logo">
+        <div class="logo__txt">
+          <img src="../../../../assets/img/placeholder-logo.jpg" />
+          <!-- <p class="pt10">UNIFIED LOGISTICS</p> -->
+        </div>
+      </div>
+      <div class="l-sidebar__content">
+        <nav class="c-menu js-menu">
+          <ul class="u-list">
+            <ng-container *ngFor="let item of menuList">
+              <li
+                class="c-menu__item"
+                [ngClass]="{
+                  'is-active': item.isActive
+                }"
+                data-toggle="tooltip"
+                [title]="item.name"
+                (click)="onModuleClicked(item)"
+              >
+                <div class="c-menu__item__inner">
+                  <!-- <vsa-icon
+                  class="icons"
+                  [icon]="item.icon"
+                  [color]="'#DF3030'"
+                  [size]="item.size"
+                  [enableTooltip]="sideBarToggle ? true : false"
+                  tooltipContent="{{ item.name }}"
+                ></vsa-icon> -->
+                  <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
+                  <mat-icon>{{ item.icon }}</mat-icon>
+                  <div class="c-menu-item__title">
+                    <span>{{ item.name }}</span>
+                  </div>
+                </div>
+              </li>
+            </ng-container>
+          </ul>
+          <ul class="u-list bottom-menu">
+            <ng-container *ngFor="let item of bottomList">
+              <li
+                class="c-menu__item"
+                [ngClass]="{
+                  'is-active': item.isActive
+                }"
+                data-toggle="tooltip"
+                [title]="item.name"
+                (click)="onBottomMenuClicked(item)"
+              >
+                <div class="c-menu__item__inner">
+                  <!-- <vsa-icon
+                  class="icons"
+                  [icon]="item.icon"
+                  [color]="'#DF3030'"
+                  [size]="item.size"
+                  [enableTooltip]="sideBarToggle ? true : false"
+                  tooltipContent="{{ item.name }}"
+                ></vsa-icon> -->
+                  <!-- <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="home"></mat-icon> -->
+                  <mat-icon
+                    [ngClass]="{
+                      red: item.icon == 'exit_to_app',
+                      notifications:
+                        item.name == 'Notifications' && sideBarToggle
+                    }"
+                    >{{ item.icon }}</mat-icon
+                  >
+                  <div class="c-menu-item__title">
+                    <span
+                      *ngIf="item.name != 'Notifications'"
+                      [ngClass]="{
+                        red: item.icon == 'exit_to_app'
+                      }"
+                      >{{ item.name }}</span
+                    >
+                    <span *ngIf="item.name == 'Notifications'"
+                      >{{ item.name }}&nbsp;&nbsp;&nbsp;<span class="badge"
+                        >25</span
+                      ></span
+                    >
+                  </div>
+                </div>
+              </li>
+            </ng-container>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <main class="l-main">
+      <div class="content-wrapper content-wrapper--with-bg">
+        <router-outlet> </router-outlet>
+        <!-- <h1 class="page-title">Dashboard</h1>
+      <div class="page-content"><router-outlet> </router-outlet></div> -->
+      </div>
+    </main>
+  </div>
+</vsa-drawer-panel>
+
+<ng-template #drawerTemplate>
+  <notifications
+    *ngIf="pageComponentVisibility.notifications"
+    (onBtnClick)="drawerAction($event)"
+  ></notifications>
+  <profile
+    [loggedInUserData]="loggedInUserData"
+    *ngIf="pageComponentVisibility.profile"
+    (onBtnClick)="drawerAction($event)"
+  ></profile>
+  <settings
+    *ngIf="pageComponentVisibility.settings"
+    (onBtnClick)="drawerAction($event)"
+  ></settings>
+</ng-template>

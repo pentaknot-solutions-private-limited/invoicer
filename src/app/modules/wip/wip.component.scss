@@ -1,0 +1,32 @@
+.extract-ai {
+  .row.center-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    height: calc(100vh - 120px);
+    .col-12 {
+      text-align: center;
+    }
+  }
+}
+.empty-layout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  img {
+    width: 20%;
+  }
+  span.title {
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    padding: 1em 0em;
+  }
+  span.description {
+    padding-bottom: 15px;
+  }
+}

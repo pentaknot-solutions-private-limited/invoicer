@@ -1,0 +1,425 @@
+<div class="vsa-grid">
+  <p *ngIf="title" class="small-title">
+    {{ title }}
+    <ng-container *ngIf="config?.collapse">
+      <vsa-icon
+        (onClick)="hideshowTable()"
+        [state]="'hover'"
+        [icon]="showTable ? 'keyboard-arrow-down' : 'keyboard-arrow-right'"
+      ></vsa-icon>
+    </ng-container>
+    <ng-container *ngIf="config?.refreshTable">
+      <vsa-icon
+        (onClick)="refreshTable()"
+        [state]="'hover'"
+        [icon]="'redo'"
+        size="small"
+      ></vsa-icon>
+    </ng-container>
+  </p>
+  <p class="showCount" *ngIf="!config.pagination">
+    Total {{ rowData.length }} Entries
+  </p>
+  <!-- *ngIf="showTable" -->
+  <div class="tableWrapper" [@collapse]="!showTable">
+    <p-table
+      #gridComp
+      [columns]="config.colDefs"
+      [value]="rowData | searchPipe: searchValue:config.colDefs"
+      [scrollable]="true"
+      [scrollHeight]="config.gridHeightDelta"
+      [autoLayout]="true"
+      responsiveLayout="scroll"
+      [paginator]="config.pagination"
+      [rows]="paginationCount"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Total {{ rowData.length }} entries"
+      (sortFunction)="customSort($event)"
+      [customSort]="true"
+      [alwaysShowPaginator]="config.pagination"
+      [rowGroupMode]="config?.rowGroupMode"
+      [groupRowsBy]="config?.groupRowKey"
+      [sortField]="config?.groupRowKey"
+      [sortMode]="'single'"
+      [(selection)]="selectedRows"
+      dataKey="{{ config?.rowId }}"
+      (onRowSelect)="onRowSelect($event)"
+      (onRowUnselect)="onRowUnselect($event)"
+      [ngClass]="{ editable: config?.editable }"
+      (onEditComplete)="onEditComplete($event)"
+    >
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th class="checkboxWidth" *ngIf="config?.showCheckbox">
+            <p-tableHeaderCheckbox
+              class="custom-color"
+              (click)="selectAllRow()"
+            ></p-tableHeaderCheckbox>
+          </th>
+          <ng-container *ngFor="let col of columns">
+            <th
+              pSortableColumn="{{ col?.field }}"
+              *ngIf="!config?.editable"
+              [style.width]="col?.width"
+              class="{{ col?.align }}-align {{ col?.customWidth ? 'flex-none' : '' }}"
+            >
+              {{ col.headerName }}
+
+              <p-columnFilter
+                *ngIf="col?.showSelectFilter; else normalFilter"
+                field="{{ col?.field }}"
+                matchMode="in"
+                display="menu"
+                [showMatchModes]="false"
+                [showOperator]="false"
+                [showAddButton]="false"
+              >
+                <ng-template pTemplate="header">
+                  <div class="px-3 pt-3 pb-0">
+                    <span class="font-bold">Select {{ col?.headerName }}</span>
+                  </div>
+                </ng-template>
+                <ng-template
+                  pTemplate="filter"
+                  let-value
+                  let-filter="filterCallback"
+                >
+                  <p-multiSelect
+                    [ngModel]="value"
+                    [options]="getUniqueValue(col?.field, rowData)"
+                    placeholder="Any"
+                    (onChange)="filter($event.value)"
+                    [optionLabel]="col?.field"
+                    [optionValue]="col?.field"
+                  >
+                    <ng-template let-option pTemplate="item">
+                      <div class="p-multiselect-representative-option">
+                        <span class="">{{ option[col?.field] }}</span>
+                      </div>
+                    </ng-template>
+                  </p-multiSelect>
+                </ng-template>
+              </p-columnFilter>
+              <ng-template #normalFilter>
+                <p-columnFilter
+                  type="text"
+                  field="{{ col?.field }}"
+                  display="menu"
+                ></p-columnFilter>
+              </ng-template>
+              <p-sortIcon field="{{ col?.field }}"></p-sortIcon>
+            </th>
+            <th
+              *ngIf="config?.editable"
+              class="{{ col?.align }}-align {{ col?.customWidth ? 'flex-none' : '' }}"
+              [style.width]="col?.width"
+              [ngClass]="{
+                'lg-width': col?.action
+              }"
+            >
+              {{ col.headerName }}
+            </th>
+          </ng-container>
+        </tr>
+      </ng-template>
+      <ng-template
+        pTemplate="body"
+        let-row
+        let-columns="columns"
+        let-expanded="expanded"
+        let-rowIndex="rowIndex"
+        let-rowgroup="rowgroup"
+        let-rowspan="rowspan"
+      >
+        <tr
+          [ngClass]="{
+            highlightedRow: row[config?.showChildDataKey] == true && expanded
+          }"
+        >
+          <td *ngIf="config?.showCheckbox" class="checkboxWidth">
+            <p-tableCheckbox
+              class="custom-color"
+              [value]="row"
+            ></p-tableCheckbox>&nbsp;&nbsp;&nbsp;
+          </td>
+          <ng-container *ngFor="let col of columns; let i = index">
+            <ng-container [ngSwitch]="col.colType">
+              <!-- Normal Text -->
+              <ng-container *ngSwitchCase="'text'">
+                <td
+                  class="{{ col?.align }}-align {{
+                    getClassName(row, config, col)
+                  }} {{ col?.customWidth ? 'flex-none' : '' }}"
+                  [style.width]="col?.width"
+                  [ngClass]="{
+                    'lg-width': col?.action,
+                    'edit-highlight': col?.editable && editCell,
+                    'p-0': col?.editable && editCell
+                  }"
+                  pEditableColumn
+                  [pEditableColumnField]="col.field"
+                >
+                  <p-cellEditor
+                    *ngIf="col?.editable && editCell; else displayText"
+                  >
+                    <ng-template pTemplate="input">
+                      <input
+                        pInputText
+                        type="text"
+                        [(ngModel)]="row[col.field]"
+                        class="edit-input"
+                        [style.width]="col?.width"
+                      />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      <div
+                        class="text-wrapper pl-3"
+                        [style.width]="col?.width"
+                        title="{{ row[col.field] | valueFormatter: row:col }}"
+                      >
+                        {{ row[col.field] | valueFormatter: row:col }}
+                        <vsa-icon
+                          *ngIf="col?.editable && col?.action"
+                          [icon]="col?.action[0].icon"
+                          [size]="col?.action[0].size"
+                          [customColor]="col?.action[0].color"
+                          state="hover"
+                          (onClick)="onRowEditInit(row)"
+                        ></vsa-icon>
+                      </div>
+                    </ng-template>
+                  </p-cellEditor>
+                  <ng-template #displayText>
+                    <div
+                      class="text-wrapper {{ col?.class }}"
+                      [style.width]="col?.width"
+                      title="{{ row[col.field] | valueFormatter: row:col }}"
+                      *ngIf="col?.editable && !editCell"
+                    >
+                      {{ row[col.field] | valueFormatter: row:col }}
+                      <vsa-icon
+                        *ngIf="col?.editable && col?.action"
+                        [icon]="col?.action[0].icon"
+                        [size]="col?.action[0].size"
+                        [customColor]="col?.action[0].color"
+                        state="hover"
+                        (onClick)="onRowEditInit(row)"
+                      ></vsa-icon>
+                    </div>
+                  </ng-template>
+                  <div
+                    class="text-wrapper"
+                    [style.width]="col?.width"
+                    title="{{ row[col.field] | valueFormatter: row:col }}"
+                    *ngIf="!col?.editable"
+                  >
+                    {{ row[col.field] | valueFormatter: row:col }}
+                    <vsa-icon
+                      *ngIf="col?.editable && col?.action"
+                      [icon]="col?.action[0].icon"
+                      [size]="col?.action[0].size"
+                      [customColor]="col?.action[0].color"
+                      state="hover"
+                      (onClick)="onRowEditInit(row)"
+                    ></vsa-icon>
+                  </div>
+                </td>
+                <!-- <td
+                  *ngIf="editCell && col?.editable"
+                  pEditableColumn
+                  class="{{ col?.align }}-align"
+                >
+                  <p-cellEditor>
+                    <ng-template pTemplate="input">
+                      <input
+                        pInputText
+                        type="text"
+                        [(ngModel)]="dataModel[col?.field]"
+                      />
+                    </ng-template>
+                    <ng-template pTemplate="output">
+                      <div
+                        class="text-wrapper"
+                        title="{{ row[col.field] | valueFormatter: row:col }}"
+                      >
+                        {{ row[col.field] | valueFormatter: row:col }}
+                        <vsa-icon
+                          *ngIf="col?.editable && col?.action"
+                          [icon]="col?.action[0].icon"
+                          [size]="col?.action[0].size"
+                          [customColor]="col?.action[0].color"
+                          state="hover"
+                          (onClick)="onRowEditInit(row)"
+                        ></vsa-icon>
+                      </div>
+                    </ng-template>
+                  </p-cellEditor>
+                </td> -->
+              </ng-container>
+
+              <!-- Link Field -->
+              <td
+                *ngSwitchCase="'link'"
+                [style.width]="col?.width"
+                class="{{ col?.align }}-align {{ col?.customWidth ? 'flex-none' : '' }}"
+              >
+                <a
+                  href="javascript:void(0)"
+                  class="gridLink"
+                  *ngIf="!config?.hasChildData"
+                  (click)="callOnActionLink(row, col?.linkAction)"
+                  >{{ row[col.field] | valueFormatter: row:col }}</a
+                >
+                <!-- <a
+                    href="javascript:void(0)"
+                    class="gridLink"
+                    [pRowToggler]="row"
+                    *ngIf="config?.hasChildData"
+                    >{{ row[col.field] | valueFormatter: row:col }}</a
+                  > -->
+                <ng-container *ngIf="config?.hasChildData">
+                  <ng-container *ngIf="row[config?.showChildDataKey]">
+                    <button
+                      type="button"
+                      pButton
+                      pRipple
+                      [pRowToggler]="row"
+                      class="custom-button"
+                      (click)="getExpandedValue(expanded)"
+                    >
+                      <mat-icon>{{
+                        expanded ? "expand_more" : "chevron_right"
+                      }}</mat-icon></button
+                    >&nbsp;&nbsp;
+                  </ng-container>
+                  {{ row[col.field] | valueFormatter: row:col }}
+                </ng-container>
+              </td>
+              <!-- Multiple Items -->
+              <td
+                *ngSwitchCase="'multi'"
+                [style.width]="col?.width"
+                class="{{ col?.align }}-align {{ col?.customWidth ? 'flex-none' : '' }}"
+              >
+                <grid-multi-renderer
+                  [params]="row[col.field] | paramFormatter: row:col"
+                >
+                  {{ row[col.field] | valueFormatter: row:col }}
+                </grid-multi-renderer>
+              </td>
+              <!-- Chips -->
+              <td
+                *ngSwitchCase="'chips'"
+                [style.width]="col?.width"
+                class="{{ col?.align }}-align {{ col?.customWidth ? 'flex-none' : '' }}"
+              >
+                <grid-chip-renderer
+                  [params]="row[col.field] | paramFormatter: row:col"
+                  [value]="row[col.field] | valueFormatter: row:col"
+                >
+                </grid-chip-renderer>
+              </td>
+              <!-- Actions -->
+              <td
+                *ngSwitchCase="'actions'"
+                [style.width]="col?.width"
+                class="{{ col?.align }}-align {{ col?.customWidth ? 'flex-none' : '' }}"
+              >
+                <grid-action-renderer
+                  [params]="row[col.field] | paramFormatter: row:col"
+                  [hideAction]="row[config?.showChildDataKey]"
+                  (onActionClick)="onActionClick($event)"
+                >
+                </grid-action-renderer>
+              </td>
+              <td *ngSwitchCase="'checkbox'" class="{{ col?.align }}-align">
+                <p-tableCheckbox
+                  class="custom-color"
+                  [value]="row"
+                ></p-tableCheckbox>
+              </td>
+              <ng-container *ngSwitchCase="'rowspan'">
+                <td
+                  [attr.rowspan]="
+                    convertToInt(
+                      updateRowGroupMetaData(rowData, config?.groupRowKey)[
+                        row[col.field]
+                      ]
+                    )
+                  "
+                >
+                  <!-- RowGroup: {{rowgroup ? rowgroup : 'Not found'}} && Rowspan: {{rowspan ? rowspan : 'Not found'}} -->
+                  <div
+                    class="text-wrapper bold"
+                    title="{{ row[col.field] | valueFormatter: row:col }}"
+                  >
+                    {{ row[col.field] | valueFormatter: row:col }}
+                  </div>
+                </td>
+              </ng-container>
+
+              <!-- Default -->
+              <!-- <td *ngSwitchDefault class="{{ col?.align }}-align">
+                <div
+                  class="text-wrapper"
+                  title="{{ row[col.field] | valueFormatter: row:col }}"
+                >
+                  {{ row[col.field] | valueFormatter: row:col }}
+                </div>
+              </td> -->
+            </ng-container>
+          </ng-container>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="rowexpansion" let-row>
+        <!-- <tr><td>{{row[config?.childDataArrayName] | json}}</td></tr> -->
+        <!-- <tr *ngFor="let item of ; let i = index" class="childTr"> -->
+        <grid-expansion-project
+          [config]="config?.childColDefs"
+          [data]="row[config?.childDataArrayName]"
+          (onChildActionClicked)="onChildActionClicked($event, row)"
+          class="full-width"
+        ></grid-expansion-project>
+        <!-- </tr> -->
+      </ng-template>
+
+      <ng-template pTemplate="footer" *ngIf="config?.showFooter">
+        <tr *ngIf="selectedRows?.length > 0">
+          <td class="footer-action">
+            <ng-container *ngFor="let item of config?.footerAction">
+              <vsa-button
+                [role]="item.role"
+                [size]="item.size"
+                [color]="item.color"
+                (onClick)="onFooterActionClicked(selectedRows, item.action)"
+                >{{ item.text }}</vsa-button
+              >&nbsp;&nbsp;&nbsp;
+            </ng-container>
+          </td>
+          <!-- <td>$506,202</td>
+          <td>$531,020</td> -->
+        </tr>
+      </ng-template>
+      <!-- Empty Message -->
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr class="emptyTableRow">
+          <td [attr.colspan]="columns?.length">
+            {{ config?.emptyMessage || "No records found" }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <!-- <button (click)="hideshowTable()">Hide</button> -->
+  <!-- <div
+    class="collapseableDiv text-center"
+    *ngIf="config?.collapse"
+    (click)="hideshowTable()"
+  >
+    <vsa-icon
+      [icon]="showTable ? 'keyboard-arrow-up' : 'keyboard-arrow-down'"
+    ></vsa-icon>
+  </div> -->
+</div>
+<!-- {{selectedRows|json}} -->

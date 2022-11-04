@@ -1,0 +1,23 @@
+.invoice-generation {
+  // padding: 20px;
+  .dashed-divider {
+    border-top: 1px dashed #e0e0e0;
+  }
+}
+
+:host::ng-deep {
+  .drawer-footer {
+    padding: 13px 20px !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .right {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      vsa-button {
+        margin-left: 10px;
+      }
+    }
+  }
+}

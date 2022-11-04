@@ -1,0 +1,31 @@
+<div class="selection-list">
+      <vsa-input
+      (onBlur)="filter($event)"
+        class="search-box"
+        [config]="internalConfig.search"
+        [dataModel]="internalModel"
+      ></vsa-input>
+      <div class="selection-actions">
+        <!-- Select All Toggle -->
+        <mat-checkbox (change)="setAll($event?.checked)" [disabled]="!filteredList || filteredList?.length == 0" 
+        [checked]="filteredList?.length == selectedItems.length && filteredList?.length != 0"
+        [indeterminate]="selectedItems?.length > 0 && filteredList?.length != selectedItems?.length">Select All</mat-checkbox>
+        <!-- Show Selected Toggle -->
+        <vsa-toggle class="toggleBtn"
+        [config]="internalConfig.showSelectedToggle"
+        (onChange)="toggleShowSelected($event)"
+        ></vsa-toggle>
+      </div>
+      <div class="selection-box" [style.maxHeight]="config?.boxHeight">    
+      <mat-selection-list [multiple]="true" (selectionChange)="selectItem($event)">
+        <mat-list-option [selected]="isItemSelect(config?.returnKey ? option[config?.returnKey] : config?.labelKey ? option[config?.labelKey] : option)"
+        [value]="config?.returnKey ? option[config?.returnKey] : config?.labelKey ? option[config?.labelKey] : option"
+        [checkboxPosition]="'before'" *ngFor="let option of filteredList">
+          {{config?.labelKey ? option[config?.labelKey] : option}}
+        </mat-list-option>
+      </mat-selection-list>
+      <ng-container *ngIf="filteredList.length == 0">
+        <p>No Data Available</p>
+      </ng-container>
+    </div>
+</div>

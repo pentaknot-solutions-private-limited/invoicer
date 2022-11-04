@@ -1,0 +1,36 @@
+<ng-container>
+  <div class="page-title">
+    <h1>Log In</h1>
+    <p>Welcome, input your user credentials below.</p>
+  </div>
+  <form class="loginForm" [formGroup]="loginForm">
+    <vsa-input
+      [config]="loginInputConfig?.LoginIdInput"
+      formControlName="emailId"
+      [dataModel]="loginModel"
+    >
+    </vsa-input>
+    <vsa-input
+      [config]="loginInputConfig?.LoginPasswordInput"
+      formControlName="password"
+      [dataModel]="loginModel"
+    ></vsa-input>
+    <div class="more-options">
+      <a
+        href="javascript:void"
+        class="forget-password"
+        >Forget Password?</a
+      >
+    </div>
+    <vsa-button
+      [type]="'submit'"
+      [loading]="isLoading"
+      (onClick)="onSubmit()"
+      [disabled]="loginForm.invalid"
+      [fullWidth]="'true'"
+      size="medium"
+      >Confirm
+    </vsa-button>
+  </form>
+</ng-container>
+<div class="toasty-layer" toastContainer></div>

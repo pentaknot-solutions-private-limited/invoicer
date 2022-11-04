@@ -1,0 +1,138 @@
+@import '../../../../assets/style/partials/variables.scss';
+*:focus {
+    outline: none;
+}
+
+.download-template {
+    margin-bottom: 5px;
+    a {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+}
+
+.file-uploader {
+    .file-selector {
+        height: 208px;
+        width: 100%;
+        background-color: #f9fafc;
+        border: 1px dotted #c2c2c2;
+		border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: $dark_gray_typo-color;
+        p {
+            font-size: $h5_font-size;
+            margin: 0;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        .details {
+            text-align: center;
+            .pipe-seprator {
+                color: $light_gray_typo-color;
+            }
+            .fileSupport {
+                font-size: $small_font-size;
+            }
+        }
+    }
+}
+.file-details {
+    display: flex;
+    margin-top: 20px;
+    .file-indicators {
+        width: calc(100% - 40px);
+        padding-right: 20px;
+        .filename {
+            font-size: $default_font-size;
+            color: $default_typo-color;
+        } 
+        .size-details {
+            font-size: $small_font-size;
+            color: $gray_typo-color;
+            &.error {
+                color: #cf0f26;
+            }
+        }
+    }
+    .file-actions {
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+    }
+}
+
+:host ::ng-deep {
+    .file-upload-progressbar.mat-progress-bar {
+        margin-top: 5px;
+        height: 7px;
+        border-radius: 4px;
+    }
+    .mat-progress-bar-buffer {
+        background-color: rgba(224, 224, 224, 1);
+    }
+    .mat-progress-bar.error .mat-progress-bar-fill::after {
+        animation: none;
+        content: "";
+        display: inline-block;
+        left: 0;
+        background: #d0302b;
+    }
+    .mat-progress-bar.success .mat-progress-bar-fill::after {
+        animation: none;
+        content: "";
+        display: inline-block;
+        left: 0;
+        background: #469a2f;
+    }
+}
+
+::ng-deep {
+    &.notification_modal {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      .notification_footer {
+        padding: 20px !important;
+      }
+    }
+    &.title2 {
+      margin-bottom: 5px !important;
+      font-size: 12px  !important;
+      font-weight: 400  !important;
+      font-family: $primary_font-family;
+      color: #767676  !important;
+      transition: 0.5s !important;
+    } 
+  }
+  
+  
+  ::ng-deep {
+
+    &.notification_modal {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      .notification_header {
+        align-items: flex-start !important;
+        justify-content: flex-end !important;
+      }
+      .notification_footer {
+        padding: 20px !important;
+        display: flex;
+        justify-content: flex-end;
+        padding-right: 10px !important;
+        border-top: 1px solid #e5e5e5
+      }
+      .notification_body {
+        border-top: 1px solid #e5e5e5;
+      }
+    } 
+  }

@@ -1,0 +1,483 @@
+[
+  {
+    "id": 1,
+    "name": "VCAS PayPal Agreement",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "32 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "VCAS Agreement1",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "15 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Complete",
+        "confidence": "Medium"
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Complete",
+        "confidence": "N/A"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "VCAS Agreement2",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "120 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "VCAS Agreement3",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "414 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "VCAS Agreement4",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "123 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "VCAS Agreement5",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "21 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "VCAS Agreement6",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "645 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "VCAS Agreement7",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "56 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "VCAS Agreement8",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "65 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "VCAS Agreement9",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "345 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "VCAS Agreement10",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "87 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "VCAS Agreement11",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "35 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "VCAS Agreement12",
+    "status": "In Progress",
+    "fileType": "PDF",
+    "fileSize": "43 KB",
+    "showSteps": false,
+    "steps": [
+      {
+        "id": 1,
+        "type": "Text extraction",
+        "status": "Complete",
+        "confidence": "High"
+      },
+
+      {
+        "id": 2,
+        "type": "Entity & Clause extraction",
+        "status": "In-progress",
+        "confidence": ""
+      },
+
+      {
+        "id": 3,
+        "type": "Policy generation",
+        "status": "Pending",
+        "confidence": ""
+      },
+
+      {
+        "id": 4,
+        "type": "Policy storage & sync",
+        "status": "Pending",
+        "confidence": ""
+      }
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+<div class="vsa-toggle">
+  <!-- [color]="config?.attributes?.color" -->
+  <mat-slide-toggle
+    [disableRipple]="true"
+    [checked]="value || config?.isActive"
+    [(ngModel)]="value || config.isActive"
+    (ngModelChange)="changeToggle($event)"
+    name="vsa-slide-toggle"
+    [disabled]="config?.attributes?.disable || this.disabled"
+  >
+    {{ config?.attributes?.label }}
+  </mat-slide-toggle>
+</div>

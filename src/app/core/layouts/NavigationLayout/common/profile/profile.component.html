@@ -1,0 +1,85 @@
+<div class="drawer-body">
+  <div class="notification">
+    <div class="row center-button">
+      <div class="col-12 avatar-name">
+        <!-- <img src="../../../../../../assets/img/avatar.png" alt="" /> -->
+        <div class="avatar mt-4">
+          <span
+            >{{ loggedInUserData.firstName.charAt(0)
+            }}{{ loggedInUserData.lastName.charAt(0) }}</span
+          >
+        </div>
+        <p class="name">
+          {{ loggedInUserData.firstName }} {{ loggedInUserData.lastName }}<br />
+          <small>{{ loggedInUserData.role }}</small>
+        </p>
+      </div>
+      <div class="col-12 mt-3">
+        <!-- <p class="name">
+          {{ loggedInUserData.firstName }} {{ loggedInUserData.lastName }}
+        </p> -->
+        <div class="mail-role">
+          <p class="email">
+            <a href="mailto:{{ loggedInUserData.email }}"
+              ><mat-icon>mail</mat-icon>&nbsp;&nbsp;
+              <span class="truncate">{{ loggedInUserData.email }}</span></a
+            >
+          </p>
+          <!-- <p class="role">
+            <mat-icon>business_center</mat-icon>&nbsp;&nbsp;{{
+              loggedInUserData.role
+            }}
+          </p> -->
+          <p class="email">
+            <a href="tel:+1-9876 412 345"
+              ><mat-icon>call</mat-icon>&nbsp;&nbsp; <span class="truncate">+1-9876 412 345</span></a
+            >
+          </p>
+        </div>
+        <div class="connects">
+          <p>Social</p>
+          <div class="socials">
+            <img
+              class="fb"
+              src="../../../../../../assets/img/facebook.png"
+              alt="facebook"
+            />
+            <img
+              class="twitter"
+              src="../../../../../../assets/img/twitter.png"
+              alt="twitter"
+            />
+            <img
+              class="linkedin"
+              src="../../../../../../assets/img/linkedin.png"
+              alt="linkedin"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="dates">
+          <div class="profile-activity__child modified-on">
+            Last Modified:&nbsp;<strong>29/08/2022, 14:44:55</strong>
+          </div>
+          <div class="profile-activity__child modified-on mt-2">
+            Last Login:&nbsp;<strong>{{ loggedInUserData.loginTime }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="drawer-footer">
+  <div>
+    <vsa-button
+      [type]="'button'"
+      [role]="'primary'"
+      size="small"
+      (onClick)="actionEvent('cancel')"
+      >Close</vsa-button
+    >
+  </div>
+</div>

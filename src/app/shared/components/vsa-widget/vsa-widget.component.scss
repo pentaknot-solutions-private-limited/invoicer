@@ -1,0 +1,187 @@
+@import "../../../../assets/style/partials/variables.scss";
+.vsa-widget {
+  padding: 20px;
+  box-sizing: border-box;
+  border: 1px solid $border-color;
+  background-color: white;
+  border-radius: 4px;
+  // box-shadow: 0px 0px 3px rgb(0 0 0 / 20%);
+  // min-height: 360px; Old Css By Shlok
+  // New CSS by nihal
+  height: 100%;
+  // box-sizing: border-box;
+  /* Box Shadow */
+
+  // box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.07);
+
+  &__header {
+    height: 26px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .title {
+      color: #191919;
+      font-style: normal;
+      font-size: 14px;
+      font-family: 'Open Sans';
+      font-weight: 500;
+    }
+    .action {
+      display: flex;
+      justify-content: flex-end;
+      align-items: baseline;
+      &-icon {
+        margin-left: 10px;
+      }
+    }
+  }
+  &__body {
+    box-sizing: border-box;
+    padding: auto 20px;
+    .filter-type {
+      margin-bottom: 20px;
+      font-size: 12px;
+      .view {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        &-options {
+          margin-left: 10px;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+        }
+      }
+    }
+    // Chart Content
+    .chart-view {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      .customLegend {
+        text-align: center;
+        letter-spacing: -0.3px;
+        font-weight: 400;
+        font-style: normal;
+        font-size: 12px;
+        color: #5c5c5c;
+        line-height: 24px;
+        margin: 0px;
+        padding-top: 1em;
+      }
+    }
+  }
+
+  &__footer {
+    position: absolute;
+    bottom: 10px;
+    .widget-breadcrumb {
+      span {
+        font-weight: 400;
+        // font-size: 12px;
+      }
+      span.title {
+        color: #73839c;
+      }
+      .breadcrumb-seperator {
+        color: #c2c2c2;
+      }
+    }
+  }
+}
+
+// Filter Chip
+.vsa-filter-chip {
+  min-height: 20px;
+  background: inherit;
+  background-color: rgba(240, 240, 240, 1);
+  border: none;
+  border-radius: 8px;
+  margin-right: 10px;
+  font-size: 12px;
+  box-sizing: border-box;
+  font-style: normal;
+  align-self: center;
+  padding: 1px 7px 3px 7px;
+  user-select: none;
+  cursor: pointer;
+  color: $dark_gray_typo-color;
+  border: 1px solid transparent;
+  &.active {
+    border-color: $global-theme;
+    color: $global-theme;
+    background-color: white;
+  }
+  &:hover {
+    background-color: #f4f4f4;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+:host ::ng-deep {
+  .full-screen {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100000;
+    .responsive-height {
+      height: calc(100vh - 240px);
+    }
+  }
+
+  vsa-chart {
+    width: 100%;
+    .responsive-height {
+      height: 300px;
+    }
+  }
+}
+.gridRow {
+  width: 100%;
+}
+
+::ng-deep {
+  &.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 32px;
+  }
+  &.mat-button-toggle-checked.mat-button-toggle-appearance-standard {
+    color: white;
+    background: linear-gradient(90deg, #de983a -3.49%, #f58533 103.49%);
+  }
+  &.mat-button-toggle-appearance-standard {
+    color: #f58533;
+  }
+  &.mat-button-toggle-group-appearance-standard {
+    border: solid 1px #d3e2f8;
+  }
+  &.mat-button-toggle-group-appearance-standard
+    .mat-button-toggle
+    + .mat-button-toggle {
+    border-left: solid 1px #d3e2f8;
+  }
+  &.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    font-family: $primary_font-family;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+  }
+}
+
+.grid {
+  width: 100%;
+  padding: 40px 0px;
+  padding-bottom: 0px;
+}
+
+a {
+  color: #003ea9
+}

@@ -1,0 +1,32 @@
+<div class="responsive-height">
+  <ng-container>
+    <!-- [legend]="config?.options?.legend?.display" -->
+    <canvas
+      #chartJsCanvas
+      baseChart
+      [plugins]="[backgroundPlugin, dataLabelPlugin, pieInsideLabelPlugin]"
+      [data]="config?.data"
+      [options]="config?.options"
+      [type]="config?.type"
+      [style]="customStyle"
+      (chartClick)="onChartClick($event)"
+    >
+    </canvas>
+    <div class="loader-body" *ngIf="loading">
+      <vsa-loader></vsa-loader>
+    </div>
+  </ng-container>
+</div>
+
+<!-- This section will be hidden and used to export a constant size chart -->
+<div *ngIf="!loading" id="exportChartArea">
+  <canvas
+  #chartJsExportCanvas
+  baseChart
+  [plugins]="[backgroundPlugin]"
+  [data]="config?.data"
+  [options]="config?.options"
+  [type]="config?.type"
+  [style]="customStyle"
+></canvas>
+</div>

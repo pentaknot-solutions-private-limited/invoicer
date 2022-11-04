@@ -1,0 +1,13 @@
+<div class="search">
+    <vsa-icon icon="search" size="small" customColor="#5E6871"></vsa-icon>
+    <input
+    type="text"
+    class="search-data"
+    pInputText
+    placeholder="Type here..."
+    [(ngModel)]="searchedData"
+    name="searchData"
+    (input)="searchByInputChange()"
+    style="width: 100%"
+  />
+</div>

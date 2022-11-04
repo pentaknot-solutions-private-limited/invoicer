@@ -1,0 +1,63 @@
+[
+  {
+    "timeId": "1",
+    "name": "Yesterday",
+    "startDate": "exp().subtract(1, 'day').startOf('day')",
+    "endDate": "exp().subtract(1, 'day').endOf('day')"
+  },
+  {
+    "timeId": "2",
+    "name": "Last Week",
+    "startDate": "exp().startOf('week').subtract(1, 'week').startOf('day')",
+    "endDate": "exp().endOf('week').subtract(1, 'week').endOf('day')"
+  },
+  {
+    "timeId": "3",
+    "name": "Current Month",
+    "startDate": "exp().startOf('month').startOf('day')",
+    "endDate": "exp().endOf('month').endOf('day')"
+  },
+  {
+    "timeId": "4",
+    "name": "Last Month",
+    "startDate": "exp().startOf('month').subtract(1, 'month').startOf('day')",
+    "endDate": "exp().startOf('month').subtract(1, 'month').endOf('month').endOf('day')"
+  },
+  {
+    "timeId": "5",
+    "name": "One Month",
+    "startDate": "exp().subtract(1, 'month').startOf('day')",
+    "endDate": "exp().endOf('day')"
+  },
+  {
+    "timeId": "6",
+    "name": "Two Months",
+    "startDate": "exp().subtract(2, 'month').startOf('day')",
+    "endDate": "exp().endOf('day')"
+  },
+  {
+    "timeId": "7",
+    "name": "Three Months",
+    "startDate": "exp().subtract(3, 'month').startOf('day')",
+    "endDate": "exp().endOf('day')"
+  },
+  {
+    "timeId": "8",
+    "name": "Six Months",
+    "startDate": "exp().subtract(6, 'month').startOf('day')",
+    "endDate": "exp().endOf('day')"
+  },
+  {
+    "timeId": "9",
+    "name": "One Year",
+    "startDate": "exp().subtract(1, 'year').startOf('day')",
+    "endDate": "exp().endOf('day')"
+  },
+  {
+    "timeId": "10",
+    "name": "Two Years",
+    "startDate": "exp().subtract(2, 'year').startOf('day')",
+    "endDate": "exp().endOf('day')"
+  },
+  { "timeId": "11", "name": "Custom Date", "startDate": "", "endDate": "" }
+]

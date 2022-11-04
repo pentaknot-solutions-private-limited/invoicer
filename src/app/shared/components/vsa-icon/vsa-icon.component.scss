@@ -1,0 +1,99 @@
+@import "../../../../assets/style/partials/variables.scss";
+
+.svg_icon {
+  outline: none;
+  vertical-align: middle;
+  font-size: 24px;
+  height: 24px;
+  width: 24px;
+  line-height: 24px;
+  border-radius: 4px;
+  &.extraSmallSize {
+    font-size: 10px;
+    height: 10px;
+    width: 10px;
+    line-height: 10px;
+  }
+  &.smallSize {
+    font-size: 16px;
+    height: 16px;
+    width: 16px;
+    line-height: 16px;
+  }
+  &.mediumSmallSize {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+    line-height: 18px;
+  }
+  &.extraMediumSize {
+    font-size: 32px;
+    height: 32px;
+    width: 32px;
+    line-height: 32px;
+  }
+  &.largeSize {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    line-height: 48px;
+  }
+  &.extraLargeSize {
+    font-size: 80px;
+    height: 80px;
+    width: 80px;
+    line-height: 80px;
+  }
+  &.solid {
+    &.grayColor {
+      color: $dark_gray_typo-color;
+    }
+    &.linkColor {
+      color: $default_link-color;
+    }
+    &.themeColor {
+      color: $global-theme;
+    }
+    &.themeLightColor {
+      color: $global-theme-hover;
+    }
+    &.whiteColor {
+      color: white;
+    }
+  }
+  &.hover:not(.disabled) {
+    cursor: pointer;
+    padding: 4px;
+    &.grayColor {
+      color: $dark_gray_typo-color;
+      &:hover {
+        color: #e2953a;
+        // background-color: #f0f0f0;
+      }
+      &:focus {
+        color: $hover_link-color;
+        background-color: #dbefff;
+      }
+    }
+    &.linkColor {
+      color: $default_link-color;
+      &:hover {
+        background-color: #f0f0f0;
+        color: $hover_link-color;
+      }
+      &:focus {
+        background-color: #dbefff;
+      }
+    }
+  }
+  &.disabled {
+    color: $light_gray_typo-color !important;
+    cursor: not-allowed;
+  }
+}
+
+span.vsa-icon_validation-check {
+  background: #cef3ea !important;
+  border-radius: 50% !important;
+  padding: 12px !important;
+}

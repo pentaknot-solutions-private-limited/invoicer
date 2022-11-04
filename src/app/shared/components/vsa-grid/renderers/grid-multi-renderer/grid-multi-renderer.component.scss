@@ -1,0 +1,85 @@
+@import "../../../../../../assets/style/partials/variables.scss";
+
+.multi-renderer {
+  display: flex;
+  .text {
+    &.primary-color {
+      color: $dark_gray_typo-color;
+    }
+  }
+}
+
+.multi-renderer.warning {
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: 4px;
+  .text {
+    color: $global-secondary-text;
+    font-family: $primary_font-family;
+  }
+}
+.multi-renderer.error {
+  background: transparent;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 120px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  .text {
+    color: $red_chip-color;
+    font-family: $primary_font-family;
+  }
+}
+.multi-renderer.success {
+  background: #0bc196;
+  color: #ffffff !important;
+  padding: 4px 8px;
+  border-radius: 4px;
+  .text {
+    color: #ffffff;
+    font-family: $primary_font-family;
+  }
+}
+.multi-renderer.completed {
+  background: transparent;
+  color: #ffffff !important;
+  padding: 4px 8px;
+  // border-radius: 4px;
+  padding-left: 0px;
+  .text {
+    color: green;
+    // font-family: $primary_font-family;
+  }
+}
+.multi-renderer.completed.outline {
+  background: #ffffff;
+  border: 1px solid #dee5ef;
+  box-sizing: border-box;
+  border-radius: 4px;
+  color: #293854 !important;
+  padding: 5px 20px;
+  .text {
+    color: #293854;
+    font-family: $primary_font-family;
+    &:before{
+      content: "";
+      height: 7px;
+      width: 7px;
+      display: inline-block;
+      margin-right: 5px;
+      border-radius:50%;
+      background: transparent;
+
+
+    }
+  }
+}
+
+.white-icon {
+  color: #ff0000;
+}
+/* Note: If you're using an SVG icon, you should make the class target the `<svg>` element */
+.white-icon svg {
+  fill: #293854;
+}

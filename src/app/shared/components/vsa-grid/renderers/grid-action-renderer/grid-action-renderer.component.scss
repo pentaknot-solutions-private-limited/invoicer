@@ -1,0 +1,55 @@
+@import '../../../../../../assets/style/partials/variables.scss';
+
+.actionButton {
+    font-family: $primary_font-family;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    color: #394A64 !important;
+    line-height: 140%;
+    padding:5px 16px !important;
+}
+
+.simple-text {
+    font-family: $primary_font-family;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 11px;
+    line-height: 130%;
+    color: #F2994A;
+}
+
+.icon-text {
+    font-family: $primary_font-family;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 130%;
+}
+.icon-text.download {
+    font-family: $primary_font-family;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 130%;
+    background: linear-gradient(
+90deg, #51ABDE 21.35%, #4C8AF5 100%);
+    border-radius: 4px;
+    padding: 8px 12px;
+    padding-left: 10px;
+    margin-left: -1.5em;
+}
+
+.textIconAction {
+    display: flex;
+    width: 100px;
+    justify-content: center;
+}
+
+.left {
+    cursor: pointer;
+}
+
+::ng-deep.mat-menu-panel .mat-menu-content .mat-menu-item {
+        border-bottom: 1px solid #DEE5EF !important;
+    }

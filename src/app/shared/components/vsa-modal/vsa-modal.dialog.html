@@ -1,0 +1,18 @@
+<ng-template #content>
+    <!-- <div class="vsa-modal-header"> -->
+        <!-- <h1>{{config?.heading}}</h1>
+        <vsa-icon *ngIf="this.config?.showExpand" (onClick)="expandToggle()" [icon]="'share'" [state]="'hover'"></vsa-icon> -->
+    <!-- </div> -->
+    <div class="vsa-body p0" >
+        <!-- [style.padding]="config?.padding" -->
+        <ng-content></ng-content>
+    </div>
+    <!-- <div class="vsa-footer" > -->
+        <!-- *ngIf="config.footerActions.length != 0" -->
+        <!-- <div class="vsa-footer-actions">
+            <ng-container *ngFor="let action of config.footerActions">
+                <vsa-button [loading]="action?.loading" (onClick)="actionBtnClick(action)" [disabled]="action?.disabled" [type]="action?.type" [role]="action?.role">{{ action.value }}</vsa-button>
+            </ng-container>
+        </div> -->
+    <!-- </div> -->
+</ng-template>

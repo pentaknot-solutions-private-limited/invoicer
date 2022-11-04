@@ -1,0 +1,224 @@
+<div class="invoices">
+  <form class="policiesForm">
+    <div class="row header-row">
+      <div class="col-6 text-left">
+        <h3 class="title">
+          Invoices
+          <vsa-button
+            class="ml-2"
+            [type]="'button'"
+            role="primary"
+            (onClick)="onAddNewInvoiceClick()"
+            size="small"
+            [icon]="'add-1'"
+            [iconSize]="'small'"
+            >New
+          </vsa-button>
+        </h3>
+      </div>
+      <div class="col-6 text-right days-filter">
+        <button class="menu" mat-button [matMenuTriggerFor]="menu">
+          <mat-icon>filter_list</mat-icon>&nbsp;&nbsp;<span>{{
+            displayPeriodText
+          }}</span>
+          <vsa-icon
+            icon="arrow-drop-down"
+            customColor="#394A64"
+            size="medium"
+          ></vsa-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <ng-container *ngFor="let item of periodData">
+            <button mat-menu-item (click)="onPeriodSelect(item)">
+              {{ item.name }}
+            </button>
+          </ng-container>
+          <button mat-menu-item (click)="$event.stopPropagation()">
+            <div class="p-inputgroup">
+              <span class="p-inputgroup-addon">From</span>
+              <!-- <input
+                type="text" onfocus="(this.type='date')" placeholder="Choose Date"
+                  [(ngModel)]="from"
+                  name="from"
+                  class="customInput"
+                /> -->
+              <mat-form-field class="customDatePicker">
+                <!-- <mat-label>Choose Date</mat-label> -->
+                <input
+                  name="fromDate"
+                  matInput
+                  [matDatepicker]="fromDate"
+                  placeholder="Choose Date"
+                  [(ngModel)]="from"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="fromDate"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #fromDate></mat-datepicker>
+              </mat-form-field>
+              <!-- <p-calendar [(ngModel)]="from" autoZIndex="true" baseZIndex="1000"></p-calendar> -->
+              <!-- mat-form-field-label ng-tns-c138-3 ng-star-inserted mat-empty mat-form-field-empty -->
+            </div>
+          </button>
+          <button mat-menu-item (click)="$event.stopPropagation()">
+            <div class="p-inputgroup">
+              <span class="p-inputgroup-addon">To</span>
+              <!-- <input type="text" onfocus="(this.type='date')" placeholder="Choose Date" [(ngModel)]="to" name="to" class="customInput"/> -->
+              <mat-form-field class="customDatePicker">
+                <!-- <mat-label>Choose Date</mat-label> -->
+                <input
+                  name="toDate"
+                  matInput
+                  [matDatepicker]="toDate"
+                  [(ngModel)]="to"
+                  placeholder="Choose Date"
+                  [min]="from"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="toDate"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #toDate></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </button>
+          <button class="text-center" mat-menu-item *ngIf="from && to">
+            <!-- <span class="apply">Apply</span> -->
+            <vsa-button
+              role="secondary"
+              size="small"
+              color="blue"
+              (onClick)="onResetClick()"
+              >Reset</vsa-button
+            >&nbsp;&nbsp;&nbsp;
+            <vsa-button
+              role="primary"
+              size="small"
+              color="orange"
+              (onClick)="onApplyClick()"
+              >Apply</vsa-button
+            >
+          </button>
+          <!-- closeMenu() to be used to close the menu using mat-menu selector -->
+        </mat-menu>
+      </div>
+    </div>
+    <div class="row content">
+      <div class="col-12">
+        <div class="dashboard mb-4 mt-2">
+          <div class="row">
+            <!-- Stats Card Filter -->
+            <ng-container *ngFor="let item of statistics">
+              <div
+                class="col-2"
+                (click)="selectedFilterType = item!.type; getInvoices()"
+              >
+                <div
+                  class="box"
+                  [ngClass]="{
+                    selected: selectedFilterType == item!.type
+                  }"
+                >
+                  <div class="content">
+                    <p class="title">
+                      {{ item!.value | number }}
+                    </p>
+                    <span class="description"> {{ item!.label }} </span>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+    <form class="searchForm" [formGroup]="searchForm">
+      <div class="row">
+        <div class="col-2 pr5">
+          <vsa-input
+            [config]="searchFormConfig?.invoiceNoInput"
+            formControlName="invoiceNo"
+            [dataModel]="searchInvoiceModel"
+          >
+          </vsa-input>
+        </div>
+        <div class="col-2 pr5">
+          <vsa-input
+            [config]="searchFormConfig?.billToCustomerInput"
+            formControlName="billToCustomer"
+            [dataModel]="searchInvoiceModel"
+          >
+          </vsa-input>
+        </div>
+        <div class="col-2 pr5">
+          <vsa-input
+            [config]="searchFormConfig?.ewayNoInput"
+            formControlName="ewayNo"
+            [dataModel]="searchInvoiceModel"
+          >
+          </vsa-input>
+        </div>
+        <div class="col-2 pr5">
+          <vsa-input
+            [config]="searchFormConfig?.poNoInput"
+            formControlName="poNo"
+            [dataModel]="searchInvoiceModel"
+          >
+          </vsa-input>
+        </div>
+        <!-- class="col-2 pr5" -->
+        <div>
+          <vsa-button
+            [type]="'submit'"
+            role="secondary"
+            color="blue"
+            (onClick)="onFilterApply()"
+            size="small"
+            >Apply
+          </vsa-button>
+          <vsa-button
+            class="ml-2"
+            [type]="'reset'"
+            role="secondary"
+            color="default"
+            (onClick)="onClearClick()"
+            size="small"
+            >Clear
+          </vsa-button>
+        </div>
+      </div>
+    </form>
+    <div class="row" *ngIf="!showGrid">
+      <div class="col-12">
+        <div class="empty-layout">
+          <img src="../../../assets/img/no-policy.png" />
+          <span class="title">Search Invoices</span>
+          <span class="description"
+            >Using the above filter options you can search the invoices.</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="row" *ngIf="showGrid">
+      <div class="col-12">
+        <div class="grid">
+          <vsa-grid
+            #grid
+            [rowData]="rowData"
+            [config]="invoicesGridConfig"
+            (onLinkClick)="onLinkClick($event)"
+          ></vsa-grid>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<ng-template #drawerTemplate>
+  <!-- [invoiceData]="selectedStepData" -->
+  <invoice-generation
+    (onBtnClick)="drawerAction($event)"
+    *ngIf="pageComponentVisibility?.showInvoiceGeneration"
+  ></invoice-generation>
+</ng-template>

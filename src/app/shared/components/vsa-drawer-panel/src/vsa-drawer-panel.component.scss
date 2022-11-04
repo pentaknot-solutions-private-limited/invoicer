@@ -1,0 +1,109 @@
+@import "../../../../../assets/style/partials/variables.scss";
+
+:host ::ng-deep {
+  .drawer-class {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    // top: 0;
+  }
+
+  .drawer-panel.mat-drawer {
+    // height: calc(100vh - 60px);
+    // top: 60px;
+    height: 100vh;
+    width: 545px;
+    color: $default_typo-color;
+    overflow: hidden;
+
+    .mat-drawer-inner-container {
+      overflow: hidden;
+    }
+    .drawer-header {
+      height: 60px;
+      border-bottom: 1px solid $default_line-color;
+      font-size: $h5_font-size;
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      font-weight: 500;
+      // Manage Icon in Header
+      display: flex;
+      justify-content: space-between;
+      .close-drawer {
+        color: inherit;
+        &:hover {
+            color: $global-theme;
+        }
+      }
+    }
+    .drawer-body {
+      padding: 20px;
+      height: calc(100% - 124px);
+      border-bottom: 1px solid #e0e0e0;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .drawer-footer {
+      height: 64px;
+      padding: 10px;
+      &.rightAlignButtons {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        rm-button {
+          margin: 0 5px;
+        }
+      }
+    }
+  }
+  .drawer-class.extra-extra-small .mat-drawer.drawer-panel {
+    // width: 40vw;
+    width: 400px;
+  }
+  .drawer-class.extra-small .mat-drawer.drawer-panel {
+    // width: 40vw;
+    width: 545px;
+  }
+  .drawer-class.small .mat-drawer.drawer-panel {
+    // width: 50vw;
+    width: 720px;
+  }
+  .drawer-class.medium .mat-drawer.drawer-panel {
+    // width: 60vw;
+    width: 820px;
+  }
+  .drawer-class.large .mat-drawer.drawer-panel {
+    // width: 80vw;
+    width: 1090px;
+  }
+  .drawer-class.extra-large .mat-drawer.drawer-panel {
+    // width: 80vw;
+    width: 95%;
+  }
+  @media (max-width: 545px) {
+    .drawer-class.extra-small .mat-drawer.drawer-panel {
+      width: 100%;
+    }
+  }
+  @media (max-width: 720px) {
+    .drawer-class.small .mat-drawer.drawer-panel {
+      width: 100%;
+    }
+  }
+  @media (max-width: 820px) {
+    .drawer-class.medium .mat-drawer.drawer-panel {
+      width: 100%;
+    }
+  }
+  @media (max-width: 1090px) {
+    .drawer-class.large .mat-drawer.drawer-panel {
+      width: 100%;
+    }
+  }
+  @media (max-width: 1090px) {
+    .drawer-class.extra-large .mat-drawer.drawer-panel {
+      width: 100%;
+    }
+  }
+}

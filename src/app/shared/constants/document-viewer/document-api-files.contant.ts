@@ -1,0 +1,1 @@
+export const xmlDocumentAPIFileNames = ["numbering","settings","styles","theme1", "rels"]

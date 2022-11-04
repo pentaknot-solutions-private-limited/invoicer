@@ -1,0 +1,31 @@
+<mat-drawer-container
+  class="drawer-class {{ drawerSize }}"
+  [hasBackdrop]="hasBackdrop"
+>
+  <mat-drawer
+    class="drawer-panel"
+    #drawer
+    (openedChange)="onDrawerToggle($event)"
+    [opened]="isActive"
+    [disableClose]="escClose"
+    [position]="isRightSide ? 'end' : 'start'"
+    [mode]="drawerMode"
+  >
+    <ng-container *ngIf="!useCustomTemplate; else customTemplate">
+      <div class="drawer-header">
+        <span>{{ drawerTitle }}</span>
+        <!-- <vsa-icon *ngIf="showCloseButton" state="hover" icon="delete-1"></vsa-icon> -->
+        <a href="javascript:void(0)" class="close-drawer" (click)="closeDrawer()">
+          <mat-icon *ngIf="showCloseButton">close</mat-icon>
+        </a>
+      </div>
+      <ng-container *ngTemplateOutlet="drawerContainer"></ng-container>
+    </ng-container>
+    <ng-template #customTemplate>
+      <ng-container *ngTemplateOutlet="drawerContainer"></ng-container>
+    </ng-template>
+  </mat-drawer>
+  <mat-drawer-content>
+    <ng-content></ng-content>
+  </mat-drawer-content>
+</mat-drawer-container>

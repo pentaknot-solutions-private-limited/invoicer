@@ -1,0 +1,84 @@
+<div class="notification_modal">
+   
+   <!-- <vsa-icon
+      [color]="
+        notificationModel?.notificationType == 'warning' ||
+        notificationModel?.notificationType == 'confirm'
+          ? '#463303'
+          : 'white'
+      "
+      [size]="
+        notificationModel?.notificationType == 'warning'
+          ? 'extra-medium'
+          : 'large'
+      "
+      [icon]="
+        notificationModel?.notificationType == 'error'
+          ? 'errorExclamation'
+          : notificationModel?.notificationType == 'warning'
+          ? 'warning16'
+          : notificationModel?.notificationType == 'delete'
+          ? 'trashCan'
+          : notificationModel?.notificationType == 'info'
+          ? 'info'
+          : notificationModel?.notificationType == 'success'
+          ? 'circleCheck'
+          : notificationModel?.notificationType == 'confirm'
+          ? 'help'
+          : null
+      "
+    ></vsa-icon>
+    <p>
+      {{
+        notificationModel?.notificationType == "error"
+          ? "Error!"
+          : notificationModel?.notificationType == "warning"
+          ? "warning !"
+          : notificationModel?.notificationType == "delete"
+          ? "delete ?"
+          : notificationModel?.notificationType == "info"
+          ? "information"
+          : notificationModel?.notificationType == "success"
+          ? "success !"
+          : notificationModel?.notificationType == "confirm"
+          ? "confirmation"
+          : null
+      }}
+    </p>
+  </div> -->
+  <div class="notification_header {{ notificationModel?.notificationType }}">
+    <h6 class="notification_title" *ngIf="notificationModel?.title">
+      {{ notificationModel?.title }}
+    </h6>
+    <vsa-icon icon="delete-1" (onClick)="actionClick('close')" state="hover" size="small"></vsa-icon>
+  </div>
+  <div class="notification_body">
+    
+    <p *ngIf="notificationModel?.message" class="notification_msg" [innerHTML]="notificationModel?.message"></p>
+    <ng-container *ngIf="notificationModel.extraOptions">
+      <div class="">
+        <ul>
+          <li *ngFor="let item of notificationModel?.extraOptions.dataModel">
+              {{item[notificationModel?.extraOptions.fieldName]}}
+          </li>
+        </ul>
+        <!-- <vsa-radio
+          [config]="notificationModel.extraOptions.radioButtons"
+          [dataModel]="notificationModel.extraOptions.dataModel"
+        ></vsa-radio> -->
+      </div>
+    </ng-container>
+  </div>
+  <div class="notification_footer">
+    <!-- Actions -->
+    <ng-container *ngFor="let action of notificationModel?.actions">
+      <button
+        matRipple
+        (click)="actionClick(action?.actionCase)"
+        class="notification_action {{action.class}}"
+      >
+        {{ action?.label }}
+      </button>
+    </ng-container>
+  </div>
+</div>

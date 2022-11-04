@@ -1,0 +1,35 @@
+<mat-sidenav-container class="layout-sidenav-container">
+    <mat-sidenav #snav [opened]="!mobileQuery.matches || drawerToggle" (closed)="drawerToggle = false" [mode]="mobileQuery.matches ? 'over' : 'side'"
+        [fixedInViewport]="mobileQuery.matches" [style.paddingTop.px]="mobileQuery.matches ? 108 : 0">
+        <div class="action_btn" *ngIf="actionButton">
+            <vsa-button (onClick)="actionClick(actionButton?.actionCase)"> {{ actionButton?.displayName }}</vsa-button>
+        </div>
+        <mat-nav-list cdkDropList class="tab-drag-list" [ngClass]="{ 'withActionBtn' : actionButton }" (cdkDropListDropped)="drop($event)">
+            <a mat-list-item cdkDragBoundary=".tab-drag-list" class="tabSelector drag-tab" cdkDrag (click)="clickOnTab(i, navTab)" [ngClass]="{ 'active' : i == selectedTab, 'multipleLineHeight' : leftTabTemplate }" *ngFor="let navTab of tabItems; let i = index">
+                <!-- <div class="tab-drop-placeholder" *cdkDragPlaceholder></div> -->
+                <div class="tab-drag-preview" *cdkDragPreview>
+                    <!-- <span class="displayName">{{ navTab?.displayName ? navTab?.displayName : navTab?.name }}</span> -->
+                </div>
+                <vsa-icon [icon]="'drag1'"></vsa-icon>
+                <div class="tabSelector-item">
+                    <span class="displayName">
+                        {{ navTab?.displayName ? navTab?.displayName : navTab?.name }}
+                        <span class="requiredMarker" *ngIf="requiredIndicatorField && navTab[requiredIndicatorField]">*</span>
+                    </span>
+                    <ng-container *ngIf="leftTabTemplate">
+                        <span class="leftTabTemplate">
+                            <ng-container *ngTemplateOutlet="leftTabTemplate; context: {$implicit: navTab}"></ng-container>
+                        </span>
+                    </ng-container>
+                </div>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <button class="menu_toggle_btn" *ngIf="mobileQuery.matches" (click)="drawerToggle = !drawerToggle"> 
+            <vsa-icon [icon]="'keyboard-arrow-right'"></vsa-icon>
+        </button>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>

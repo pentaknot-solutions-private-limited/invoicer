@@ -1,0 +1,18 @@
+[
+	{
+	  "id": 1,
+	  "type": "CPSA",
+	  "value" : 1600
+	},
+	{
+	  "id": 2,
+	   "type": "Centinel",
+	  "value" : 720
+	},
+	{
+	  "id": 3,
+	   "type": "VCAS",
+	  "value" : 80
+	}
+
+]

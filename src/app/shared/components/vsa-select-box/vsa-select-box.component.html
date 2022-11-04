@@ -1,0 +1,261 @@
+<div
+  class="vsa-select form_field"
+  [ngClass]="config.attributes?.class ? config.attributes.class : 'col-xs-12'"
+>
+  <p class="title" *ngIf="config?.attributes?.title">
+    {{ config?.attributes?.title }}
+  </p>
+  <mat-form-field
+    [ngClass]="{
+      readonly: config?.attributes?.readonly,
+      'no-label': !config.attributes?.label,
+      'pristine': pristine,
+      'valid': valid,
+      'no-border': !config?.attributes?.showBorder
+    }"
+    [floatLabel]="'never'"
+  >
+    <mat-label *ngIf="config.attributes?.label">{{
+      config.attributes.label
+    }}</mat-label>
+    <!-- Non Lazy Loaded -->
+    <!-- [ngModelOptions]="{ standalone: true }" -->
+    <mat-select
+      *ngIf="!config?.isLazyLoaded"
+      #ref
+      [formControl]="fControl"
+      name="config.fieldKey"
+      [multiple]="config.isMultiple"
+      [placeholder]="config.attributes?.placeholder"
+      disableOptionCentering
+      panelClass="dropdownPosition {{
+        config?.attributes?.rowSize == 'double' ? 'doubleRow' : ''
+      }} {{ config?.attributes?.rowSize == 'triple' ? 'tripleRow' : '' }} {{
+        !config.attributes?.label ? 'no-label' : ''
+      }} {{ config.isMultiple ? 'multi' : '' }}"
+      [(ngModel)]="dataModel[config.fieldKey]"
+      (selectionChange)="selectionChangeCall($event); onChange()"
+      [disabled]="config.attributes?.disable"
+      [required]="
+        config?.attributes?.isMandatory && !config?.attributes?.readonly
+      "
+      (blur)="onTouchedFn()"
+    >
+      <!-- <mat-select-trigger *ngIf="customLabelTemplate">
+        <ng-container
+          *ngTemplateOutlet="
+            customLabelTemplate;
+            context: { $implicit: ref?.selected?.value }
+          "
+        ></ng-container>
+      </mat-select-trigger>
+      <mat-select-trigger *ngIf="customLabelContent">
+        <ng-container
+          *ngTemplateOutlet="
+            customLabelContent;
+            context: { $implicit: ref?.selected?.value }
+          "
+        ></ng-container>
+      </mat-select-trigger> -->
+      <select-check-all
+        *ngIf="config?.isMultiple"
+        [model]="fControl"
+        (modelChanges)="modelChanged($event)"
+        [values]="config.options"
+      ></select-check-all>
+      <mat-option
+        style="height: 3em"
+        [disabled]="true"
+        class="search-contanier"
+        *ngIf="
+          config?.attributes?.type === 'select-search' ||
+          config?.attributes?.type === 'select-template-search'
+        "
+      >
+        <div class="row">
+          <vsa-icon class="icon" [icon]="'search'" size="small"></vsa-icon>
+          <input
+            (keydown)="_handleKeydown($event)"
+            autocomplete="off"
+            type="text"
+            #selectSearchRef
+            placeholder="Search"
+            [(ngModel)]="query"
+            name="search-query"
+          />
+        </div>
+      </mat-option>
+      <mat-option
+        [disabled]="option[config?.disableBoolKey]"
+        *ngFor="
+          let option of config.options | SelectSearch: query;
+          let i = index
+        "
+        [value]="
+          option[config.returnKey] == null && option[config.dataKey] == null
+            ? option
+            : option[config.returnKey] == null
+            ? option[config.dataKey]
+            : option[config.returnKey]
+        "
+      >
+        <!-- Show Grid Data -->
+        <div class="row" *ngIf="config?.attributes?.type === 'select-search'">
+          <div
+            [ngClass]="
+              index === 0
+                ? column?.class
+                  ? column?.class
+                  : 'col-1'
+                : column?.class
+            "
+            *ngFor="let column of config?.searchBy; let index = index"
+          >
+            {{ option[column?.key] }}
+          </div>
+          <div class="col-2 text-right" *ngIf="config?.tooltipKey">
+            <a href="link" [title]="option[config?.tooltipKey]">
+              <vsa-icon [icon]="'content_file'"></vsa-icon>
+            </a>
+          </div>
+        </div>
+
+        <div *ngIf="config?.attributes?.type === 'select-template-search'">
+          <ng-container
+            *ngTemplateOutlet="
+              customOptionTemplate;
+              context: { $implicit: option }
+            "
+          ></ng-container>
+        </div>
+
+        <!-- Show Normal Data -->
+        <div
+          *ngIf="
+            config?.attributes?.type !== 'select-search' &&
+            config?.attributes?.type !== 'select-template-search'
+          "
+        >
+          {{ option[config.dataKey] }}
+        </div>
+      </mat-option>
+    </mat-select>
+
+    <!-- Lazy Loaded Select -->
+    <mat-select
+      *ngIf="config?.isLazyLoaded"
+      #refLazyLoad
+      [formControl]="fControl"
+      name="config.fieldKey"
+      [multiple]="config.isMultiple"
+      [placeholder]="config.attributes?.placeholder"
+      disableOptionCentering
+      panelClass="dropdownPosition {{
+        !config.attributes?.label ? 'no-label' : ''
+      }} {{ config.isMultiple ? 'multi' : '' }}"
+      [(ngModel)]="dataModel[config.fieldKey]"
+      (selectionChange)="selectionChangeCall($event); onChange()"
+      [disabled]="config.attributes?.disable"
+      (openedChange)="openChange($event)"
+      [required]="
+        config?.attributes?.isMandatory && !config?.attributes?.readonly
+      "
+      (blur)="onTouchedFn()"
+    >
+      <!-- <mat-select-trigger *ngIf="customLabelTemplate">
+        <ng-container
+          *ngTemplateOutlet="
+            customLabelTemplate;
+            context: { $implicit: refLazyLoad?.selected?.value }
+          "
+        ></ng-container>
+      </mat-select-trigger> -->
+      <mat-option
+        style="height: 3em"
+        [disabled]="true"
+        class="search-contanier"
+        *ngIf="
+          config?.attributes?.type === 'select-search' ||
+          config?.attributes?.type === 'select-template-search'
+        "
+      >
+        <div class="row">
+          <vsa-icon class="icon" [icon]="'search'"></vsa-icon>
+          <input
+            (keydown)="_handleKeydown($event)"
+            autocomplete="off"
+            type="text"
+            #selectSearchRef
+            placeholder="Search"
+            [(ngModel)]="query"
+            name="search-query"
+          />
+        </div>
+      </mat-option>
+      <cdk-virtual-scroll-viewport
+        itemSize="5"
+        minBufferPx="200"
+        maxBufferPx="400"
+        class="example-viewport-select"
+      >
+        <mat-option
+          [disabled]="option[config?.disableBoolKey]"
+          *cdkVirtualFor="
+            let option of config.options | SelectSearch: query;
+            let i = index
+          "
+          [value]="
+            option[config.returnKey] == null && option[config.dataKey] == null
+              ? option
+              : option[config.returnKey] == null
+              ? option[config.dataKey]
+              : option[config.returnKey]
+          "
+        >
+          <!-- Show Grid Data -->
+          <div class="row" *ngIf="config?.attributes?.type === 'select-search'">
+            <div
+              [ngClass]="index === 0 ? 'col-1' : column?.class"
+              *ngFor="let column of config?.searchBy; let index = index"
+            >
+              {{ option[column?.key] }}
+            </div>
+            <div class="col-2 text-right" *ngIf="config?.tooltipKey">
+              <a href="link" [title]="option[config?.tooltipKey]">
+                <vsa-icon [icon]="'info'"></vsa-icon>
+              </a>
+            </div>
+          </div>
+
+          <!-- Show Normal Data -->
+          <div
+            *ngIf="
+              config?.attributes?.type !== 'select-search' &&
+              config?.attributes?.type !== 'select-template-search'
+            "
+          >
+            {{ option[config.dataKey] }}
+          </div>
+        </mat-option>
+      </cdk-virtual-scroll-viewport>
+    </mat-select>
+
+    <!-- <span *ngIf="config?.attributes?.readonly && (!dataModel[config.fieldKey] && dataModel[config.fieldKey] != '')" style="position: absolute;left: 0;"> N/A </span> -->
+    <span
+      matPrefix
+      *ngIf="config.attributes?.prefixIcon"
+      [ngClass]="config.attributes?.prefixIcon"
+    ></span>
+    <mat-error *ngIf="showError && !config?.attributes?.readonly">
+      {{ errors }}
+    </mat-error>
+    <span
+      matSuffix
+      *ngIf="config.attributes?.suffixIcon"
+      [ngClass]="config.attributes?.suffixIcon"
+    ></span>
+    <mat-hint *ngIf="config?.attributes?.hint">{{
+      config?.attributes?.hint
+    }}</mat-hint>
+  </mat-form-field>
+</div>

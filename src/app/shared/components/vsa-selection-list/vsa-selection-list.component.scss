@@ -1,0 +1,39 @@
+@import "../../../../assets//style/partials/variables.scss";
+
+:host ::ng-deep {
+    .selection-list {
+        .selection-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 36px;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 0;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+        .selection-box {
+            max-height: 350px;
+            overflow-y: hidden;
+            p {
+                font-size: 14px;
+                color: #5c5c5c;
+                text-align: center;
+                margin: 20px;
+            }
+            .mat-list-option {
+                height: 36px;
+                .mat-list-item-content {
+                    padding: 0;
+                    font-size: 14px;
+                    .mat-list-text {
+                        padding-left: 10px;
+                    }
+                }
+            }
+            &:hover {
+                overflow-y: auto;
+            }
+        }
+    }
+}

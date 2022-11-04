@@ -1,0 +1,42 @@
+<div class="multi-renderer  {{ params?.class }}">
+  <ng-container *ngIf="params?.onlyIcon;else defaultTemplate">
+    <mat-icon class="white-icon">{{ params?.matIcon }}</mat-icon>
+    
+  </ng-container>
+
+  <ng-template #defaultTemplate>
+    <!-- <mat-icon>{{ params?.matIcon }}</mat-icon> -->
+    <div
+      class="icons"
+      *ngIf="params?.icons && params?.iconPosition == 'before'"
+    >
+      <ng-container *ngFor="let icon of params?.icons">
+        <vsa-icon
+          [icon]="icon?.iconName"
+          size="small"
+          [customColor]="icon?.iconColor"
+        ></vsa-icon>
+      </ng-container>
+      &nbsp;&nbsp;
+    </div>
+    <div
+      class="text {{ params?.color }}-color"
+      [style.font-size]="params?.fontSize"
+      [style.font-weight]="params?.fontWeight"
+    >
+      <ng-content></ng-content>
+    </div>
+    <div class="icons" *ngIf="params?.icons && params?.iconPosition == 'after'">
+      &nbsp;&nbsp;
+      <ng-container *ngFor="let icon of params?.icons">
+        <vsa-icon
+          [icon]="icon?.iconName"
+          size="small"
+          [customColor]="icon?.iconColor"
+          [enableTooltip]="icon?.iconTooltip ? true : false"
+          tooltipContent="{{ icon?.iconTooltip }}"
+        ></vsa-icon>
+      </ng-container>
+    </div>
+  </ng-template>
+</div>

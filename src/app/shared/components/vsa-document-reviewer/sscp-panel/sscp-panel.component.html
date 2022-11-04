@@ -1,0 +1,127 @@
+<div
+  class="doc-panel"
+  joyrideStep="variableInspectionDetailStep"
+  [stepContent]="variableInspectionDetailTemplate"
+  stepPosition="center"
+>
+  <p class="title">
+    <vsa-icon icon="Info" size="small" customColor="#51aadf"
+    [enableTooltip]="'true'"
+    tooltipContent="This is SSCP/Variable Instance panel."
+    ></vsa-icon
+    ><span class="title">{{ title }}</span>
+  </p>
+  <ng-container>
+    <!-- SSCP -->
+    <div class="header" *ngIf="currentVariableAndDevice">
+      <p class="sub-title">{{currentVariableAndDevice?.variableIndex}}. {{ currentVariable?.name }}</p>
+      <span class="group" [matMenuTriggerFor]="menu"
+        >{{currentDevice?.deviceName}}&nbsp;&nbsp;<vsa-icon
+          icon="keyboard-arrow-down"
+          size="small"
+          customColor="#111111"
+        ></vsa-icon
+      ></span>
+      <mat-menu #menu="matMenu" xPosition="before">
+        <ng-container *ngFor="let device of currentVariable?.devices">
+          <button class="menu-item" (click)="onSelectDevice(device)" mat-menu-item>{{ device.deviceName}}</button>
+        </ng-container>
+      </mat-menu>
+    </div>
+    <div class="body" [ngClass]="{ 'no-scroll': loading }">
+      <ng-container *ngIf="!isEditing; else editorTemplate">
+        <ng-container *ngIf="loading">
+          <div class="content">
+            <document-skeleton-loader id="1"></document-skeleton-loader>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="!Loading">
+          <div class="content" #documentPlaceholder>
+            <document-skeleton-loader id="1"></document-skeleton-loader>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-template #editorTemplate>
+        <!-- Editor -->
+        <div class="editor" 
+        joyrideStep="editVariableStep"
+        [stepContent]="editVariableTemplate"
+        stepPosition="center">
+          <div class="editor-input">
+            <input type="text" [(ngModel)]="variableTextValue" />
+          </div>
+          <div class="editor-action">
+            <!-- Cancel -->
+            <vsa-icon
+              [icon]="'delete-circle'"
+              class="editor-action__icon cancel-editing"
+              (onClick)="handleEditorAction()"
+            ></vsa-icon>
+            <!-- Save -->
+            <vsa-icon
+              [icon]="'circle-checkmark'"
+              class="editor-action__icon save-editing"
+              [state]="'hover'"
+              (onClick)="handleEditorAction('save')"
+            ></vsa-icon>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <div class="footer">
+      <div class="left">
+        <!-- Hide on Edit -->
+        <ng-container *ngIf="!isEditing">
+          <vsa-button (click)="handleClick('prev')" role="secondary" color="blue" size="small"
+            >Previous</vsa-button
+          >
+        </ng-container>
+      </div>
+      <div class="right">
+        <ng-container *ngIf="!isEditing">
+          <vsa-button (click)="handleClick('skip')" role="tertiary" color="blue" size="small"
+            >Skip</vsa-button
+          >
+        </ng-container>
+        <vsa-button
+          role="tertiary"
+          color="blue"
+          size="small"
+          [disabled]="isEditing || loading"
+          (onClick)="handleClick('edit')"
+          >{{ isEditing ? "Editing..." : "Edit" }}</vsa-button
+        >
+        <vsa-button
+          role="primary"
+          color="blue"
+          size="small"
+          [disabled]="isEditing || loading"
+          (click)="handleClick('complete')"
+          >Confirm</vsa-button
+        >
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<!-- Tutorial Templates -->
+<ng-template #variableInspectionTemplate>
+  <div class="tutorial-body">
+    <p class="tutorial-body__title">What to expect</p>
+    <img src="../../../../assets/img/tutorial/step3.png" alt="" />
+  </div>
+</ng-template>
+
+<ng-template #variableInspectionDetailTemplate>
+  <div class="tutorial-body">
+    <!-- <p class="tutorial-body__title">What to expect</p> -->
+    <img src="../../../../assets/img/tutorial/step4.png" alt="" />
+  </div>
+</ng-template>
+
+<ng-template #editVariableTemplate>
+  <div class="tutorial-body">
+    <!-- <p class="tutorial-body__title">What to expect</p> -->
+    <img src="../../../../assets/img/tutorial/step5.png" alt="" />
+  </div>
+</ng-template>

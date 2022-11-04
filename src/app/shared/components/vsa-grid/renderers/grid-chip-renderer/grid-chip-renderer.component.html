@@ -1,0 +1,7 @@
+<div title="{{value}}"
+ class="grid-chip-element" 
+ class={{params?.chipColor}} 
+ [style.background-color]="params?.customColor"
+ [style.color]="params?.customColor ? getInvertColor(params.customColor) : '#fff'">
+    {{value}}
+</div>

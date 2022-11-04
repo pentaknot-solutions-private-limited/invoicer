@@ -1,0 +1,194 @@
+[
+  {
+    "item_group": "Affiliate",
+    "item_no": 1,
+    "item": "Affiliate Name",
+    "row_no": 1,
+    "value": "Cardinal Commerce",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 2,
+    "item": "Contract Title",
+    "row_no": 2,
+    "value": "Visa Consumer Authentication Service Issuer Participation Agreement",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 3,
+    "item": "Product",
+    "row_no": 3,
+    "value": "Visa Consumer Authentication Service",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 4,
+    "item": "Affiliate Template Version",
+    "row_no": 4,
+    "value": "REV 24 Oct 2017",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 5,
+    "item": "Contract Type (std./non-std./client)",
+    "row_no": 5,
+    "value": "Non-standard",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 6,
+    "item": "Contract Scope",
+    "row_no": 6,
+    "value": "Global",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 7,
+    "item": "Contract Effective Date",
+    "row_no": 7,
+    "value": "7-Mar-19",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 8,
+    "item": "Contract Term",
+    "row_no": 8,
+    "value": "three (3) years",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 9,
+    "item": "Renewal Type",
+    "row_no": 9,
+    "value": "Auto-renew",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Contract",
+    "item_no": 10,
+    "item": "Governing Law",
+    "row_no": 10,
+    "value": "NY, USA",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Client",
+    "item_no": 11,
+    "item": "Client Name",
+    "row_no": 11,
+    "value": "PayPal Pte. Ltd.",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Client",
+    "item_no": 12,
+    "item": "Client Type",
+    "row_no": 12,
+    "value": "Issuer",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Client",
+    "item_no": 13,
+    "item": "Client Region",
+    "row_no": 13,
+    "value": "Singapore",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Definitions",
+    "item_no": 14,
+    "item": "Personal Data Definition",
+    "row_no": 14,
+    "value": "Personal Data\" means any information that can directly or indirectly identify a natural person such as name, an identification number, location data, an online identifier, or to one or more factors specific to the individual's physical, physiological, genetic, mental, economic, cultural, or social identity",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Definitions",
+    "item_no": 15,
+    "item": "Confidential Data Definition",
+    "row_no": 15,
+    "value": "",
+    "confidence": ""
+  },
+  {
+    "item_group": "Definitions",
+    "item_no": 16,
+    "item": "Other Data Definition",
+    "row_no": 16,
+    "value": "",
+    "confidence": ""
+  },
+  {
+    "item_group": "Definitions",
+    "item_no": 17,
+    "item": "Services Documentation",
+    "row_no": 17,
+    "value": "",
+    "confidence": ""
+  },
+  {
+    "item_group": "Addendums",
+    "item_no": 18,
+    "item": "DPA Document",
+    "row_no": 18,
+    "value": "",
+    "confidence": ""
+  },
+  {
+    "item_group": "Policy Clauses",
+    "item_no": 19,
+    "item": "Data Sharing w Afilliates Allowed",
+    "row_no": 19,
+    "value": "",
+    "confidence": ""
+  },
+  {
+    "item_group": "Policy Clauses",
+    "item_no": 20,
+    "item": "Data Usage Restrictions",
+    "row_no": 20,
+    "value": "Issuer hereby consents to Visa or its affiliate providing Cardinal with access to Issuer's fraud, chargeback and authentication- and authorization-level data for Visa transactions, solely to enable Cardinal to provide reporting to Issuer and for analyses and efforts to improve and enhance the fraud and risk capabilities of Cardinal's Service.",
+    "confidence": "High"
+  },
+  {
+    "item_group": "Policy Clauses",
+    "item_no": 21,
+    "item": "Data Product Regional Restrictions",
+    "row_no": 21,
+    "value": "Not process PayPal Personal Data for any purpose other than for the provision of Service to PayPal and only to the extent reasonably necessary for the performance of the Existing Agreement",
+    "confidence": "Med"
+  },
+  {
+    "item_group": "Policy Clauses",
+    "item_no": 22,
+    "item": "Data Product Regional Restrictions",
+    "row_no": 22,
+    "value": "",
+    "confidence": ""
+  },
+  {
+    "item_group": "Policy Clauses",
+    "item_no": 23,
+    "item": "Data Sharing w Third-party Allowed",
+    "row_no": 23,
+    "value": "Not disclose PayPal Personal Data to any Personnel, government, authority or any other third party except as necessary for the performance of the Services, to comply with Law or with the PayPal's prior written consent",
+    "confidence": "Med"
+  },
+  {
+    "item_group": "Policy Clauses",
+    "item_no": 24,
+    "item": "Compliance",
+    "row_no": 24,
+    "value": "Cardinal agrees to maintain its compliance as a PCI/DSS Level 1 Processor",
+    "confidence": "High"
+  }
+]

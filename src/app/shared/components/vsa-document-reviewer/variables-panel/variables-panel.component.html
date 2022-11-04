@@ -1,0 +1,150 @@
+<div class="variable-panel" [ngClass]="{ collapse: collapse }">
+  <div
+    class="header"
+    joyrideStep="variableListStep"
+    stepPosition="center"
+    [stepContent]="variableListTemplate"
+  >
+    <div class="left">
+      <vsa-icon
+        icon="keyboard-arrow-up"
+        customColor="#51aadf"
+        state="hover"
+        (onClick)="onVarIndexDecreament()"
+      ></vsa-icon>
+      <vsa-icon
+        icon="keyboard-arrow-down"
+        customColor="#51aadf"
+        state="hover"
+        (onClick)="onVarIndexIncreament()"
+      ></vsa-icon>
+    </div>
+    <div class="center">
+      <input
+        type="number"
+        [(ngModel)]="currentVariableIndex"
+        class="varNum"
+        (keyup)="onVariableIndexChange()"
+      />
+      <p>of {{ variableList?.length ? variableList?.length : 0 }} variables</p>
+      &nbsp;&nbsp;<vsa-icon
+        icon="Info"
+        size="small"
+        customColor="#51aadf"
+        [enableTooltip]="'true'"
+        tooltipContent="This is variable panel."
+      ></vsa-icon>
+    </div>
+    <div class="right">
+      <vsa-icon
+        icon="expand-diagonal"
+        (onClick)="onCollapse()"
+        customColor="#5e6871"
+        state="hover"
+      ></vsa-icon>
+    </div>
+  </div>
+  <div
+    class="main-body"
+    joyrideStep="variableStatusStep"
+    [stepContent]="variableStatusTemplate"
+    stepPosition="center"
+    [prevTemplate]="prevButton"
+    [nextTemplate]="nextButton"
+    [doneTemplate]="doneButton"
+  >
+    <ng-container *ngFor="let item of variableList; let i = index">
+      <div
+        class="body"
+        (click)="onVariableItemSelect(item)"
+        [ngClass]="{
+          active: isActiveVar(item.id),
+          completed: isCompletedVar(item.id)
+        }"
+      >
+      <div class="varInfo">
+        <div class="left">
+          <p>
+            #{{ i + 1 }} <span class="name">{{ item.name }}</span>
+          </p>
+        </div>
+        &nbsp;&nbsp;
+        <vsa-icon
+              *ngIf="item.devices.length > 1 && !isActiveVar(item.id)"
+              icon="arrow-drop-down"
+              class="dropdownIcon"
+              size="medium"
+              customColor="#394A64"
+              (click)="$event.stopPropagation();"
+              [matMenuTriggerFor]="menu"
+        ></vsa-icon>
+        <!-- [matMenuTriggerFor]="menu" -->
+        <mat-menu #menu="matMenu">
+          <button
+            *ngFor="let device of item.devices"
+            (click)="onVariableItemSelect(item, device)"
+            mat-menu-item
+          >
+            {{ device.deviceName }}
+          </button>
+        </mat-menu>
+      </div>
+        <div class="right" (click)="onVariableItemSelect(item)">
+          <ng-container *ngIf="item.devices && (getNumberOfCompletedStatusCount(item.devices, item) > 0)">
+            <p class="group">
+              {{ getNumberOfCompletedStatusCount(item.devices, item) }}/{{
+                item.devices.length
+              }}
+            </p>
+            <vsa-icon
+              *ngIf="
+                getNumberOfCompletedStatusCount(item.devices, item) ==
+                item.devices.length
+              "
+              icon="circle-checkmark"
+              size="small"
+              customColor="#51ABDE"
+            ></vsa-icon>
+            <vsa-icon
+              *ngIf="
+                getNumberOfCompletedStatusCount(item.devices, item) !=
+                item.devices.length
+              "
+              icon="alert-warning-triangle"
+              size="small"
+              customColor="#e5933a"
+            ></vsa-icon>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Tutorial Templates -->
+<ng-template #variableListTemplate>
+  <div class="tutorial-body">
+    <p class="tutorial-body__title">What to expect</p>
+    <img src="../../../../assets/img/tutorial/step1.png" alt="" />
+  </div>
+</ng-template>
+
+<ng-template #variableStatusTemplate>
+  <div class="tutorial-body">
+    <p class="tutorial-body__title">What to expect</p>
+    <p class="tutorial-body__subText">
+      Different statuses of a variable while reviewing.
+    </p>
+    <img src="../../../../assets/img/tutorial/step2.png" alt="" />
+  </div>
+</ng-template>
+
+<ng-template #prevButton>
+  <vsa-button role="secondary" size="medium">Back</vsa-button>
+</ng-template>
+<ng-template #nextButton>
+  <vsa-button role="primary" size="medium">Next</vsa-button>
+</ng-template>
+<ng-template #doneButton>
+  <vsa-button role="primary" size="medium">Done</vsa-button>
+</ng-template>

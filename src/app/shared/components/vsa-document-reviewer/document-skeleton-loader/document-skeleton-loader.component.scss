@@ -1,0 +1,70 @@
+.shimmer {
+    max-width: 824px;
+    margin: 50px auto;
+  
+    &__wrapper {
+      background-color: #fff;
+      box-shadow: 0 0 10px rgb(0 0 0 / 50%);
+      overflow: hidden;
+    }
+  
+    &__item {
+      background: #fff;
+      min-height: 79px;
+      padding: 14px 32px 13px;
+      display: flex;
+      flex-wrap: wrap;
+      &:not(:last-child) {
+        // border-bottom: 1px solid rgba(40, 45, 58, 0.1);
+      }
+      > div {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        flex-basis: 100%;
+        max-width: 100%;
+      }
+    }
+  
+    &__block {
+      animation-duration: 2s;
+      animation-fill-mode: forwards;
+      animation-iteration-count: infinite;
+      animation-name: placeHolderShimmer;
+      animation-timing-function: linear;
+      animation-delay: 0.5s;
+      background-color: #ededed;
+      background-image: linear-gradient(
+        90deg,
+        #ededed 14.36%,
+        #d7d6d6 56.29%,
+        #ededed 100%
+      );
+      background-repeat: no-repeat;
+      background-size: 244px 104px;
+      position: relative;
+      height: 19px;
+      border-radius: 10px;
+      width: 100%;
+      margin: 3px 6px 3px 0px;
+    }
+  }
+  
+  @keyframes placeHolderShimmer {
+    0% {
+      background-position: calc(0% - 300px) 0;
+    }
+  
+    20% {
+      background-position: calc(0% - 300px) 0;
+    }
+  
+    80% {
+      background-position: calc(100% + 300px) 0;
+    }
+  
+    100% {
+      background-position: calc(100% + 300px) 0;
+    }
+  }
+  

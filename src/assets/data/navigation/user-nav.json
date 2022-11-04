@@ -1,0 +1,31 @@
+[
+  {
+    "top": [
+      {
+        "name": "Invoices",
+        "icon": "assignment",
+        "isActive": false,
+        "size": "medium",
+        "route": "/policies"
+      }
+    ],
+    "bottom": [
+      {
+        "id": 3,
+        "name": "Profile",
+        "icon": "person",
+        "isActive": false,
+        "size": "medium",
+        "route": "/wip"
+      },
+      {
+        "id": 4,
+        "name": "Logout",
+        "icon": "exit_to_app",
+        "isActive": false,
+        "size": "medium",
+        "route": "/"
+      }
+    ]
+  }
+]

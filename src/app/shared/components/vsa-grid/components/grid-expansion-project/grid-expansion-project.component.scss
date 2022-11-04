@@ -1,0 +1,37 @@
+td {
+    display: flex;
+    flex: 1 1 0;
+    align-items: center;
+    text-align: left;
+    border: 1px solid #e9ecef;
+    border-width: 0 0 1px 0;
+    vertical-align: inherit;
+}
+
+.full-width {
+    padding: 10px;
+    width: calc(100% - 200px);
+    p-table {
+        width: 100%;
+    }
+}
+
+span.green {
+    color: green;
+    // margin-left: -12px;
+}
+
+span.blue {
+    color: #0052cc
+}
+
+a {
+    color: #0052cc;
+}
+
+tr.custom-border {
+    border-bottom: 1px solid #e0e0e0;
+    td {
+        border: none;
+    }
+}

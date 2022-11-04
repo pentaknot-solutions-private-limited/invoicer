@@ -1,0 +1,67 @@
+// Calendar
+.owl-dt-calendar {
+  height: 100% !important;
+  &-main {
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  &-control {
+    padding: 10px;
+    margin: 10px 0;
+  }
+
+  &-cell {
+    border-radius: 4px !important;
+    &-content {
+      border-radius: 0 !important;
+      color: #5c5c5c !important;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+    }
+    &-selected:not(.owl-dt-calendar-cell-range) {
+      background-color: var(--global-theme) !important;
+      color: white !important;
+    }
+    &-today:not(.owl-dt-calendar-cell-selected) {
+      border-color: var(--global-theme) !important;
+      border-radius: 4px;
+      color: var(--global-theme);
+    }
+    &-in-range {
+      background-color: rgb(36 106 153 / 0.2) !important;
+    }
+    &-range {
+      &-from {
+        border: none !important;
+        background: var(--global-theme) !important;
+      }
+      &-to {
+        border: none !important;
+        background: var(--global-theme) !important;
+      }
+    }
+  }
+  &-table {
+    &-divider {
+      display: none;
+    }
+  }
+  &-control {
+    .owl-dt-control {
+      &-content {
+        color: #191919;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+}
+.owl-dt-calendar-table {
+  .owl-dt-calendar-cell-disabled {
+    .owl-dt-calendar-cell-content {
+      cursor: not-allowed;
+      background-color: #f4f4f4;
+      color: #c2c2c2 !important;
+    }
+  }
+}

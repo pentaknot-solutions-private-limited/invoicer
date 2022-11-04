@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "region": "All"
+  },
+  {
+    "id": 2,
+    "region": "USA"
+  },
+  {
+    "id": 3,
+    "region": "EU"
+  }
+]

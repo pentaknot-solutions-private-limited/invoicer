@@ -1,0 +1,104 @@
+@import "../../../../assets/style/partials/variables.scss";
+.notification_modal {
+  .notification_header {
+    height: auto;
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #fff;
+    padding-bottom: 0px;
+    justify-content: space-between;
+
+    // &.error { background-color: #e53935; color: #fff; }
+    // &.warning { background-color: #ffbb07; color: #463303 }
+    // &.confirm { background-color: #ffbb07; color: #463303 }
+    // &.delete { background-color: #e53935; color: #fff; }
+    // &.info { background-color: #1e88e5; color: #fff; }
+    // &.success { background-color: #1d9c72; color: #fff; }
+    p {
+      margin-left: 10px;
+      text-transform: capitalize;
+      font-size: 24px;
+    }
+    .notification_title {
+      font-family: $primary_font-family;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 140%;
+      color: #293854;
+    }
+  }
+  .notification_body {
+    padding: 15px 20px;
+    // height: calc(226px - 69px - 41px);
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    .notification_msg {
+      font-family: $primary_font-family;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 140%;
+    }
+  }
+  .notification_footer {
+    height: auto;
+    // grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    // display: grid;
+    padding: 0px 20px;
+    .notification_action {
+      // height: 41px;
+      height: auto;
+      overflow: hidden;
+      width: auto;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      padding: 12px 10px;
+      text-align: center;
+      background-color: #f2f2f2;
+      border: 1px solid $default_line-color;
+      cursor: pointer;
+      color: #293854;
+      font-weight: bold;
+      text-transform: capitalize;
+      margin-right: 1em;
+      border-radius: 4px;
+      &:focus {
+        outline: none;
+      }
+      &:hover {
+        background-color: #fff;
+      }
+    }
+    .notification_action.delete {
+      background-color: #df3030;
+      color: white;
+    }
+    .notification_action.confirm {
+      background: linear-gradient(90deg, #de983a -3.49%, #f58533 103.49%);
+      color: white;
+    }
+    .notification_action.secondary-confirm {
+      background: transparent;
+      border: 1px solid #f09246;
+      color: #f09246;
+    }
+    .notification_action.blue-confirm {
+      background: linear-gradient(90deg, #51abde 21.35%, #4c8af5 100%);
+      color: white;
+    }
+    .notification_action.big-width{
+      width: 100px
+    }
+  }
+}
+
+ul {
+  margin: 0px;
+  padding-left: 20px;
+}
+p {
+  margin: 0px;
+}

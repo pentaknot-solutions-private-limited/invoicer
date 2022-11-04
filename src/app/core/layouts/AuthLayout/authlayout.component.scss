@@ -1,0 +1,132 @@
+@import "../../../../assets/style/partials/variables.scss";
+
+.auth_layout {
+  background-color: white;
+  .constant-view {
+    background-color: $global-blue-gradient;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .logo {
+      font-size: 42px;
+      font-weight: 500;
+      color: white;
+    }
+    img {
+      width: 40%;
+    }
+    p.medtech {
+      padding-top: 2em;
+      font-family: $primary_font-family;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 18px;
+      line-height: 130%;
+      text-align: center;
+      letter-spacing: 0.1em;
+      color: #ffffff;
+    }
+    .bg_img {
+      background: #4c8af5;
+      height: 70vh;
+      background-position: bottom;
+      background-repeat: no-repeat;
+      background-size: contain;
+    }
+    .info {
+      height: max-content;
+      min-height: 30vh;
+      margin-right: -15px;
+      margin-left: -15px;
+      background-color: #056d8e;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      p {
+        color: #8dd9ea;
+        font-size: 18px;
+        margin-top: 0;
+        font-weight: normal;
+        text-align: justify;
+      }
+      h6 {
+        margin: 0;
+        color: white;
+        font-size: 16px;
+      }
+    }
+  }
+  .login-layout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    min-height: 100vh;
+    .login-viev {
+      width: 400px;
+      height: auto;
+    }
+  }
+}
+@media (max-width: 730px) {
+  .auth_layout .login-view {
+    padding-top: 18vh;
+  }
+  .hide-mobile {
+    display: none !important;
+
+  }
+}
+@media (max-width: 1200px) {
+  .auth_layout .constant-view img {
+    width: 100%;
+  }
+  .auth_layout .constant-view .medtech {
+    font-size: 14px !important;
+  }
+}
+
+// contact-support
+
+.contact-support {
+  font-weight: 500;
+  a {
+    color: white;
+  }
+}
+
+.loader-body {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff96;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 726px) and (max-width:767px) {
+  // .auth_layout .login-view {
+  //   padding-top: 18vh;
+  // }
+  // .hide-mobile {
+  //   display: none !important;
+
+  // }
+  .constant-view {
+    height: 250px;
+    min-height: auto !important;
+    max-height: 250px;
+  }
+}
+
+h1 {
+  font-size: $h1_font-size;
+  color:white;
+  padding-bottom: 1em;
+}

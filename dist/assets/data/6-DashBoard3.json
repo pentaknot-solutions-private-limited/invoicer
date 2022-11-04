@@ -1,0 +1,23 @@
+[
+	{
+	  "id": 1,
+	  "type": "processed",
+	  "value" : 2700
+	},
+	{
+	  "id": 2,
+	   "type": "affiliates",
+	  "value" : 7
+	},
+	{
+	  "id": 3,
+	  "type": "processing_time_sec",
+	  "value" : 110
+	},
+	{
+	  "id": 4,
+	  "type": "automation_achieved",
+	  "value" : 95
+	}
+
+]

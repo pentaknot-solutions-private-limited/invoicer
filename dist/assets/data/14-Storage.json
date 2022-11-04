@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "table": "Contracts",
+    "status": "Success: 1 row added",
+    "timestamp": "2022-08-03 12:30:45 GMT"
+  },
+  {
+    "id": 2,
+    "table": "Client",
+    "status": "Success: 1 row added",
+    "timestamp": "2022-08-03 12:32:30 GMT"
+  },
+  {
+    "id": 3,
+    "table": "Contract_clauses",
+    "status": "Success: 3 rows added",
+    "timestamp": "2022-08-03 12:33:12 GMT"
+  },
+  {
+    "id": 4,
+    "table": "Contract_policies",
+    "status": "Success: 5 rows added",
+    "timestamp": "2022-08-03 12:34:35 GMT"
+  }
+]

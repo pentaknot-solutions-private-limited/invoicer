@@ -1,0 +1,18 @@
+[
+	{
+	  "id": 1,
+	  "type": "Reseller",
+	  "value" : 410
+	},
+	{
+	  "id": 2,
+	   "type": "Issuer",
+	  "value" : 90
+	},
+	{
+	  "id": 3,
+	   "type": "Merchant",
+	  "value" : 2900
+	}
+
+]

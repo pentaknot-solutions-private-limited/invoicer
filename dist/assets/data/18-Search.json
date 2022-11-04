@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "affiliate": "Cardinal Commerce",
+    "product": "Centinel",
+    "client": "Home Depot",
+    "permission": "Allowed",
+    "data_format": "All",
+    "policy": "View"
+  },
+  {
+    "id": 2,
+    "affiliate": "Cardinal Commerce",
+    "product": "Visa Consumer Authentication Service",
+    "client": "PayPal",
+    "permission": "Allowed",
+    "data_format": "All",
+    "policy": "View"
+  },
+  {
+    "id": 3,
+    "affiliate": "CyberSource",
+    "product": "CyberSource Payment Solutions",
+    "client": "Netflix",
+    "permission": "Need consent",
+    "data_format": "All",
+    "policy": "View"
+  },
+  {
+    "id": 4,
+    "affiliate": "CyberSource",
+    "product": "CyberSource Payment Solutions",
+    "client": "Shopee",
+    "permission": "Allowed",
+    "data_format": "Aggregated",
+    "policy": "View"
+  }
+]

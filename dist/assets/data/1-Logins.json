@@ -1,13 +1,5 @@
 [
   {
-    "email": "as@unifiedlogs.com",
-    "role": "Admin",
-    "password": "Abc@123",
-    "role_id": 1,
-    "firstName": "Aayesha",
-    "lastName": "Sheikh"
-  },
-  {
     "email": "tech@unified.com",
     "role": "Techical Head",
     "password": "Abc@123",

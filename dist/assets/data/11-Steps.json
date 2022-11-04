@@ -1,0 +1,30 @@
+[
+	{
+	  "id": 1,
+	  "type": "Text extraction",
+	  "status" : "Complete",
+	  "confidence":"High"
+	},
+	
+	{
+	  "id": 2,
+	  "type": "Entity & Clause extraction",
+	  "status" : "In-progress",
+	  "confidence":""
+	},
+	
+	{
+	  "id": 3,
+	  "type": "Policy generation",
+	  "status" : "Pending",
+	  "confidence":""
+	},
+	
+	{
+	  "id": 4,
+	  "type": "Policy storage & sync",
+	  "status" : "Pending",
+	  "confidence":""
+	}
+
+]

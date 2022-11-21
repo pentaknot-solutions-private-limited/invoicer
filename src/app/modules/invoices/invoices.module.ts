@@ -20,6 +20,7 @@ import { InvoiceGenerationComponent } from "./common/invoice-generation/invoice-
 import { VSAStepperModule } from "src/app/shared/components/vsa-stepper/package.module";
 import { PMRStepperModule } from "src/app/shared/components/pmr-stepper/package.module";
 import { InvoiceGenerationService } from "src/app/shared/_http/invoice-generation.service";
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
   imports: [
@@ -36,6 +37,7 @@ import { InvoiceGenerationService } from "src/app/shared/_http/invoice-generatio
     VSAGridModule,
     VSAStepperModule,
     PMRStepperModule,
+    AutoCompleteModule,
     VSAToastyModule.forRoot(),
     RouterModule.forChild([
       {

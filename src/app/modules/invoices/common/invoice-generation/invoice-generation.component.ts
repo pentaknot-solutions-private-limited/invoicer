@@ -1,6 +1,7 @@
 import {
   AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnInit,
@@ -19,9 +20,21 @@ import {
   BankDetails,
   CompanyDetails,
   ConsignmentDetails,
+  LocationModel,
   RateDetails,
   ShipmentDetails,
 } from "./invoice-generation.model";
+
+import jsPDF from "jspdf";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import htmlToPdfmake from "html-to-pdfmake";
+import html2canvas from "html2canvas";
+import { VSAToastyService } from "src/app/shared/components/vsa-toasty/vsa-toasty/vsa-toasty.service";
+import { Country, State, City } from "country-state-city";
+import { FilterService } from "primeng/api";
+import { AutoComplete } from "primeng/autocomplete";
 
 @Component({
   selector: "invoice-generation",
@@ -29,7 +42,7 @@ import {
   styleUrls: ["./invoice-generation.component.scss"],
 })
 export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
-  @Input() invoiceData: any;
+  @Input() invoiceData?: any;
   @Output() onBtnClick: EventEmitter<any> = new EventEmitter();
 
   // View Child
@@ -44,13 +57,16 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   @ViewChild("rates", { static: false }) rates: TemplateRef<any>;
   @ViewChild("bankDetails", { static: false }) bankDetails: TemplateRef<any>;
   @ViewChild("preview", { static: false }) preview: TemplateRef<any>;
+  @ViewChild("pdfTable") pdfTable: ElementRef;
+
+  @ViewChild("autoItems", { static: true }) public autoItems: AutoComplete;
 
   // Configs
   baseConfig = new InvoicesConfigs();
   stepperConfig: IPMRStepperConfig = {
     steps: [
       {
-        stepLabel: "Company Details",
+        stepLabel: "Basic Details",
         stepTemplate: null,
       },
       { stepLabel: "Shipment Details", stepTemplate: null },
@@ -65,6 +81,9 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
     branchSelectorConfig: this.baseConfig.branchSelectorConfig,
     customerSelectorConfig: this.baseConfig.customerSelectorConfig,
     customerBranchSelectorConfig: this.baseConfig.customerBranchSelectorConfig,
+    invoiceNoGenerationInputConfig: this.baseConfig.invoiceNoGenerationInput,
+    invoiceDateInputConfig: this.baseConfig.invoiceDateInput,
+    invoiceDueDateInputConfig: this.baseConfig.invoiceDueDateInput,
   };
   shipmentDetailConfig = {
     mawbNo: this.baseConfig.mawbNoInput,
@@ -89,13 +108,17 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   };
 
   consignmentDetailConfig = {
-    shipper: this.baseConfig.shipperInput,
-    consignee: this.baseConfig.consigneeInput,
-    placeOfReciept: this.baseConfig.placeOfRecieptInput,
-    placeOfDelivery: this.baseConfig.placeOfDeliveryInput,
-    loadingPort: this.baseConfig.loadingPortInput,
-    dischargePort: this.baseConfig.dischargePortInput,
-    destinationPort: this.baseConfig.destinatonPortInput,
+    shipper: this.baseConfig.shipperSelect,
+    consignee: this.baseConfig.consigneeSelect,
+    recieptCountry: this.baseConfig.recieptCountrySelect,
+    recieptState: this.baseConfig.recieptStateSelect,
+    recieptCity: this.baseConfig.recieptCitySelect,
+    deliveryCountry: this.baseConfig.deliveryCountrySelect,
+    deliveryState: this.baseConfig.deliveryStateSelect,
+    deliveryCity: this.baseConfig.deliveryCitySelect,
+    loadingPort: this.baseConfig.loadingPortSelect,
+    dischargePort: this.baseConfig.dischargePortSelect,
+    destinationPort: this.baseConfig.destinatonPortSelect,
   };
 
   rateDetailsConfig = {
@@ -123,6 +146,10 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
 
   // Form Control
   shipmentDetailsForm: FormGroup = new FormGroup({
+    invoiceNo: new FormControl("", Validators.required),
+    invoiceDate: new FormControl("", Validators.required),
+    invoiceDueDate: new FormControl("", Validators.required),
+    //
     mawbNo: new FormControl("", Validators.required),
     hawbNo: new FormControl("", Validators.required),
     sbNo: new FormControl("", Validators.required),
@@ -144,15 +171,15 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
     incoTerms: new FormControl("", Validators.required),
   });
 
-  consignmentDetailsForm: FormGroup = new FormGroup({
-    shipper: new FormControl("", Validators.required),
-    consignee: new FormControl("", Validators.required),
-    placeOfReciept: new FormControl("", Validators.required),
-    loadingPort: new FormControl("", Validators.required),
-    dischargePort: new FormControl("", Validators.required),
-    placeOfDelivery: new FormControl("", Validators.required),
-    destinationPort: new FormControl("", Validators.required),
-  });
+  // consignmentDetailsForm: FormGroup = new FormGroup({
+  //   shipper: new FormControl("", Validators.required),
+  //   consignee: new FormControl("", Validators.required),
+  //   placeOfReciept: new FormControl("", Validators.required),
+  //   loadingPort: new FormControl("", Validators.required),
+  //   dischargePort: new FormControl("", Validators.required),
+  //   placeOfDelivery: new FormControl("", Validators.required),
+  //   destinationPort: new FormControl("", Validators.required),
+  // });
 
   rateDetailsForm: FormGroup = new FormGroup({
     serviceTypeId: new FormControl("", Validators.required),
@@ -180,8 +207,11 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   // Variables
   currentStepIndex: number = 0;
   rowData: any[] = [];
+  filteredData: any[] = [];
   disabled: boolean = true;
   editMode: boolean = false;
+  disablePlaceOfRecieptState: boolean = true;
+  disablePlaceOfRecieptCity: boolean = true;
   downloadLoading: boolean = false;
   invoiceDetails: any; //Temporary
   companyDetailsModel: CompanyDetails = new CompanyDetails();
@@ -189,8 +219,23 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   consignmentDetailsModel: ConsignmentDetails = new ConsignmentDetails();
   rateDetailsModel: RateDetails = new RateDetails();
   bankDetailsModel: BankDetails = new BankDetails();
+  locationModel: LocationModel = new LocationModel();
+  countryPlaceOfRecieptData: any[] = [];
+  statePlaceOfRecieptData: any[] = [];
+  citiesPlaceOfRecieptData: any[] = [];
+  groupedData: any[] = [];
+  selectedPlaceOfRecieptCountry: any = "";
+  selectedPlaceOfRecieptState: any = "";
+  selectedPlaceOfRecieptCity: any = "";
+  selectedPlaceOfDeliveryCountry: any = "";
+  selectedPlaceOfDeliveryState: any = "";
+  selectedPlaceOfDeliveryCity: any = "";
 
-  constructor(private invoiceGenerationService: InvoiceGenerationService) {
+  constructor(
+    private invoiceGenerationService: InvoiceGenerationService,
+    private toasty: VSAToastyService,
+    private filterService: FilterService
+  ) {
     // Set Initial Values
     this.setInitValues();
   }
@@ -198,17 +243,51 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   setInitValues() {
     this.rateDetailsModel.cgstRate = "9%"; //0.09;
     this.rateDetailsModel.sgstRate = "9%"; //0.09;
-    this.rateDetailsModel.igstRate = "-";
+    this.rateDetailsModel.igstRate = "";
   }
 
   ngOnInit(): void {
     this.getAllOrganization();
     this.getAllCustomer();
     this.getMyAccountDetails();
+    this.getAllCargoTypes();
+    this.getAllAirlines();
+    this.getAllCurrency();
+    this.getAllServiceType();
+    this.getAllShippers();
+    this.getAllConsignees();
+    this.getAllPorts();
     setTimeout(() => {
       this.getAllBranchByOrgId();
       this.getAllBranchByCustomerId();
     }, 500);
+    this.consignmentDetailConfig.recieptCountry.options =
+      this.consignmentDetailConfig.deliveryCountry.options =
+        Country.getAllCountries();
+  }
+
+  ngOnChanges() {
+    if (this.invoiceData) {
+      // Basic Details
+      this.companyDetailsModel.customerBranchId = this.invoiceData.companyDetails.customerBranchId;
+      this.companyDetailsModel.customerId = this.invoiceData.companyDetails.customer.customerId
+      this.companyDetailsModel.invoiceDate = this.invoiceData.invoiceDate
+      this.companyDetailsModel.invoiceDueDate = this.invoiceData.dueDate
+      this.companyDetailsModel.invoiceNo = this.invoiceData.invoiceNo
+      this.companyDetailsModel.organizationBranchId = this.invoiceData.companyDetails.organizationBranchId
+      this.companyDetailsModel.organizationId = this.invoiceData.companyDetails.organization.id
+      // Shipment Details
+      this.shipmentDetailsModel = this.invoiceData.shipmentDetails
+      // Consignment Details
+      this.consignmentDetailsModel = this.invoiceData.consignmentDetails
+      // Rate Details
+      this.rateDetailsModel = this.invoiceData.rateDetails
+      this.rateDetailsModel.cgstRate = this.invoiceData.rateDetails.cgstRate ? `${this.invoiceData.rateDetails.cgstRate}%` : ""
+      this.rateDetailsModel.sgstRate = this.invoiceData.rateDetails.sgstRate ? `${this.invoiceData.rateDetails.sgstRate}%` : ""
+      this.rateDetailsModel.igstRate = this.invoiceData.rateDetails.igstRate ? `${this.invoiceData.rateDetails.igstRate}%` : ""
+      // Bank Details
+      this.bankDetailsModel = this.invoiceData.bankDetails
+    }
   }
 
   ngAfterViewInit() {
@@ -236,7 +315,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
           break;
       }
     });
-    console.log(this.stepper);
+    // console.log(this.stepper);
   }
 
   // Drawer Action Events
@@ -256,6 +335,60 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
         // Some process
         this.downloadLoading = false;
         break;
+      case "save":
+        const bankDetails = {
+          bankDetailId: this.bankDetailsModel.id,
+          bankName: this.bankDetailsModel.name,
+          bankIfscCode: this.bankDetailsModel.ifscCode,
+          bankAccountNumber: this.bankDetailsModel.accountNumber,
+          bankSwiftCode: this.bankDetailsModel.swiftCode,
+        };
+        this.consignmentDetailsModel.placeOfDeliveryId = 1
+        this.consignmentDetailsModel.placeOfRecieptId = 1
+        const data = {
+          id: null,
+          companyDetails: this.companyDetailsModel,
+          shipmentDetails: this.shipmentDetailsModel,
+          consignmentDetails: this.consignmentDetailsModel,
+          rateDetails: this.rateDetailsModel,
+          bankDetails: bankDetails,
+          invoiceNo: this.companyDetailsModel.invoiceNo,
+          invoiceDate: this.companyDetailsModel.invoiceDate,
+          dueDate: this.companyDetailsModel.invoiceDueDate,
+          shipmentNo: "",
+          shipmentTypeId: 0,
+          isCompleted: 1
+        };
+
+        this.addUpdateInvoice(data);
+        break;
+      case "draft":
+        const editBankDetails = {
+          bankDetailId: this.bankDetailsModel.id,
+          bankName: this.bankDetailsModel.name,
+          bankIfscCode: this.bankDetailsModel.ifscCode,
+          bankAccountNumber: this.bankDetailsModel.accountNumber,
+          bankSwiftCode: this.bankDetailsModel.swiftCode,
+        };
+        this.consignmentDetailsModel.placeOfDeliveryId = 1
+        this.consignmentDetailsModel.placeOfRecieptId = 1
+        const editData = {
+          id: null,
+          companyDetails: this.companyDetailsModel,
+          shipmentDetails: this.shipmentDetailsModel,
+          consignmentDetails: this.consignmentDetailsModel,
+          rateDetails: this.rateDetailsModel,
+          bankDetails: editBankDetails,
+          invoiceNo: this.companyDetailsModel.invoiceNo,
+          invoiceDate: this.companyDetailsModel.invoiceDate,
+          dueDate: this.companyDetailsModel.invoiceDueDate,
+          shipmentNo: "",
+          shipmentTypeId: 0,
+          isCompleted: 0
+        };
+
+        this.addUpdateInvoice(editData);
+        break;
 
       default:
         this.onBtnClick.emit("close");
@@ -264,6 +397,8 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   }
 
   selectionChanged(type: any) {
+    // console.log(type);
+
     switch (type) {
       case "org":
         this.getAllBranchByOrgId();
@@ -277,9 +412,6 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   }
 
   valueChanged(type: any) {
-    console.log();
-    console.log(this.rateDetailsModel.cgstRate, this.rateDetailsModel.sgstRate);
-
     switch (type) {
       case "quantity":
       case "rate":
@@ -295,22 +427,95 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
         const igstRateValue =
           Number(this.rateDetailsModel.igstRate.toString().split("%")[0]) / 100;
         this.rateDetailsModel.taxableAmount =
-          Number(this.rateDetailsModel.amount) *
-          Number(cgstRateValue + sgstRateValue);
+          Math.round(
+            Number(this.rateDetailsModel.amount) *
+              Number(cgstRateValue + sgstRateValue) *
+              100
+          ) / 100;
 
         // Update Total Amount
-        this.rateDetailsModel.totalAmount =
+        this.rateDetailsModel.totalAmount = Math.round(
           Number(this.rateDetailsModel.amount) +
-          Number(this.rateDetailsModel.taxableAmount);
+            Number(this.rateDetailsModel.taxableAmount)
+        );
 
         // Update Amount in Words
+        // const totalAmt = this.rateDetailsModel.totalAmount.toString().split('.')
+        // console.log(totalAmt);
+
+        // this.rateDetailsModel.amountInWords = convertAmountToWords(
+        //   Number(parseInt(totalAmt[0]))) +"and"+convertAmountToWords(
+        //     Number(parseInt(totalAmt[1])));
         this.rateDetailsModel.amountInWords = convertAmountToWords(
-          Number(this.rateDetailsModel.totalAmount)
+          Math.round(Number(this.rateDetailsModel.totalAmount))
         );
         break;
 
       default:
         break;
+    }
+  }
+
+  // Download PDF //PDF genrate button click function
+  public downloadAsPDF() {
+    const isExist = document.getElementsByTagName("div")[0];
+    if (isExist) {
+      const doc = new jsPDF("p", "pt", "a4");
+      //pdf.html(doc).then(() => pdf.save('fileName.pdf'));
+      doc.html(this.pdfTable.nativeElement, {
+        callback: (doc) => {
+          doc.deletePage(13);
+          doc.deletePage(12);
+          doc.deletePage(11);
+          doc.deletePage(10);
+          doc.deletePage(9);
+          doc.deletePage(8);
+          doc.deletePage(7);
+          doc.deletePage(6);
+          doc.deletePage(5);
+          doc.deletePage(4);
+          doc.deletePage(3);
+          doc.deletePage(2);
+          const filename = new Date().toDateString() + "invoice.pdf";
+          doc.save(filename);
+        },
+      });
+    }
+  }
+
+  onCountrySelection(type, event) {
+    if (type == "reciept") {
+      this.consignmentDetailConfig.recieptState.options =
+        State.getStatesOfCountry(event.value);
+      this.consignmentDetailConfig.recieptState.attributes.disable = false;
+    } else {
+      this.consignmentDetailConfig.deliveryState.options =
+        State.getStatesOfCountry(event.value);
+      this.consignmentDetailConfig.deliveryState.attributes.disable = false;
+    }
+  }
+
+  onStateSelection(type, event) {
+    if (type == "reciept") {
+      this.consignmentDetailConfig.recieptCity.options = City.getCitiesOfState(
+        this.locationModel.recieptCountry,
+        event.value
+      );
+      this.consignmentDetailConfig.recieptCity.attributes.disable = false;
+    } else {
+      this.consignmentDetailConfig.deliveryCity.options = City.getCitiesOfState(
+        this.locationModel.deliveryCountry,
+        event.value
+      );
+      this.consignmentDetailConfig.deliveryCity.attributes.disable = false;
+    }
+  }
+
+  onCitySelection(type, event) {
+    if (type == "reciept") {
+      this.consignmentDetailsModel.placeOfRecieptId = `${this.locationModel.recieptCountry}_${this.locationModel.recieptState}_${event.value}`;
+    } else {
+      this.consignmentDetailsModel.placeOfDeliveryId = `${this.locationModel.deliveryCountry}_${this.locationModel.deliveryState}_${event.value}`;
     }
   }
 
@@ -321,7 +526,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
       // Set First Value
       if (this.companyDetailConfig.organizationConfig.options?.length > 0) {
         this.companyDetailsModel.organizationId =
-          this.companyDetailConfig.organizationConfig.options[0]!.organizationId;
+          this.companyDetailConfig.organizationConfig.options[0]!.id;
       }
     });
   }
@@ -330,13 +535,12 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
       .getAllBranchByOrgId(this.companyDetailsModel.organizationId)
       .subscribe((res: any) => {
         this.companyDetailConfig.branchSelectorConfig.options = res.filter(
-          (item: any) =>
-            item.organizationId === this.companyDetailsModel.organizationId
+          (item: any) => item.organizationId === this.companyDetailsModel.organizationId
         );
         // Set First Value
         if (this.companyDetailConfig.branchSelectorConfig.options?.length > 0) {
-          this.companyDetailsModel.branchId =
-            this.companyDetailConfig.branchSelectorConfig.options[0]!.branchId;
+          this.companyDetailsModel.organizationBranchId =
+            this.companyDetailConfig.branchSelectorConfig.options[0]!.id;
         }
       });
   }
@@ -347,12 +551,12 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
       // Set First Value
       if (this.companyDetailConfig.customerSelectorConfig.options?.length > 0) {
         this.companyDetailsModel.customerId =
-          this.companyDetailConfig.customerSelectorConfig.options[0]!.customerId;
+          this.companyDetailConfig.customerSelectorConfig.options[0]!.id;
       }
     });
   }
   getAllBranchByCustomerId() {
-    console.log(this.companyDetailsModel);
+    // console.log(this.companyDetailsModel);
     this.invoiceGenerationService
       .getAllBranchByCustomerId(this.companyDetailsModel.customerId)
       .subscribe((res: any) => {
@@ -367,8 +571,65 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
             ?.length > 0
         ) {
           this.companyDetailsModel.customerBranchId =
-            this.companyDetailConfig.customerBranchSelectorConfig.options[0]!.customerBranchId;
+            this.companyDetailConfig.customerBranchSelectorConfig.options[0]!.id;
         }
+      });
+  }
+
+  // Cargo Details
+  getAllCargoTypes() {
+    this.invoiceGenerationService.getAllCargoTypes().subscribe((res: any) => {
+      this.shipmentDetailConfig.cargoTypeConfig.options = res;
+      // Set First Value
+      if (this.shipmentDetailConfig.cargoTypeConfig.options?.length > 0) {
+        this.shipmentDetailsModel.cargoTypeId =
+          this.shipmentDetailConfig.cargoTypeConfig.options[0]!.id;
+      }
+    });
+  }
+
+  // Airline Details
+  getAllAirlines() {
+    this.invoiceGenerationService.getAllAirlines().subscribe((res: any) => {
+      this.shipmentDetailConfig.airlineConfig.options = res.data;
+      // Set First Value
+      if (this.shipmentDetailConfig.airlineConfig.options?.length > 0) {
+        this.shipmentDetailsModel.airlineId =
+          this.shipmentDetailConfig.airlineConfig.options[0]!.id;
+      }
+    });
+  }
+
+  // Service Type
+  getAllServiceType() {
+    this.invoiceGenerationService.getAllServiceType().subscribe((res: any) => {
+      this.rateDetailsConfig.serviceTypeConfig.options = res;
+      // Set First Value
+      if (this.rateDetailsConfig.serviceTypeConfig.options?.length > 0) {
+        this.rateDetailsModel.serviceTypeId =
+          this.rateDetailsConfig.serviceTypeConfig.options[0]!.id;
+      }
+    });
+  }
+
+  // Currency
+  getAllCurrency() {
+    this.invoiceGenerationService.getAllCurrency().subscribe((res: any) => {
+      this.rateDetailsConfig.currencyConfig.options = res;
+      // Set First Value
+      if (this.rateDetailsConfig.currencyConfig.options?.length > 0) {
+        this.rateDetailsModel.currencyId =
+          this.rateDetailsConfig.currencyConfig.options[0]!.id;
+      }
+    });
+  }
+
+  addUpdateInvoice(payload) {
+    this.invoiceGenerationService
+      .addUpdateInvoice(payload)
+      .subscribe((res: any) => {
+        this.toasty.success(res.message);
+        this.onBtnClick.emit("done");
       });
   }
 
@@ -377,7 +638,159 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
     this.invoiceGenerationService
       .getMyAccountDetails()
       .subscribe((res: any) => {
-        this.bankDetailsModel = res;
+        this.bankDetailsModel = res[0];
+        console.log(this.bankDetailsModel);
       });
   }
+
+  // Consigement Details
+
+  getAllShippers() {
+    this.invoiceGenerationService.getAllShippers().subscribe((res: any) => {
+      if (res.data) {
+        this.consignmentDetailConfig.shipper.options = res.data;
+      }
+    });
+  }
+
+  getAllConsignees() {
+    this.invoiceGenerationService.getAllConsignees().subscribe((res: any) => {
+      if (res.data) {
+        this.consignmentDetailConfig.consignee.options = res.data;
+      }
+    });
+  }
+
+  getAllPorts() {
+    this.invoiceGenerationService.getAllPorts().subscribe((res: any) => {
+      if (res.data) {
+        this.consignmentDetailConfig.loadingPort.options = res.data;
+        this.consignmentDetailConfig.destinationPort.options = res.data;
+        this.consignmentDetailConfig.dischargePort.options = res.data;
+      }
+    });
+  }
+  // search(event) {
+  //   // this.groupedData
+  //   let query = event.query;
+  //   let filteredGroups = [];
+
+  //   for (let optgroup of this.groupedData) {
+  //     let filteredSubOptions = this.filterService.filter(
+  //       optgroup.items,
+  //       ["label"],
+  //       query,
+  //       "contains"
+  //     );
+  //     if (filteredSubOptions && filteredSubOptions.length) {
+  //       filteredGroups.push({
+  //         label: optgroup.label,
+  //         value: optgroup.value,
+  //         items: filteredSubOptions
+  //       });
+  //     }
+  //   }
+
+  //   this.filteredData = filteredGroups;
+  // }
+
+  // filterCountry(event) {
+  //   let filtered: any[] = [];
+  //   let query = event.query;
+  //   for (let i = 0; i < Country.getAllCountries().length; i++) {
+  //     let country = Country.getAllCountries()[i];
+  //     if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+  //       filtered.push(country);
+  //     }
+  //   }
+
+  //   this.countryPlaceOfRecieptData = filtered.map((row: any) => {
+  //     return row.name
+  //   });
+  // }
+
+  // filterState(event) {
+  //   let filtered: any[] = [];
+  //   let query = event.query;
+  //   const countryData = Country.getAllCountries().find((item: any) => item.name == this.selectedPlaceOfRecieptCountry)
+  //   const stateData = State.getAllStates().filter((item: any) => item.countryCode == countryData.isoCode)
+  //   for (let i = 0; i < stateData.length; i++) {
+  //     let state = stateData[i];
+  //     if (state.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+  //       filtered.push(state);
+  //     }
+  //   }
+
+  //   this.statePlaceOfRecieptData = filtered.map((row: any) => {
+  //     return row.name
+  //   });
+  // }
+
+  // filterCities(event) {
+  //   let filtered: any[] = [];
+  //   let query = event.query;
+  //   const countryData = Country.getAllCountries().find((item: any) => item.name == this.selectedPlaceOfRecieptCountry)
+  //   const stateData = State.getAllStates().find((item: any) => item.name == this.selectedPlaceOfRecieptState)
+  //   const cityData = City.getAllCities().filter((item: any) => item.countryCode == countryData.isoCode && item.stateCode == stateData.isoCode)
+  //   for (let i = 0; i < cityData.length; i++) {
+  //     let city = cityData[i];
+  //     if (city.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+  //       filtered.push(city);
+  //     }
+  //   }
+
+  //   this.citiesPlaceOfRecieptData = filtered.map((row: any) => {
+  //     return row.name
+  //   });
+  // }
+
+  // filterDeliveryCountry(event) {
+  //   let filtered: any[] = [];
+  //   let query = event.query;
+  //   for (let i = 0; i < Country.getAllCountries().length; i++) {
+  //     let country = Country.getAllCountries()[i];
+  //     if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+  //       filtered.push(country);
+  //     }
+  //   }
+
+  //   this.countryPlaceOfRecieptData = filtered.map((row: any) => {
+  //     return row.name
+  //   });
+  // }
+
+  // filterDeliveryState(event) {
+  //   let filtered: any[] = [];
+  //   let query = event.query;
+  //   const countryData = Country.getAllCountries().find((item: any) => item.name == this.selectedPlaceOfDeliveryCountry)
+  //   const stateData = State.getAllStates().filter((item: any) => item.countryCode == countryData.isoCode)
+  //   for (let i = 0; i < stateData.length; i++) {
+  //     let state = stateData[i];
+  //     if (state.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+  //       filtered.push(state);
+  //     }
+  //   }
+
+  //   this.statePlaceOfRecieptData = filtered.map((row: any) => {
+  //     return row.name
+  //   });
+  // }
+
+  // filterDeliveryCities(event) {
+  //   let filtered: any[] = [];
+  //   let query = event.query;
+  //   const countryData = Country.getAllCountries().find((item: any) => item.name == this.selectedPlaceOfDeliveryCountry)
+  //   const stateData = State.getAllStates().find((item: any) => item.name == this.selectedPlaceOfDeliveryState)
+  //   const cityData = City.getAllCities().filter((item: any) => item.countryCode == countryData.isoCode && item.stateCode == stateData.isoCode)
+  //   for (let i = 0; i < cityData.length; i++) {
+  //     let city = cityData[i];
+  //     if (city.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
+  //       filtered.push(city);
+  //     }
+  //   }
+
+  //   this.citiesPlaceOfRecieptData = filtered.map((row: any) => {
+  //     return row.name
+  //   });
+  // }
 }

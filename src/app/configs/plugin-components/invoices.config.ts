@@ -2,6 +2,7 @@ import * as moment from "moment";
 import { IGridConfig } from "src/app/shared/components/vsa-grid/vsa-grid.model";
 import { ITextConfig } from "src/app/shared/components/vsa-input/vsa-input.model";
 import { ISelectConfig } from "src/app/shared/components/vsa-select-box/vsa-select-box.model";
+import { dateFormatter } from "src/app/shared/utils/date-formatter";
 
 export class InvoicesConfigs {
   // Search Box
@@ -37,7 +38,7 @@ export class InvoicesConfigs {
   // Invoice Grid
   invoicesGrid: IGridConfig = {
     rowId: "id",
-    gridHeightDelta: "calc(100vh - 500px)",
+    gridHeightDelta: "calc(100vh - 510px)",
     pagination: true,
     emptyMessage: "No records found.",
     colDefs: [
@@ -45,22 +46,40 @@ export class InvoicesConfigs {
         field: "invoiceNo",
         headerName: "Invoice No",
         colType: "link",
+        valueFormatter: (value, row, col) => {
+          return row.invoiceNo ? row.invoiceNo : "-";
+        },
       },
       {
         field: "customerName",
         headerName: "Customer",
         colType: "text",
+        valueFormatter: (value, row, col) => {
+          console.log(row);
+
+          return row?.companyDetails?.customer?.customerName
+            ? row?.companyDetails?.customer?.customerName
+            : "-";
+        },
       },
       {
         field: "invoiceDate",
         headerName: "Date",
         // showSelectFilter: true,
         colType: "text",
+        valueFormatter: (value, row, col) => {
+          return row.invoiceDate ? dateFormatter(row.invoiceDate) : "-";
+        },
       },
       {
         field: "amount",
         headerName: "Amount",
         colType: "text",
+        valueFormatter: (value, row, col) => {
+          return row.rateDetails.totalAmount
+            ? row.rateDetails.totalAmount
+            : "-";
+        },
       },
       {
         headerName: "Action",
@@ -80,6 +99,14 @@ export class InvoicesConfigs {
                 type: "edit",
                 // disabled: row.showSteps,
               },
+              {
+                icon: "download-button-2",
+                action: "download",
+                tooltip: "Download Invoice",
+                title: "Download Invoice",
+                type: "edit",
+                // disabled: row.showSteps,
+              },
             ],
           };
         },
@@ -96,18 +123,18 @@ export class InvoicesConfigs {
       title: "Organization",
     },
     dataKey: "name",
-    returnKey: "organizationId",
+    returnKey: "id",
     options: [],
   };
   branchSelectorConfig: ISelectConfig = {
-    fieldKey: "branchId",
+    fieldKey: "organizationBranchId",
     attributes: {
       class: "header-item",
       placeholder: "Select Branch",
       title: "Branch",
     },
     dataKey: "name",
-    returnKey: "branchId",
+    returnKey: "id",
     options: [],
   };
   customerSelectorConfig: ISelectConfig = {
@@ -118,7 +145,7 @@ export class InvoicesConfigs {
       title: "Bill to Customer",
     },
     dataKey: "name",
-    returnKey: "customerId",
+    returnKey: "id",
     options: [],
   };
   customerBranchSelectorConfig: ISelectConfig = {
@@ -129,8 +156,35 @@ export class InvoicesConfigs {
       title: "Customer Branch",
     },
     dataKey: "name",
-    returnKey: "customerBranchId",
+    returnKey: "id",
     options: [],
+  };
+
+  invoiceNoGenerationInput: ITextConfig = {
+    fieldKey: "invoiceNo",
+    attributes: {
+      title: "Invoice No.",
+      showBorder: true,
+      hint: "Note: If no Invoice No. is entered it will be generated automatically.",
+    },
+  };
+
+  invoiceDateInput: ITextConfig = {
+    fieldKey: "invoiceDate",
+    attributes: {
+      title: "Invoice Date",
+      type: "datepicker",
+      showBorder: true,
+    },
+  };
+
+  invoiceDueDateInput: ITextConfig = {
+    fieldKey: "invoiceDueDate",
+    attributes: {
+      title: "Invoice Due Date",
+      type: "datepicker",
+      showBorder: true,
+    },
   };
 
   // Shipment Details
@@ -238,25 +292,8 @@ export class InvoicesConfigs {
       title: "Cargo Type",
     },
     dataKey: "name",
-    returnKey: "cargoTypeId",
-    options: [
-      {
-        cargoTypeId: 1,
-        name: "Airways",
-      },
-      {
-        cargoTypeId: 2,
-        name: "Waterways",
-      },
-      {
-        cargoTypeId: 3,
-        name: "Railways",
-      },
-      {
-        cargoTypeId: 4,
-        name: "Roadways",
-      },
-    ],
+    returnKey: "id",
+    options: [],
   };
   airlineSelectorConfig: ISelectConfig = {
     fieldKey: "airlineId",
@@ -265,13 +302,8 @@ export class InvoicesConfigs {
       title: "Airline",
     },
     dataKey: "name",
-    returnKey: "airlineId",
-    options: [
-      {
-        airlineId: 1,
-        name: "Air India",
-      },
-    ],
+    returnKey: "id",
+    options: [],
   };
   shipperRefInput: ITextConfig = {
     fieldKey: "shipperRef",
@@ -287,56 +319,193 @@ export class InvoicesConfigs {
       showBorder: true,
     },
   };
+
   // Consignee Details
-  shipperInput: ITextConfig = {
-    fieldKey: "shipper",
+  shipperSelect: ISelectConfig = {
+    fieldKey: "shipperId",
     attributes: {
+      type: 'select-search',
+      class: "header-item",
       title: "Shipper",
-      showBorder: true,
     },
-  };
-  consigneeInput: ITextConfig = {
-    fieldKey: "consignee",
-    attributes: {
-      title: "Consignee",
-      showBorder: true,
-    },
-  };
-  placeOfRecieptInput: ITextConfig = {
-    fieldKey: "placeOfReciept",
-    attributes: {
-      title: "Place of Reciept",
-      showBorder: true,
-    },
-  };
-  placeOfDeliveryInput: ITextConfig = {
-    fieldKey: "placeOfDelivery",
-    attributes: {
-      title: "Place of Delivery",
-      showBorder: true,
-    },
-  };
-  loadingPortInput: ITextConfig = {
-    fieldKey: "loadingPort",
-    attributes: {
-      title: "Loading Port",
-      showBorder: true,
-    },
-  };
-  dischargePortInput: ITextConfig = {
-    fieldKey: "dischargePort",
-    attributes: {
-      title: "Discharge Port",
-      showBorder: true,
-    },
+    dataKey: "name",
+    returnKey: "id",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
   };
 
-  destinatonPortInput: ITextConfig = {
-    fieldKey: "destinatonPort",
+  consigneeSelect: ISelectConfig = {
+    fieldKey: "consigneeId",
     attributes: {
-      title: "Destinaton Port",
-      showBorder: true,
+      type: 'select-search',
+      class: "header-item",
+      title: "Consignee",
     },
+    dataKey: "name",
+    returnKey: "id",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  recieptCountrySelect: ISelectConfig = {
+    fieldKey: "recieptCountry",
+    attributes: {
+      type: 'select-search',
+      class: "header-item",
+      title: "Country",
+    },
+    dataKey: "name",
+    returnKey: "isoCode",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  recieptStateSelect: ISelectConfig = {
+    fieldKey: "recieptState",
+    attributes: {
+      type: 'select-search',
+      class: "header-item",
+      title: "State",
+      disable: true,
+    },
+    dataKey: "name",
+    returnKey: "isoCode",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  recieptCitySelect: ISelectConfig = {
+    fieldKey: "recieptCity",
+    attributes: {
+      type: 'select-search',
+      class: "header-item",
+      title: "City",
+      disable: true,
+    },
+    dataKey: "name",
+    returnKey: "name",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  deliveryCountrySelect: ISelectConfig = {
+    fieldKey: "deliveryCountry",
+    attributes: {
+      type: 'select-search',
+      class: "header-item",
+      title: "Country",
+    },
+    dataKey: "name",
+    returnKey: "isoCode",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  deliveryStateSelect: ISelectConfig = {
+    fieldKey: "deliveryState",
+    attributes: {
+      type: 'select-search',
+      class: "header-item",
+      title: "State",
+      disable: true,
+    },
+    dataKey: "name",
+    returnKey: "isoCode",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  deliveryCitySelect: ISelectConfig = {
+    fieldKey: "deliveryCity",
+    attributes: {
+      class: "header-item",
+      title: "City",
+      disable: true,
+    },
+    dataKey: "name",
+    returnKey: "name",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  loadingPortSelect: ISelectConfig = {
+    fieldKey: "loadingPortId",
+    attributes: {
+      class: "header-item",
+      title: "Loading Port",
+    },
+    dataKey: "name",
+    returnKey: "id",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  dischargePortSelect: ISelectConfig = {
+    fieldKey: "dischargePortId",
+    attributes: {
+      class: "header-item",
+      title: "Discharge Port",
+    },
+    dataKey: "name",
+    returnKey: "id",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+  };
+
+  destinatonPortSelect: ISelectConfig = {
+    fieldKey: "destinatonPortId",
+    attributes: {
+      class: "header-item",
+      title: "Destination Port",
+    },
+    dataKey: "name",
+    returnKey: "id",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
   };
 
   // Rate Details
@@ -347,13 +516,8 @@ export class InvoicesConfigs {
       title: "Service Type",
     },
     dataKey: "name",
-    returnKey: "serviceTypeId",
-    options: [
-      {
-        serviceTypeId: 1,
-        name: "AIR",
-      },
-    ],
+    returnKey: "id",
+    options: [],
   };
 
   hsnCodeInput: ITextConfig = {
@@ -372,7 +536,7 @@ export class InvoicesConfigs {
       title: "Currency",
     },
     dataKey: "name",
-    returnKey: "currencyId",
+    returnKey: "id",
     options: [
       {
         currencyId: 1,
@@ -446,7 +610,7 @@ export class InvoicesConfigs {
   totalAmountInput: ITextConfig = {
     fieldKey: "totalAmount",
     attributes: {
-      title: "Total Amount",
+      title: "Total Amount (Round Off)",
       type: "number",
       // showBorder: true,
       readonly: true,
@@ -464,7 +628,7 @@ export class InvoicesConfigs {
   };
   // Bank Details
   bankNameInput: ITextConfig = {
-    fieldKey: "bankName",
+    fieldKey: "name",
     attributes: {
       title: "Bank Name",
       // showBorder: true,
@@ -473,7 +637,7 @@ export class InvoicesConfigs {
     },
   };
   bankBranchInput: ITextConfig = {
-    fieldKey: "bankBranch",
+    fieldKey: "branchName",
     attributes: {
       title: "Branch Name",
       // showBorder: true,
@@ -482,9 +646,9 @@ export class InvoicesConfigs {
     },
   };
   acNoInput: ITextConfig = {
-    fieldKey: "acNo",
+    fieldKey: "accountNumber",
     attributes: {
-      title: "Bank Name",
+      title: "Account Number",
       type: "number",
       // showBorder: true,
       readonly: true,

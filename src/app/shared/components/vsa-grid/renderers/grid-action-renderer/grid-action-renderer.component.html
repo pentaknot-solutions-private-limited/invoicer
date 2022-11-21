@@ -99,27 +99,30 @@
         ></vsa-icon>
       </div>
       <div class="">
-        <vsa-icon
-          *ngIf="params?.actions[0].icon && !params.actions[0].actions"
-          icon="{{ params?.actions[0].icon }}"
-          size="small"
-          state="hover"
-          customColor="{{ params.actions[0].color }}"
-          [enableTooltip]="params?.actions[0].tooltip ? true : false"
-          tooltipContent="{{ params?.actions[0].tooltip }}"
-          (onClick)="onBtnClick(params?.actions[0].action, params.row)"
-          [disabled]="params?.actions[0].disabled || hideAction"
-        ></vsa-icon>
-        <vsa-icon
-          *ngIf="params.actions[0].icon && params.actions[0].actions"
-          icon="{{ params.actions[0].icon }}"
-          size="small"
-          state="hover"
-          [enableTooltip]="params?.actions[0].tooltip ? true : false"
-          tooltipContent="{{ params?.actions[0].tooltip }}"
-          customColor="{{ params.actions[0].color }}"
-          [disabled]="params?.actions[0].disabled || hideAction"
-        ></vsa-icon>
+        <ng-container *ngFor="let item of params.actions; let i = index">
+          <vsa-icon
+            *ngIf="item.icon && !item.actions"
+            icon="{{ item.icon }}"
+            size="small"
+            state="hover"
+            customColor="{{ item.color }}"
+            [enableTooltip]="item.tooltip ? true : false"
+            tooltipContent="{{ item.tooltip }}"
+            (onClick)="onBtnClick(item.action, params.row)"
+            [disabled]="item.disabled || hideAction"
+          ></vsa-icon>
+          <vsa-icon
+            *ngIf="item.icon && item.actions"
+            icon="{{ item.icon }}"
+            size="small"
+            state="hover"
+            [enableTooltip]="item.tooltip ? true : false"
+            tooltipContent="{{ item.tooltip }}"
+            customColor="{{ params.actions[0].color }}"
+            [disabled]="item.disabled || hideAction"
+          ></vsa-icon>
+          <span *ngIf="params.actions.length > 1">&nbsp;&nbsp;&nbsp;</span>
+        </ng-container>
       </div>
     </div>
   </ng-container>

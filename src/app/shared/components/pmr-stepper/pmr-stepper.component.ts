@@ -48,8 +48,8 @@ export class PMRStepperComponent implements OnInit {
 
   public changeStep(event) {
     if (event.selectedIndex < event.previouslySelectedIndex) {
-      this.stepper._steps.toArray()[event.previouslySelectedIndex].completed =
-        false;
+      // this.stepper._steps.toArray()[event.previouslySelectedIndex].completed =
+      //   false;
       // this.stepper._steps.toArray()[event.previouslySelectedIndex].editable = false;
     }
     if (event.selectedIndex > event.previouslySelectedIndex) {

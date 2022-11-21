@@ -10,8 +10,11 @@
 }
 
 .row.header-row {
-  align-items: center;
   justify-content: space-between;
+  display: flex;
+  align-items: center;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid $border-color;
   // padding: 0px 20px;
 
   h3.title {
@@ -19,12 +22,11 @@
     font-size: 24px;
     line-height: 28px;
     color: $global-grey-shade-6;
-    border-bottom: 1px solid $border-color;
+    // border-bottom: 1px solid $border-color;
     padding: 0px;
-    margin-bottom: 1em;
-    padding-bottom: 0.5em;
+    // margin-bottom: 1em;
+    // padding-bottom: 0.5em;
     // Custom for Add Button
-    
   }
 }
 
@@ -89,15 +91,61 @@ span.pipe {
   }
 }
 
-
-
 .box {
-  transition: box-shadow .3s;
+  transition: box-shadow 0.3s;
   cursor: pointer;
   &:hover {
-    box-shadow: 0 0 11px rgba(33,33,33,.2); 
+    box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
   }
   &.selected {
     border: 3px dashed $global-theme;
   }
 }
+
+.pt5 {
+  padding-top: 5px;
+}
+
+#pdfTable {
+  display: none;
+  width: 595px;
+  height: 842px;
+  .xl {
+    font-size: 12px !important;
+  }
+  .larg {
+    font-size: 10px !important;
+  }
+  * {
+    font-size: 8px;
+    line-height: 2em;
+  }
+  
+  b {
+    font-size: 12px;
+  }
+  padding: 3em;
+  hr {
+    margin: 0.5rem 0;
+    color: inherit;
+    border: 0;
+    border-top: 5px solid #e0e0e0;
+    opacity: 0.25;
+  }
+  .details-title {
+    border-bottom: 2px solid #191919;
+  }
+  .table>:not(caption)>*>* {
+    padding: 0px !important;
+  }
+}
+
+#tableData {
+  max-width: 2800px;
+  width: 100%;
+}
+
+@media print { 
+  /* All your print styles go here */
+     #pdfTable { display: block !important; } 
+ }

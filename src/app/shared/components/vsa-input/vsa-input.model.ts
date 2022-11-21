@@ -34,6 +34,7 @@ export interface ITextAttribute {
     title?: string | any;
     errorMessage?: string;
     showBorder?: boolean;
+    autoComplete?: boolean;
 }
 
 

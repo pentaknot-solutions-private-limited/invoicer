@@ -1,5 +1,11 @@
 import { formatDate } from "@angular/common";
-import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { InvoicesConfigs } from "src/app/configs/plugin-components/invoices.config";
 import { DrawerPanelService } from "src/app/shared/components/vsa-drawer-panel/src/vsa-drawer.service";
@@ -10,6 +16,7 @@ import { evalMomentExp } from "src/app/shared/utils/moment-exp.util";
 import { DashboardService } from "src/app/shared/_http/dashboard.service";
 import { InvoiceService } from "src/app/shared/_http/invoice.service";
 import { SearchInvoiceModel } from "./invoices.model";
+import jsPDF from "jspdf";
 
 @Component({
   selector: "invoices",
@@ -20,9 +27,10 @@ export class InvoicesComponent implements OnInit {
   // View Child
   @ViewChild("drawerTemplate") drawerTemplate: TemplateRef<any>;
   @ViewChild("grid") grid: VSAGridComponent;
+  @ViewChild("pdfTable") pdfTable: ElementRef;
 
   // Variables
-  displayPeriodText = "Yesterday";
+  displayPeriodText = "Today";
   periodModel: PeriodModel = new PeriodModel();
   periodData = [];
   currentDate = new Date();
@@ -35,8 +43,8 @@ export class InvoicesComponent implements OnInit {
   searchForm: FormGroup = new FormGroup({
     invoiceNo: new FormControl(""),
     billToCustomer: new FormControl(""),
-    ewayNo: new FormControl(""),
-    poNo: new FormControl(""),
+    // ewayNo: new FormControl(""),
+    // poNo: new FormControl(""),
   });
   searchFormConfig = {
     invoiceNoInput: this.baseConfig.invoiceNoInput,
@@ -58,6 +66,7 @@ export class InvoicesComponent implements OnInit {
   usecase: string = "";
   region: string = "";
   selectedStepData: any;
+  invoiceData: any;
 
   constructor(
     private invoiceService: InvoiceService,
@@ -76,7 +85,7 @@ export class InvoicesComponent implements OnInit {
   }
 
   onFilterApply() {
-    console.log(this.searchForm.value);
+    // console.log(this.searchForm.value);
     this.getInvoices();
   }
 
@@ -124,6 +133,41 @@ export class InvoicesComponent implements OnInit {
     this.getInvoices();
   }
 
+  actionClicked(event) {
+    if (event.event == "edit") {
+      this.invoiceData = event.data;
+      this.openDrawer("invoice-generation");
+    } else {
+      var yourUl = document.getElementById("pdfTable");
+      yourUl.style.display = 'block';
+      const isExist = document.getElementsByTagName("div")[0];
+      if (isExist) {
+        const doc = new jsPDF("p", "pt", "a4");
+        //pdf.html(doc).then(() => pdf.save('fileName.pdf'));
+        
+        doc.html(this.pdfTable.nativeElement, {
+          callback: (doc) => {
+            doc.deletePage(13);
+            doc.deletePage(12);
+            doc.deletePage(11);
+            doc.deletePage(10);
+            doc.deletePage(9);
+            doc.deletePage(8);
+            doc.deletePage(7);
+            doc.deletePage(6);
+            doc.deletePage(5);
+            doc.deletePage(4);
+            doc.deletePage(3);
+            doc.deletePage(2);
+            const filename = new Date().toDateString() + "invoice.pdf";
+            doc.save(filename);
+            yourUl.style.display = 'none';
+          },
+        });
+      }
+    }
+  }
+
   openDrawer(drawerCase: string, data?: any) {
     this.drawerControllerService.useCustomTemplate(false);
     switch (drawerCase) {
@@ -156,9 +200,10 @@ export class InvoicesComponent implements OnInit {
   }
 
   drawerAction(event) {
-    switch (event.action) {
+    switch (event) {
       case "done":
         this.clearDrawerData();
+        this.getInvoices();
         break;
 
       default:
@@ -176,7 +221,7 @@ export class InvoicesComponent implements OnInit {
     };
     this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
       if (res) {
-        this.rowData = res;
+        this.rowData = res.data;
       }
     });
   }

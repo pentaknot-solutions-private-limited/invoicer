@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
-import { FormsModule, NG_VALIDATORS } from '@angular/forms';
+import { FormsModule, NG_VALIDATORS, ReactiveFormsModule } from '@angular/forms';
 import { VSAInputComponent } from './vsa-input.component';
 import { MaterialModule } from '../../shared-modules/material.module';
 // import { RMIconModule } from '../vsa-icon/package.module';
@@ -19,7 +19,8 @@ import { VSAIconModule } from "../vsa-icon/package.module";
     VSADateTimeModule,
     MaterialModule,
     VSAIconModule,
-    FormsModule],
+    FormsModule,
+  ReactiveFormsModule],
   declarations: [VSAInputComponent],
   exports: [VSAInputComponent],
   providers: [

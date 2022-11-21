@@ -39,8 +39,51 @@
       config?.attributes?.label
     }}</mat-label>
 
+    <!-- Autocomplete Input fields -->
     <ng-container
-      *ngIf="config?.attributes?.type !== 'datepicker'"
+      *ngIf="
+        config?.attributes?.type !== 'datepicker' &&
+        config?.attributes?.autoComplete
+      "
+      class="test"
+    >
+      <input
+        [readonly]="config?.attributes?.readonly"
+        matInput
+        [pattern]="config?.attributes?.pattern"
+        [type]="config?.attributes?.type || 'text'"
+        [placeholder]="config?.attributes?.placeholder"
+        [ngClass]="{
+          password: config?.attributes?.togglePassword,
+          prefixInput: config.attributes?.prefixIcon
+        }"
+        [required]="
+          config?.attributes?.isMandatory && !config?.attributes?.readonly
+        "
+        [disabled]="config?.attributes?.disable"
+        [autocomplete]="
+          config?.attributes?.disableNativeAutoComplete ? 'off' : 'on'
+        "
+        [matAutocomplete]="auto"
+        [(ngModel)]="dataModel[config?.fieldKey]"
+        (input)="onChange()"
+        (change)="onChange()"
+        (blur)="onTouchedFn()"
+        [formControl]="planClient"
+      />
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectAutoCompleteOption($event)">
+        <mat-option
+          *ngFor="let item of config?.attributes?.autoCompleteOptions" [value]="item.name"
+        >
+          {{ item.name }}
+        </mat-option>
+      </mat-autocomplete>
+    </ng-container>
+
+    <!-- Simple Input fields -->
+    <ng-container
+      *ngIf="config?.attributes?.type !== 'datepicker' &&
+      !config?.attributes?.autoComplete"
       class="test"
     >
       <input
@@ -66,6 +109,8 @@
         (blur)="onTouchedFn()"
       />
     </ng-container>
+
+    <!-- Datepicker Input fields -->
     <ng-container *ngIf="config?.attributes?.type === 'datepicker'">
       <input
         [readonly]="config?.attributes?.readonly"

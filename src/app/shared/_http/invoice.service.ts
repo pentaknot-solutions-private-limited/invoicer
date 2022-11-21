@@ -7,15 +7,17 @@ import { EncryptedStorage } from '../utils/encrypted-storage';
 @Injectable()
 export class InvoiceService {
   baseUrl: string = '';
+  liveUrl: string = "";
   constructor(private http: HttpClient) {
     this.baseUrl = '../../../assets/data';
+    this.liveUrl = "http://13.235.223.244/api";
   }
   
   // Invoices Data
   getInvoices(searchFilter: any): Observable<any> {
     // console.log(searchFilter);
     // return this.http.get(`${this.baseUrl}/18-Search.json`)
-    return this.http.get(`${this.baseUrl}/Invoices-${searchFilter!.filter}.json`)
+    return this.http.get(`${this.liveUrl}/invoices`);
   }
 
   

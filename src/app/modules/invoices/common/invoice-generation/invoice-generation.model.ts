@@ -1,8 +1,11 @@
 export class CompanyDetails {
   organizationId: string;
-  branchId!: string;
+  organizationBranchId!: string;
   customerId: string;
   customerBranchId!: string;
+  invoiceNo!: string;
+  invoiceDate!: Date;
+  invoiceDueDate!: Date;
 }
 export class ShipmentDetails {
   mawbNo: string;
@@ -17,40 +20,60 @@ export class ShipmentDetails {
   date2: Date;
   arrivalDate: Date;
   flightNo: string;
+  cargoTypeId: string;
   airlineId: string;
   shipperRef!: string;
   incoTerms!: string;
+  
 }
 
 export class ConsignmentDetails {
-  shipper: string;
-  consignee: string;
-  placeOfReciept: string;
-  placeOfDelivery: string;
-  loadingPort: string;
-  dischargePort: string;
-  destinationPort: string;
+  shipperId: string;
+  consigneeId: string;
+  placeOfRecieptId: string | number;
+  placeOfDeliveryId: string | number;
+  loadingPortId: string;
+  dischargePortId: string;
+  destinatonPortId: string;
 }
 
 export class RateDetails {
   serviceTypeId: string;
-  hscCode: string;
+  hsnCode: string;
   currencyId: string;
   quantity: number;
   rate: number;
-  amount: number;
+  amount: string | number;
   cgstRate: string | number;
   sgstRate: string | number;
   igstRate: string | number;
-  taxableAmount: number;
-  totalAmount: number;
+  taxableAmount: number | string;
+  totalAmount: number | string;
   amountInWords: string;
 }
 
 export class BankDetails {
-  bankName: string;
-  bankBranch: string;
-  acNo: string;
+  ORGID: number;
+  accountNumber: string;
+  branchName: string;
+  createdAt: string;
+  createdBy: string;
+  id: number;
   ifscCode: string;
+  ipAddress: string;
+  isActive: number;
+  isDeleted: number;
+  modifiedAt: string;
+  modifiedBy: null;
+  name: string;
   swiftCode: string;
+}
+
+export class LocationModel {
+  recieptCountry: string;
+  deliveryCountry: string;
+  recieptState: string;
+  deliveryState: string;
+  recieptcity: string;
+  deliverycity: string;
 }

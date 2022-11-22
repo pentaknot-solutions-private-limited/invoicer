@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class InvoiceGenerationService {
@@ -8,7 +9,8 @@ export class InvoiceGenerationService {
   liveUrl: string = "";
   constructor(private http: HttpClient) {
     this.baseUrl = "../../../assets/data/invoices";
-    this.liveUrl = "http://13.235.223.244/api";
+    this.liveUrl = `${environment?.apiURL}/api`;
+    // this.liveUrl = "http://13.235.223.244/api";
   }
 
   //
@@ -64,7 +66,7 @@ export class InvoiceGenerationService {
   getAllBranchByCustomerId(customerId: string): Observable<any> {
     // return this.http.get(`${this.baseUrl}/branch-customer-list.json`);
     return this.http.get(`${this.liveUrl}/customerBranches`);
-  // }
+    // }
   }
 
   // Consginment Details
@@ -86,16 +88,10 @@ export class InvoiceGenerationService {
   addUpdateInvoice(data: any): Observable<any> {
     if (data.id) {
       // Update query
-      return this.http.put(
-        `${this.liveUrl}/invoices`,
-        data
-      );
+      return this.http.put(`${this.liveUrl}/invoices`, data);
     } else {
       // Add Query
-      return this.http.post(
-        `${this.liveUrl}/invoices`,
-        data
-      );
+      return this.http.post(`${this.liveUrl}/invoices`, data);
     }
   }
 

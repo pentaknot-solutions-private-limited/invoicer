@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   // apiUrl: "http://13.64.196.20:8080",
+  apiURL: "https://api-ci.pentabridge.com"
 };
 
 /*

@@ -17,7 +17,7 @@
         </h3>
       </div>
       <div class="col-6 text-right days-filter">
-        <button class="menu" mat-button [matMenuTriggerFor]="menu">
+        <!-- <button class="menu" mat-button [matMenuTriggerFor]="menu">
           <mat-icon>filter_list</mat-icon>&nbsp;&nbsp;<span>{{
             displayPeriodText
           }}</span>
@@ -26,7 +26,7 @@
             customColor="#394A64"
             size="medium"
           ></vsa-icon>
-        </button>
+        </button> -->
         <mat-menu #menu="matMenu">
           <ng-container *ngFor="let item of periodData">
             <button mat-menu-item (click)="onPeriodSelect(item)">
@@ -104,7 +104,7 @@
         </mat-menu>
       </div>
     </div>
-    <br/>
+    <br />
     <div class="row content">
       <div class="col-12">
         <div class="dashboard mb-4 mt-2">
@@ -226,38 +226,59 @@
   ></invoice-generation>
 </ng-template>
 
-
+<!-- <div class="container-fluid" id="pdfTable" #pdfTable></div> -->
 <div class="container-fluid" id="pdfTable" #pdfTable>
   <div class="row">
     <div class="col-md-12">
+      <!-- {{ invoiceData | json }} -->
       <div class="row">
         <div class="col-md-8 text-left">
           <h3 class="invoice-title mb-0 xl" style="font-size: 12px !important">
-            <b>Unified Logistics Solution Pvt. Ltd.</b>
+            <!-- <b>Unified Logistics Solution Pvt. Ltd.</b> -->
+            <b>{{ invoiceData?.companyDetails?.organization?.name }}</b>
           </h3>
           <p class="mb-0">
-            Customer Branch Address<br />
-            City - Pincode, State (Country)<br />
+            {{ invoiceData?.companyDetails?.organizationBranch?.address }}
+            {{ invoiceData?.companyDetails?.organizationBranch?.cityId }} -
+            {{ invoiceData?.companyDetails?.organizationBranch?.pincode }},
+            {{ invoiceData?.companyDetails?.organizationBranch?.stateId }} ({{
+              invoiceData?.companyDetails?.organizationBranch?.countryId
+            }})<br />
+            <!-- Customer Branch Address<br /> -->
+            <!-- City - Pincode, State (Country)<br /> -->
           </p>
           <div class="row">
             <div class="col-md-6">
               <div class="row">
                 <div class="col-md-3"><strong></strong>STATE</div>
-                <div class="col-md-9">[00] State Name</div>
+                <!-- <div class="col-md-9">[00] State Name</div> -->
+                <div class="col-md-9">
+                  [00]
+                  {{ invoiceData?.companyDetails?.organizationBranch?.stateId }}
+                </div>
               </div>
               <div class="row">
                 <div class="col-md-3"><strong></strong>CIN</div>
-                <div class="col-md-9">XXXXXXXX</div>
+                <!-- <div class="col-md-9">XXXXXXXX</div> -->
+                <div class="col-md-9">
+                  {{ invoiceData?.companyDetails?.organization?.cinNo }}
+                </div>
               </div>
             </div>
             <div class="col-md-6">
               <div class="row">
                 <div class="col-md-3"><strong></strong>GSTIN</div>
-                <div class="col-md-9">xxxxxxxxxxxxxxx</div>
+                <!-- <div class="col-md-9">xxxxxxxxxxxxxxx</div> -->
+                <div class="col-md-9">
+                  {{ invoiceData?.companyDetails?.organizationBranch?.gstin }}
+                </div>
               </div>
               <div class="row">
                 <div class="col-md-3"><strong></strong>PAN</div>
-                <div class="col-md-9">xxxxxxxxxx</div>
+                <!-- <div class="col-md-9">xxxxxxxxxx</div> -->
+                <div class="col-md-9">
+                  {{ invoiceData?.companyDetails?.organizationBranch?.panNo }}
+                </div>
               </div>
             </div>
           </div>
@@ -266,51 +287,86 @@
           <p class="invoice-title mb-0" style="font-size: 10px !important">
             <b>Tax Invoice</b>
           </p>
-          <p>#INV-123</p>
+          <!-- <p>#INV-123</p> -->
+          <p>#{{ invoiceData?.invoiceNo }}</p>
         </div>
       </div>
       <hr />
       <div class="row">
         <div class="col-md-6">
           <p class="details-title mb-0" style="font-size: 10px !important">
-            <b>Recipient (Company Details)</b>
+            <!-- <b>Recipient (Company Details)</b> -->
+            <b>Recipient Details</b>
           </p>
-          <p class="mb-0"><b>Customer Name</b></p>
-          <p class="mb-0">Customer Branch Address,</p>
-          <p class="mb-0">City - Pincode, State (Country)</p>
+          <!-- <p class="mb-0"><b>Customer Name</b></p> -->
+          <p class="mb-0">
+            <b>{{ invoiceData?.companyDetails?.customer?.name }}</b>
+          </p>
+          <!-- <p class="mb-0">Customer Branch Address,</p> -->
+          <p class="mb-0">
+            {{ invoiceData?.companyDetails?.customerBranch?.address }}
+          </p>
+          <!-- <p class="mb-0">City - Pincode, State (Country)</p> -->
+          <p class="mb-0">
+            {{ invoiceData?.companyDetails?.customerBranch?.cityId }} -
+            {{ invoiceData?.companyDetails?.customerBranch?.pincode }},
+            {{ invoiceData?.companyDetails?.customerBranch?.stateId }} ({{
+              invoiceData?.companyDetails?.customerBranch?.countryId
+            }})
+          </p>
           <div class="row">
             <div class="col-md-3"><strong>PAN NO</strong></div>
-            <div class="col-md-9">Customer PAN</div>
+            <!-- <div class="col-md-9">Customer PAN</div> -->
+            <div class="col-md-9">
+              {{ invoiceData?.companyDetails?.customerBranch?.panNo }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-3"><strong>GST NO</strong></div>
-            <div class="col-md-9">Customer Branch GST</div>
+            <!-- <div class="col-md-9">Customer Branch GST</div> -->
+            <div class="col-md-9">
+              {{ invoiceData?.companyDetails?.customerBranch?.gstin }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-3"><strong>STATE</strong></div>
-            <div class="col-md-9">Customer Branch GST</div>
+            <!-- <div class="col-md-9">Customer Branch GST</div> -->
+            <div class="col-md-9">
+              {{ invoiceData?.companyDetails?.customerBranch?.stateId }}
+            </div>
           </div>
         </div>
         <div class="col-md-6 pt-5">
           <div class="row">
             <div class="col-md-5"><strong>INVOICE DATE</strong></div>
-            <div class="col-md-7">24 Oct, 2022</div>
+            <!-- <div class="col-md-7">24 Oct, 2022</div> -->
+            <div class="col-md-7">
+              {{ (invoiceData?.invoiceDate | date: "mediumDate") || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>DATE DUE</strong></div>
-            <div class="col-md-7">24 Oct, 2022</div>
+            <!-- <div class="col-md-7">24 Oct, 2022</div> -->
+            <div class="col-md-7">
+              {{ (invoiceData?.dueDate | date: "mediumDate") || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>PLACE OF SUPPLY</strong></div>
-            <div class="col-md-7">[xx] STATE</div>
+            <!-- <div class="col-md-7">[xx] STATE</div> -->
+            <div class="col-md-7">
+              [xx] {{ invoiceData?.placeOfSupply || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>SHIPMENT NO</strong></div>
-            <div class="col-md-7">xxx/xxxxx/xxxx</div>
+            <!-- <div class="col-md-7">xxx/xxxxx/xxxx</div> -->
+            <div class="col-md-7">{{ invoiceData?.shipmentNo || "-" }}</div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>SHIPMENT TYPE</strong></div>
-            <div class="col-md-7">AIR EXPORT</div>
+            <!-- <div class="col-md-7">AIR EXPORT</div> -->
+            <div class="col-md-7">{{ invoiceData?.shipmentTypeId || "-" }}</div>
           </div>
         </div>
       </div>
@@ -321,35 +377,59 @@
           </p>
           <div class="row">
             <div class="col-md-6"><strong>MAWB NO</strong></div>
-            <div class="col-md-6">xxxxx-xxxxx-xxxx</div>
+            <!-- <div class="col-md-6">xxxxx-xxxxx-xxxx</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.mawbNo || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6"><strong>HAWB NO</strong></div>
-            <div class="col-md-6">xxxxxx</div>
+            <!-- <div class="col-md-6">xxxxxx</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.hawbNo || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6"><strong>SB NO</strong></div>
-            <div class="col-md-6">xxxxxxxxxxxxxx</div>
+            <!-- <div class="col-md-6">xxxxxxxxxxxxxx</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.sbNo || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6"><strong>PACKAGES</strong></div>
-            <div class="col-md-6">2 (Nos: Unit</div>
+            <!-- <div class="col-md-6">2 (Nos: Unit</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.packageQty || 0 }} (NOS)
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6"><strong>CHARGEABLE WT.</strong></div>
-            <div class="col-md-6">1351.00 (KGS)</div>
+            <!-- <div class="col-md-6">1351.00 (KGS)</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.chargeableWt || 0 }} (KGS)
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6"><strong>GROSS WT.</strong></div>
-            <div class="col-md-6">1351.00 (KGS)</div>
+            <!-- <div class="col-md-6">1351.00 (KGS)</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.grossWt || 0 }} (KGS)
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6"><strong>NET WT.</strong></div>
-            <div class="col-md-6">0.00 (KGS)</div>
+            <!-- <div class="col-md-6">0.00 (KGS)</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.netWt || 0 }} (KGS)
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6"><strong>VOLUME</strong></div>
-            <div class="col-md-6">0.624 (CBM)</div>
+            <!-- <div class="col-md-6">0.624 (CBM)</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.volume || "-" }} (CBM)
+            </div>
           </div>
         </div>
         <div class="col-md-6">
@@ -358,27 +438,54 @@
           </p>
           <div class="row">
             <div class="col-md-5"><strong>DATE 1</strong></div>
-            <div class="col-md-7">24 Oct, 2022</div>
+            <!-- <div class="col-md-7">24 Oct, 2022</div> -->
+            <div class="col-md-7">
+              {{
+                invoiceData?.shipmentDetails?.date1 || "-" | date: "mediumDate"
+              }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>DATE 2</strong></div>
-            <div class="col-md-7">24 Oct, 2022</div>
+            <!-- <div class="col-md-7">24 Oct, 2022</div> -->
+            <div class="col-md-7">
+              {{
+                invoiceData?.shipmentDetails?.date2 || "-" | date: "mediumDate"
+              }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>ARRIVAL DATE</strong></div>
-            <div class="col-md-7">24 Oct, 2022</div>
+            <!-- <div class="col-md-7">24 Oct, 2022</div> -->
+            <div class="col-md-7">
+              {{
+                invoiceData?.shipmentDetails?.arrivalDate
+                  | date: "mediumDate" || "-"
+              }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>CARGO TYPE</strong></div>
-            <div class="col-md-7">Loose</div>
+            <!-- cargoTypeId -->
+            <!-- <div class="col-md-7">Loose</div> -->
+            <div class="col-md-7">
+              {{ invoiceData?.shipmentDetails?.cargoTypeName || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>AIRLINE</strong></div>
-            <div class="col-md-7">Air India</div>
+            <!-- airlineId -->
+            <!-- <div class="col-md-7">Air India</div> -->
+            <div class="col-md-7">
+              {{ invoiceData?.shipmentDetails?.airlineName || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-5"><strong>FLIGHT NO.</strong></div>
-            <div class="col-md-7">AI-XXX</div>
+            <!-- <div class="col-md-7">AI-XXX</div> -->
+            <div class="col-md-7">
+              {{ invoiceData?.shipmentDetails?.flightNo || "-" }}
+            </div>
           </div>
         </div>
       </div>
@@ -417,11 +524,17 @@
           </div>
           <div class="row">
             <div class="col-md-6"><strong>SHIPPER REF.</strong></div>
-            <div class="col-md-6">NAN</div>
+            <!-- <div class="col-md-6">NAN</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.shipperRef || "-" }}
+            </div>
           </div>
           <div class="row">
             <div class="col-md-6"><strong>INCO TERMS</strong></div>
-            <div class="col-md-6">NAN</div>
+            <!-- <div class="col-md-6">NAN</div> -->
+            <div class="col-md-6">
+              {{ invoiceData?.shipmentDetails?.incoTerms || "-" }}
+            </div>
           </div>
         </div>
         <div class="col-md-6">
@@ -469,11 +582,24 @@
               <tr class="content">
                 <td>1</td>
                 <td>Air Export Freight</td>
-                <td>998314</td>
-                <td>1351.00 (KGS)</td>
-                <td>198.00</td>
+                <!-- <td>998314</td> -->
+                <td>{{ invoiceData?.rateDetails?.hsnCode }}</td>
+                <!-- <td>1351.00 (KGS)</td> -->
+                <td>
+                  <!-- {{ invoiceData?.shipmentDetails?.chargeableWt || 0 }} (KGS) -->
+                  {{ invoiceData?.rateDetails?.quantity || 0 }} (KGS)
+                </td>
+                <!-- <td>198.00</td> -->
+                <td>
+                  {{ invoiceData?.rateDetails?.rate | currency: "INR" || "-" }}
+                </td>
                 <td>INR</td>
-                <td>2,67,498.00</td>
+                <!-- <td>2,67,498.00</td> -->
+                <td>
+                  {{
+                    invoiceData?.rateDetails?.amount | currency: "INR" || "-"
+                  }}
+                </td>
               </tr>
               <tr class="content">
                 <td></td>
@@ -482,7 +608,10 @@
                 <td></td>
                 <td></td>
                 <td>Taxable Amount&nbsp;:</td>
-                <td>2,67,498.00</td>
+                <!-- <td>2,67,498.00</td> -->
+                <td>
+                  {{ invoiceData?.rateDetails?.amount | currency: "INR" }}
+                </td>
               </tr>
               <tr class="content">
                 <td></td>
@@ -490,8 +619,26 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>IGST @ 18%&nbsp;:</td>
-                <td>48,149.64</td>
+                <!-- <td>IGST @ 18%&nbsp;:</td> -->
+                <td>
+                  IGST @
+                  {{
+                    invoiceData?.rateDetails?.cgstRate +
+                      invoiceData?.rateDetails?.sgstRate ==
+                    0
+                      ? invoiceData?.rateDetails?.igstRate
+                      : invoiceData?.rateDetails?.cgstRate +
+                        invoiceData?.rateDetails?.sgstRate
+                  }}%&nbsp;:
+                </td>
+                <!-- <td>48,149.64</td> -->
+                <td>
+                  {{
+                    invoiceData?.rateDetails?.taxableAmount?.toLocaleString(
+                      "en-IN"
+                    ) || "-"
+                  }}
+                </td>
               </tr>
               <tr class="content">
                 <td></td>
@@ -500,7 +647,13 @@
                 <td></td>
                 <td></td>
                 <td><b>Total</b></td>
-                <td><b>3,15,647.64</b></td>
+                <!-- <td><b>3,15,647.64</b></td> -->
+                <td>
+                  <b>{{
+                    invoiceData?.rateDetails?.totalAmount
+                      | currency: "INR" || "-"
+                  }}</b>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -508,9 +661,18 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <p class="mb-0"><b>Amount in words (INR): </b></p>
+          <!-- <p class="mb-0"><b>Amount in words (INR): </b></p> -->
+          <!-- currencyId -->
           <p class="mb-0">
-            Three Lakh Fifteen Thousand Six Hundred Forty Eight Only
+            <b
+              >Amount in words ({{
+                invoiceData?.rateDetails?.currencyName || "INR"
+              }}):
+            </b>
+          </p>
+          <p class="mb-0">
+            <!-- Three Lakh Fifteen Thousand Six Hundred Forty Eight Only -->
+            {{ invoiceData?.rateDetails?.amountInWords || "-" }}
           </p>
         </div>
       </div>

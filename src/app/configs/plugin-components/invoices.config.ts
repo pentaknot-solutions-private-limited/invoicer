@@ -55,8 +55,7 @@ export class InvoicesConfigs {
         headerName: "Customer",
         colType: "text",
         valueFormatter: (value, row, col) => {
-          console.log(row);
-
+          // console.log(row);
           return row?.companyDetails?.customer?.customerName
             ? row?.companyDetails?.customer?.customerName
             : "-";

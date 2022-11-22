@@ -76,8 +76,11 @@ export class InvoicesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllPeriodFilterData();
-    this.getAllStatisticsData();
     this.getInvoices();
+    // Simulation
+    setTimeout(() => {
+      this.getAllStatisticsData();
+    }, 500);
 
     // this.getAllEntity();
     // this.getAllUsecase();
@@ -138,13 +141,14 @@ export class InvoicesComponent implements OnInit {
       this.invoiceData = event.data;
       this.openDrawer("invoice-generation");
     } else {
+      this.invoiceData = event.data;
       var yourUl = document.getElementById("pdfTable");
-      yourUl.style.display = 'block';
+      yourUl.style.display = "block";
       const isExist = document.getElementsByTagName("div")[0];
       if (isExist) {
         const doc = new jsPDF("p", "pt", "a4");
         //pdf.html(doc).then(() => pdf.save('fileName.pdf'));
-        
+
         doc.html(this.pdfTable.nativeElement, {
           callback: (doc) => {
             doc.deletePage(13);
@@ -161,7 +165,7 @@ export class InvoicesComponent implements OnInit {
             doc.deletePage(2);
             const filename = new Date().toDateString() + "invoice.pdf";
             doc.save(filename);
-            yourUl.style.display = 'none';
+            yourUl.style.display = "none";
           },
         });
       }
@@ -222,6 +226,8 @@ export class InvoicesComponent implements OnInit {
     this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
       if (res) {
         this.rowData = res.data;
+        // TEMP
+        this.invoiceData = res.data[0];
       }
     });
   }
@@ -231,6 +237,7 @@ export class InvoicesComponent implements OnInit {
     this.dashboardService.getAllStatisticsData(event).subscribe((res: any) => {
       if (res) {
         this.statistics = res;
+        this.statistics[0].value = this.invoiceData.length;
       }
     });
   }

@@ -43,6 +43,7 @@ import { AutoComplete } from "primeng/autocomplete";
 })
 export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   @Input() invoiceData?: any;
+  @Input() invoiceDrawerType: string;
   @Output() onBtnClick: EventEmitter<any> = new EventEmitter();
 
   // View Child
@@ -85,6 +86,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
     invoiceDateInputConfig: this.baseConfig.invoiceDateInput,
     invoiceDueDateInputConfig: this.baseConfig.invoiceDueDateInput,
   };
+  
   shipmentDetailConfig = {
     mawbNo: this.baseConfig.mawbNoInput,
     hawbNo: this.baseConfig.hawbNoInput,
@@ -106,7 +108,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
     shipperRef: this.baseConfig.shipperRefInput,
     incoTerms: this.baseConfig.incoTermsInput,
   };
-
+  
   consignmentDetailConfig = {
     shipper: this.baseConfig.shipperSelect,
     consignee: this.baseConfig.consigneeSelect,
@@ -120,7 +122,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
     dischargePort: this.baseConfig.dischargePortSelect,
     destinationPort: this.baseConfig.destinatonPortSelect,
   };
-
+  
   rateDetailsConfig = {
     serviceTypeConfig: this.baseConfig.serviceTypeSelectorConfig,
     hsnCode: this.baseConfig.hsnCodeInput,
@@ -267,7 +269,66 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
   }
 
   ngOnChanges() {
+    if (this.invoiceDrawerType == 'view') {
+      this.companyDetailConfig.branchSelectorConfig.attributes.disable = true
+      this.companyDetailConfig.customerBranchSelectorConfig.attributes.disable = true
+      this.companyDetailConfig.customerSelectorConfig.attributes.disable = true
+      this.companyDetailConfig.invoiceDateInputConfig.attributes.disable = true
+      this.companyDetailConfig.invoiceDueDateInputConfig.attributes.disable = true
+      this.companyDetailConfig.invoiceNoGenerationInputConfig.attributes.disable = true
+      this.companyDetailConfig.organizationConfig.attributes.disable = true
+
+      this.shipmentDetailConfig.airlineConfig.attributes.disable = true
+      this.shipmentDetailConfig.arrivalDate.attributes.disable = true
+      this.shipmentDetailConfig.cargoTypeConfig.attributes.disable = true
+      this.shipmentDetailConfig.chargeableWt.attributes.disable = true
+      this.shipmentDetailConfig.date1.attributes.disable = true
+      this.shipmentDetailConfig.date2.attributes.disable = true
+      this.shipmentDetailConfig.flightNo.attributes.disable = true
+      this.shipmentDetailConfig.grossWt.attributes.disable = true
+      this.shipmentDetailConfig.hawbNo.attributes.disable = true
+      this.shipmentDetailConfig.incoTerms.attributes.disable = true
+      this.shipmentDetailConfig.mawbNo.attributes.disable = true
+      this.shipmentDetailConfig.netWt.attributes.disable = true
+      this.shipmentDetailConfig.packageQty.attributes.disable = true
+      this.shipmentDetailConfig.sbNo.attributes.disable = true
+      this.shipmentDetailConfig.shipperRef.attributes.disable = true
+      this.shipmentDetailConfig.volume.attributes.disable = true
+
+      this.consignmentDetailConfig.consignee.attributes.disable = true
+      this.consignmentDetailConfig.deliveryCity.attributes.disable = true
+      this.consignmentDetailConfig.deliveryCountry.attributes.disable = true
+      this.consignmentDetailConfig.deliveryState.attributes.disable = true
+      this.consignmentDetailConfig.destinationPort.attributes.disable = true
+      this.consignmentDetailConfig.dischargePort.attributes.disable = true
+      this.consignmentDetailConfig.loadingPort.attributes.disable = true
+      this.consignmentDetailConfig.recieptCity.attributes.disable = true
+      this.consignmentDetailConfig.recieptCountry.attributes.disable = true
+      this.consignmentDetailConfig.recieptState.attributes.disable = true
+      this.consignmentDetailConfig.shipper.attributes.disable = true
+
+      this.rateDetailsConfig.amount.attributes.disable = true
+      this.rateDetailsConfig.amountInWords.attributes.disable = true
+      this.rateDetailsConfig.cgstRate.attributes.disable = true
+      this.rateDetailsConfig.currencyConfig.attributes.disable = true
+      this.rateDetailsConfig.hsnCode.attributes.disable = true
+      this.rateDetailsConfig.igstRate.attributes.disable = true
+      this.rateDetailsConfig.quantity.attributes.disable = true
+      this.rateDetailsConfig.rate.attributes.disable = true
+      this.rateDetailsConfig.serviceTypeConfig.attributes.disable = true
+      this.rateDetailsConfig.sgstRate.attributes.disable = true
+      this.rateDetailsConfig.taxableAmount.attributes.disable = true
+      this.rateDetailsConfig.totalAmount.attributes.disable = true
+      // consignmentDetailConfigrateDetailsConfig
+    }
     if (this.invoiceData) {
+      // Set Stepper Config
+      this.stepperConfig.steps.map((row: any) => {
+        row["isCompleted"] = true
+        return {
+          ...row
+        }
+      })
       // Basic Details
       this.companyDetailsModel.customerBranchId = this.invoiceData.companyDetails.customerBranchId;
       this.companyDetailsModel.customerId = this.invoiceData.companyDetails.customer.customerId
@@ -346,7 +407,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
         this.consignmentDetailsModel.placeOfDeliveryId = 1
         this.consignmentDetailsModel.placeOfRecieptId = 1
         const data = {
-          id: null,
+          id: this.invoiceData.id ? this.invoiceData.id : null,
           companyDetails: this.companyDetailsModel,
           shipmentDetails: this.shipmentDetailsModel,
           consignmentDetails: this.consignmentDetailsModel,
@@ -373,7 +434,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
         this.consignmentDetailsModel.placeOfDeliveryId = 1
         this.consignmentDetailsModel.placeOfRecieptId = 1
         const editData = {
-          id: null,
+          id: this.invoiceData.id ? this.invoiceData.id : null,
           companyDetails: this.companyDetailsModel,
           shipmentDetails: this.shipmentDetailsModel,
           consignmentDetails: this.consignmentDetailsModel,

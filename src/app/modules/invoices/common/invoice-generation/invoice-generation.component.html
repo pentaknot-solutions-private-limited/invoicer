@@ -263,142 +263,142 @@
     <!-- Step 3. Consignment Details -->
     <ng-template #consignmentDetails>
       <!-- <form class="consignmentDetailsForm" [formGroup]="consignmentDetailsForm"> -->
-        <div class="row mt-4 mb-4">
-          <!-- Title -->
-          <div class="col-12">
-            <h3>Consignment Details</h3>
-          </div>
-          <!-- Shipper Select -->
-          <div class="col-3">
-            <vsa-select
-              [config]="consignmentDetailConfig?.shipper"
-              [dataModel]="consignmentDetailsModel"
-            >
-            </vsa-select>
-          </div>
-          <!-- Consignee -->
-          <div class="col-3">
-            <vsa-select
-              [config]="consignmentDetailConfig?.consignee"
-              [dataModel]="consignmentDetailsModel"
-            >
-            </vsa-select>
-          </div>
-          <!-- Loading Port -->
-          <div class="col-3 custom-col">
-            <!-- <vsa-input
+      <div class="row mt-4 mb-4">
+        <!-- Title -->
+        <div class="col-12">
+          <h3>Consignment Details</h3>
+        </div>
+        <!-- Shipper Select -->
+        <div class="col-3">
+          <vsa-select
+            [config]="consignmentDetailConfig?.shipper"
+            [dataModel]="consignmentDetailsModel"
+          >
+          </vsa-select>
+        </div>
+        <!-- Consignee -->
+        <div class="col-3">
+          <vsa-select
+            [config]="consignmentDetailConfig?.consignee"
+            [dataModel]="consignmentDetailsModel"
+          >
+          </vsa-select>
+        </div>
+        <!-- Loading Port -->
+        <div class="col-3 custom-col">
+          <!-- <vsa-input
               [config]="consignmentDetailConfig?.loadingPort"
               formControlName="loadingPort"
               [dataModel]="consignmentDetailsModel"
             >
             </vsa-input> -->
-            <vsa-select
-              [config]="consignmentDetailConfig?.loadingPort"
-              [dataModel]="consignmentDetailsModel"
-            >
-            </vsa-select>
-          </div>
-          <!-- Discharge Port -->
-          <div class="col-3 custom-col">
-            <!-- <vsa-input
+          <vsa-select
+            [config]="consignmentDetailConfig?.loadingPort"
+            [dataModel]="consignmentDetailsModel"
+          >
+          </vsa-select>
+        </div>
+        <!-- Discharge Port -->
+        <div class="col-3 custom-col">
+          <!-- <vsa-input
               [config]="consignmentDetailConfig?.dischargePort"
               formControlName="dischargePort"
               [dataModel]="consignmentDetailsModel"
             >
             </vsa-input> -->
-            <vsa-select
-              [config]="consignmentDetailConfig?.dischargePort"
-              [dataModel]="consignmentDetailsModel"
-            >
-            </vsa-select>
-          </div>
-          <!-- Destination Port -->
-          <div class="col-3 custom-col">
-            <!-- <vsa-input
+          <vsa-select
+            [config]="consignmentDetailConfig?.dischargePort"
+            [dataModel]="consignmentDetailsModel"
+          >
+          </vsa-select>
+        </div>
+        <!-- Destination Port -->
+        <div class="col-3 custom-col">
+          <!-- <vsa-input
               [config]="consignmentDetailConfig?.destinationPort"
               formControlName="destinationPort"
               [dataModel]="consignmentDetailsModel"
             >
             </vsa-input> -->
-            <vsa-select
-              [config]="consignmentDetailConfig?.destinationPort"
-              [dataModel]="consignmentDetailsModel"
-            >
-            </vsa-select>
-          </div>
+          <vsa-select
+            [config]="consignmentDetailConfig?.destinationPort"
+            [dataModel]="consignmentDetailsModel"
+          >
+          </vsa-select>
         </div>
-        <hr class="dashed-divider" />
-        <!-- Place of Reciept -->
-        <div class="row mt-4 mb-4">
-          <div class="col-12">
-            <h3>Place of Reciept</h3>
-          </div>
-          <!-- Country -->
-          <div class="col-3 custom-col">
-            <vsa-select
-              [config]="consignmentDetailConfig?.recieptCountry"
-              [dataModel]="locationModel"
-              (onSelectionChange)="onCountrySelection('reciept',$event)"
-            >
-            </vsa-select>
-          </div>
-
-          <!-- State -->
-          <div class="col-3 custom-col">
-            <vsa-select
-              [config]="consignmentDetailConfig?.recieptState"
-              [dataModel]="locationModel"
-              (onSelectionChange)="onStateSelection('reciept',$event)"
-            >
-            </vsa-select>
-          </div>
-
-          <!-- City -->
-          <div class="col-3 custom-col">
-            <vsa-select
-              [config]="consignmentDetailConfig?.recieptCity"
-              [dataModel]="locationModel"
-              (onSelectionChange)="onCitySelection('reciept',$event)"
-            >
-            </vsa-select>
-          </div>
+      </div>
+      <hr class="dashed-divider" />
+      <!-- Place of Reciept -->
+      <div class="row mt-4 mb-4">
+        <div class="col-12">
+          <h3>Place of Reciept</h3>
         </div>
-        <hr class="dashed-divider" />
-        <!-- Place of Delivery -->
-        <div class="row mt-4 mb-4">
-          <div class="col-12">
-            <h3>Place of Delivery</h3>
-          </div>
-          <!-- Country -->
-          <div class="col-3 custom-col">
-            <vsa-select
-              [config]="consignmentDetailConfig?.deliveryCountry"
-              [dataModel]="locationModel"
-              (onSelectionChange)="onCountrySelection('delivery',$event)"
-            >
-            </vsa-select>
-          </div>
-
-          <!-- State -->
-          <div class="col-3 custom-col">
-            <vsa-select
-              [config]="consignmentDetailConfig?.deliveryState"
-              [dataModel]="locationModel"
-              (onSelectionChange)="onStateSelection('delivery',$event)"
-            >
-            </vsa-select>
-          </div>
-
-          <!-- City -->
-          <div class="col-3 custom-col">
-            <vsa-select
-              [config]="consignmentDetailConfig?.deliveryCity"
-              [dataModel]="locationModel"
-              (onSelectionChange)="onCitySelection('delivery',$event)"
-            >
-            </vsa-select>
-          </div>
+        <!-- Country -->
+        <div class="col-3 custom-col">
+          <vsa-select
+            [config]="consignmentDetailConfig?.recieptCountry"
+            [dataModel]="locationModel"
+            (onSelectionChange)="onCountrySelection('reciept', $event)"
+          >
+          </vsa-select>
         </div>
+
+        <!-- State -->
+        <div class="col-3 custom-col">
+          <vsa-select
+            [config]="consignmentDetailConfig?.recieptState"
+            [dataModel]="locationModel"
+            (onSelectionChange)="onStateSelection('reciept', $event)"
+          >
+          </vsa-select>
+        </div>
+
+        <!-- City -->
+        <div class="col-3 custom-col">
+          <vsa-select
+            [config]="consignmentDetailConfig?.recieptCity"
+            [dataModel]="locationModel"
+            (onSelectionChange)="onCitySelection('reciept', $event)"
+          >
+          </vsa-select>
+        </div>
+      </div>
+      <hr class="dashed-divider" />
+      <!-- Place of Delivery -->
+      <div class="row mt-4 mb-4">
+        <div class="col-12">
+          <h3>Place of Delivery</h3>
+        </div>
+        <!-- Country -->
+        <div class="col-3 custom-col">
+          <vsa-select
+            [config]="consignmentDetailConfig?.deliveryCountry"
+            [dataModel]="locationModel"
+            (onSelectionChange)="onCountrySelection('delivery', $event)"
+          >
+          </vsa-select>
+        </div>
+
+        <!-- State -->
+        <div class="col-3 custom-col">
+          <vsa-select
+            [config]="consignmentDetailConfig?.deliveryState"
+            [dataModel]="locationModel"
+            (onSelectionChange)="onStateSelection('delivery', $event)"
+          >
+          </vsa-select>
+        </div>
+
+        <!-- City -->
+        <div class="col-3 custom-col">
+          <vsa-select
+            [config]="consignmentDetailConfig?.deliveryCity"
+            [dataModel]="locationModel"
+            (onSelectionChange)="onCitySelection('delivery', $event)"
+          >
+          </vsa-select>
+        </div>
+      </div>
       <!-- </form> -->
     </ng-template>
     <!-- Step 4. Rates Details -->
@@ -616,31 +616,84 @@
               <div class="row">
                 <div class="col-md-8 text-left">
                   <h3 class="invoice-title mb-0 xl">
-                    <b>Unified Logistics Solution Pvt. Ltd.</b>
+                    <b>{{
+                      invoiceData
+                        ? invoiceData?.companyDetails?.organization?.name
+                        : companyDetails?.organizationId
+                    }}</b>
                   </h3>
                   <p class="mb-0">
-                    Customer Branch Address<br />
-                    City - Pincode, State (Country)<br />
+                    <ng-container *ngIf="invoiceData">
+                      {{
+                        invoiceData?.companyDetails?.organizationBranch?.address
+                      }}
+                      {{
+                        invoiceData?.companyDetails?.organizationBranch?.cityId
+                      }}
+                      -
+                      {{
+                        invoiceData?.companyDetails?.organizationBranch
+                          ?.pincode
+                      }},
+                      {{
+                        invoiceData?.companyDetails?.organizationBranch?.stateId
+                      }}
+                      ({{
+                        invoiceData?.companyDetails?.organizationBranch
+                          ?.countryId
+                      }})<br />
+                    </ng-container>
+                    <ng-container *ngIf="!invoiceData">
+                      {{ companyDetails?.organizationBranchId }}<br />
+                    </ng-container>
                   </p>
                   <div class="row">
                     <div class="col-md-6">
                       <div class="row">
-                        <div class="col-md-3"><strong></strong>STATE</div>
-                        <div class="col-md-9">[00] State Name</div>
+                        <div class="col-md-3"><strong>STATE</strong></div>
+                        <div class="col-md-9">
+                          [00]
+                          {{
+                            invoiceData
+                              ? invoiceData?.companyDetails?.organizationBranch
+                                  ?.stateId
+                              : "xxxxxxx"
+                          }}
+                        </div>
                       </div>
                       <div class="row">
-                        <div class="col-md-3"><strong></strong>CIN</div>
-                        <div class="col-md-9">XXXXXXXX</div>
+                        <div class="col-md-3"><strong>CIN</strong></div>
+                        <div class="col-md-9">
+                          {{
+                            invoiceData
+                              ? invoiceData?.companyDetails?.organization?.cinNo
+                              : "xxxxxxx"
+                          }}
+                        </div>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="row">
-                        <div class="col-md-3"><strong></strong>GSTIN</div>
-                        <div class="col-md-9">xxxxxxxxxxxxxxx</div>
+                        <div class="col-md-3"><strong>GSTIN</strong></div>
+                        <div class="col-md-9">
+                          {{
+                            invoiceData
+                              ? invoiceData?.companyDetails?.organizationBranch
+                                  ?.gstin
+                              : "xxxxxxx"
+                          }}
+                        </div>
                       </div>
                       <div class="row">
-                        <div class="col-md-3"><strong></strong>PAN</div>
-                        <div class="col-md-9">xxxxxxxxxx</div>
+                        <div class="col-md-3"><strong>PAN</strong></div>
+                        <div class="col-md-9">
+                          {{
+                            invoiceData
+                              ? invoiceData?.companyDetails?.organizationBranch
+                                  ?.panNo
+                              : "xxxxxxx"
+                          }}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -649,7 +702,7 @@
                   <p class="invoice-title mb-0">
                     <b>Tax Invoice</b>
                   </p>
-                  <p>#INV-123</p>
+                  <p>#{{ invoiceData ? invoiceData?.invoiceNo : companyDetails?.invoiceNo ? companyDetails?.invoiceNo : "xxxxxx" }}</p>
                 </div>
               </div>
               <hr />
@@ -658,42 +711,107 @@
                   <p class="details-title mb-0">
                     <b>Recipient (Company Details)</b>
                   </p>
-                  <p class="mb-0"><b>Customer Name</b></p>
-                  <p class="mb-0">Customer Branch Address,</p>
-                  <p class="mb-0">City - Pincode, State (Country)</p>
+                  <p class="mb-0">
+                    <b>{{
+                      invoiceData
+                        ? invoiceData?.companyDetails?.customer?.name
+                        : "Xxxxxxx"
+                    }}</b>
+                  </p>
+                  <p class="mb-0">
+                    {{
+                      invoiceData
+                        ? invoiceData?.companyDetails?.customerBranch?.address
+                        : "xxxxxxxx"
+                    }}
+                  </p>
+                  <p class="mb-0">
+                    {{
+                      invoiceData
+                        ? invoiceData?.companyDetails?.customerBranch?.cityId
+                        : "xxxxxx"
+                    }}
+                    -
+                    {{
+                      invoiceData
+                        ? invoiceData?.companyDetails?.customerBranch?.pincode
+                        : "xxxxx"
+                    }},
+                    {{
+                      invoiceData
+                        ? invoiceData?.companyDetails?.customerBranch?.stateId
+                        : "xxxxx"
+                    }}
+                    ({{
+                      invoiceData
+                        ? invoiceData?.companyDetails?.customerBranch?.countryId
+                        : "xxxxx"
+                    }})
+                  </p>
                   <div class="row">
                     <div class="col-md-3"><strong>PAN NO</strong></div>
-                    <div class="col-md-9">Customer PAN</div>
+                    <div class="col-md-9">
+                      {{
+                        invoiceData
+                          ? invoiceData?.companyDetails?.customerBranch?.panNo
+                          : "xxxx"
+                      }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-3"><strong>GST NO</strong></div>
-                    <div class="col-md-9">Customer Branch GST</div>
+                    <div class="col-md-9">
+                      {{
+                        invoiceData
+                          ? invoiceData?.companyDetails?.customerBranch?.gstin
+                          : "xxxx"
+                      }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-3"><strong>STATE</strong></div>
                     <div class="col-md-9">Customer Branch GST</div>
+                    <div class="col-md-9">
+                      {{
+                        invoiceData
+                          ? invoiceData?.companyDetails?.customerBranch?.stateId
+                          : "xxxx"
+                      }}
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-6 pt-5">
                   <div class="row">
                     <div class="col-md-5"><strong>INVOICE DATE</strong></div>
-                    <div class="col-md-7">24 Oct, 2022</div>
+                    <div class="col-md-7">
+                      {{
+                        (invoiceData?.invoiceDate | date: "mediumDate") || (companyDetailsModel?.invoiceDate | date: "mediumDate")  || "-"
+                      }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>DATE DUE</strong></div>
-                    <div class="col-md-7">24 Oct, 2022</div>
+                    <div class="col-md-7">
+                      {{ (invoiceData?.dueDate | date: "mediumDate") || (companyDetailsModel?.invoiceDueDate | date: "mediumDate") || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>PLACE OF SUPPLY</strong></div>
-                    <div class="col-md-7">[xx] STATE</div>
+                    <div class="col-md-7">
+                      [xx] {{ invoiceData?.placeOfSupply || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>SHIPMENT NO</strong></div>
-                    <div class="col-md-7">xxx/xxxxx/xxxx</div>
+                    <div class="col-md-7">
+                      {{ invoiceData?.shipmentNo || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>SHIPMENT TYPE</strong></div>
-                    <div class="col-md-7">AIR EXPORT</div>
+                    <div class="col-md-7">
+                      {{ invoiceData?.shipmentTypeId || "-" }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -704,35 +822,52 @@
                   </p>
                   <div class="row">
                     <div class="col-md-6"><strong>MAWB NO</strong></div>
-                    <div class="col-md-6">xxxxx-xxxxx-xxxx</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.mawbNo || shipmentDetails?.mawbNo || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>HAWB NO</strong></div>
-                    <div class="col-md-6">xxxxxx</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.hawbNo || shipmentDetails?.hawbNo || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>SB NO</strong></div>
-                    <div class="col-md-6">xxxxxxxxxxxxxx</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.sbNo || shipmentDetails?.sbNo || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>PACKAGES</strong></div>
-                    <div class="col-md-6">2 (Nos: Unit</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.packageQty || shipmentDetails?.packageQty || 0 }} (NOS)
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>CHARGEABLE WT.</strong></div>
-                    <div class="col-md-6">1351.00 (KGS)</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.chargeableWt || shipmentDetails?.chargeableWt || 0 }}
+                      (KGS)
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>GROSS WT.</strong></div>
-                    <div class="col-md-6">1351.00 (KGS)</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.grossWt || shipmentDetails?.grossWt || 0 }} (KGS)
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>NET WT.</strong></div>
-                    <div class="col-md-6">0.00 (KGS)</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.netWt || shipmentDetails?.netWt || 0 }} (KGS)
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>VOLUME</strong></div>
-                    <div class="col-md-6">0.624 (CBM)</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.volume || shipmentDetails?.volume || "-" }} (CBM)
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -741,27 +876,51 @@
                   </p>
                   <div class="row">
                     <div class="col-md-5"><strong>DATE 1</strong></div>
-                    <div class="col-md-7">24 Oct, 2022</div>
+                    <div class="col-md-7">
+                      {{
+                        (invoiceData?.shipmentDetails?.date1
+                          | date: "mediumDate") || (shipmentDetails?.date1
+                          | date: "mediumDate") || "-"
+                      }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>DATE 2</strong></div>
-                    <div class="col-md-7">24 Oct, 2022</div>
+                    <div class="col-md-7">
+                      {{
+                        (invoiceData?.shipmentDetails?.date2
+                          | date: "mediumDate") || (shipmentDetails?.date2
+                          | date: "mediumDate") || "-"
+                      }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>ARRIVAL DATE</strong></div>
-                    <div class="col-md-7">24 Oct, 2022</div>
+                    <div class="col-md-7">
+                      {{
+                        (invoiceData?.shipmentDetails?.arrivalDate
+                          | date: "mediumDate") || (shipmentDetails?.arrivalDate
+                          | date: "mediumDate") || "-"
+                      }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>CARGO TYPE</strong></div>
-                    <div class="col-md-7">Loose</div>
+                    <div class="col-md-7">
+                      {{ invoiceData?.shipmentDetails?.cargoTypeName || shipmentDetails?.cargoTypeName || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>AIRLINE</strong></div>
-                    <div class="col-md-7">Air India</div>
+                    <div class="col-md-7">
+                      {{ invoiceData?.shipmentDetails?.airlineName || shipmentDetails?.airlineName || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>FLIGHT NO.</strong></div>
-                    <div class="col-md-7">AI-XXX</div>
+                    <div class="col-md-7">
+                      {{ invoiceData?.shipmentDetails?.flightNo || shipmentDetails?.flightNo || "-" }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -808,11 +967,15 @@
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>SHIPPER REF.</strong></div>
-                    <div class="col-md-6">NAN</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.shipperRef || shipmentDetails?.shipperRef || "-" }}
+                    </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>INCO TERMS</strong></div>
-                    <div class="col-md-6">NAN</div>
+                    <div class="col-md-6">
+                      {{ invoiceData?.shipmentDetails?.incoTerms || shipmentDetails?.incoTerms || "-" }}
+                    </div>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -860,11 +1023,27 @@
                       <tr class="content">
                         <td>1</td>
                         <td>Air Export Freight</td>
-                        <td>998314</td>
-                        <td>1351.00 (KGS)</td>
-                        <td>198.00</td>
+                        <td>{{ invoiceData?.rateDetails?.hsnCode || rateDetails?.hsnCode || '-' }}</td>
+                        <td>
+                          {{ invoiceData?.rateDetails?.quantity || rateDetails?.quantity || 0 }} (KGS)
+                        </td>
+                        <td>
+                          Rs.
+                          {{
+                            (invoiceData?.rateDetails?.rate
+                              | currency: "":"") || (rateDetails?.rate
+                              | currency: "":"") || "0.00"
+                          }}
+                        </td>
                         <td>INR</td>
-                        <td>2,67,498.00</td>
+                        <td>
+                          Rs.
+                          {{
+                            (invoiceData?.rateDetails?.amount
+                              | currency: "":"") || (rateDetails?.amount
+                              | currency: "":"") || "0.00"
+                          }}
+                        </td>
                       </tr>
                       <tr class="content">
                         <td></td>
@@ -873,7 +1052,14 @@
                         <td></td>
                         <td></td>
                         <td>Taxable Amount&nbsp;:</td>
-                        <td>2,67,498.00</td>
+                        <td>
+                          Rs.
+                          {{
+                            (invoiceData?.rateDetails?.amount
+                              | currency: "":"") || (rateDetails?.amount
+                              | currency: "":"") || "0.00"
+                          }}
+                        </td>
                       </tr>
                       <tr class="content">
                         <td></td>
@@ -881,8 +1067,40 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td>IGST @ 18%&nbsp;:</td>
-                        <td>48,149.64</td>
+                        <td>
+                          <ng-container *ngIf="invoiceData; else flatDetails">
+                            GST @
+                          {{
+                            invoiceData?.rateDetails?.cgstRate +
+                              invoiceData?.rateDetails?.sgstRate ==
+                            0
+                              ? invoiceData?.rateDetails?.igstRate
+                              : invoiceData?.rateDetails?.cgstRate +
+                                invoiceData?.rateDetails?.sgstRate
+                          }}%&nbsp;:
+                          </ng-container>
+                          <ng-template #flatDetails>
+                            GST @
+                            {{
+                              rateDetails?.cgstRate +
+                                rateDetails?.sgstRate ==
+                              0
+                                ? rateDetails?.igstRate
+                                : rateDetails?.cgstRate +
+                                  rateDetails?.sgstRate
+                            }}%&nbsp;:
+                          </ng-template>
+                        </td>
+                        <td>
+                          Rs.
+                          {{
+                            invoiceData?.rateDetails?.taxableAmount?.toLocaleString(
+                              "en-IN"
+                            ) || rateDetails?.taxableAmount?.toLocaleString(
+                              "en-IN"
+                            ) || "0.00"
+                          }}
+                        </td>
                       </tr>
                       <tr class="content">
                         <td></td>
@@ -891,7 +1109,16 @@
                         <td></td>
                         <td></td>
                         <td><b>Total</b></td>
-                        <td><b>3,15,647.64</b></td>
+                        <td>
+                          <b
+                            >Rs.
+                            {{
+                              (invoiceData?.rateDetails?.totalAmount
+                                | currency: "":"") || (rateDetails?.totalAmount
+                                | currency: "":"") || "0.00"
+                            }}</b
+                          >
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -899,9 +1126,15 @@
               </div>
               <div class="row">
                 <div class="col-md-12">
-                  <p class="mb-0"><b>Amount in words (INR): </b></p>
                   <p class="mb-0">
-                    Three Lakh Fifteen Thousand Six Hundred Forty Eight Only
+                    <b
+                      >Amount in words ({{
+                        (invoiceData ? invoiceData?.rateDetails?.currencyName : rateDetails?.currencyName) || "INR"
+                      }}):
+                    </b>
+                  </p>
+                  <p class="mb-0">
+                    {{ (invoiceData ? invoiceData?.rateDetails?.amountInWords : rateDetails.amountInWords) || "-" }}
                   </p>
                 </div>
               </div>
@@ -923,7 +1156,7 @@
       >Close</vsa-button
     >
   </div>
-  <div class="right">
+  <div class="right" *ngIf="invoiceDrawerType != 'view'">
     <vsa-button
       *ngIf="currentStepIndex != 0"
       [type]="'button'"

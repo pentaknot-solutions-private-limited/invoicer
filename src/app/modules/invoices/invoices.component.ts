@@ -67,6 +67,7 @@ export class InvoicesComponent implements OnInit {
   region: string = "";
   selectedStepData: any;
   invoiceData: any;
+  invoiceDrawerType: string = '';
 
   constructor(
     private invoiceService: InvoiceService,
@@ -79,7 +80,7 @@ export class InvoicesComponent implements OnInit {
     this.getInvoices();
     // Simulation
     setTimeout(() => {
-      this.getAllStatisticsData();
+      // this.getAllStatisticsData();
     }, 500);
 
     // this.getAllEntity();
@@ -96,7 +97,9 @@ export class InvoicesComponent implements OnInit {
     console.log(event);
     this.selectedStepData = event;
     // this.openDrawer("invoice-generation", event);
-    this.openDrawer("view-invoice", event);
+    this.invoiceDrawerType = 'view'
+    this.invoiceData = event
+    this.openDrawer("invoice-generation", event);
   }
 
   // Filter Function
@@ -127,47 +130,60 @@ export class InvoicesComponent implements OnInit {
   }
 
   onAddNewInvoiceClick() {
+    this.invoiceDrawerType = 'add'
     this.openDrawer("invoice-generation");
   }
 
   applyAPICall(event) {
     console.log(event);
-    this.getAllStatisticsData(event);
+    // this.getAllStatisticsData(event);
     this.getInvoices();
   }
 
   actionClicked(event) {
+    this.invoiceData = {};
     if (event.event == "edit") {
       this.invoiceData = event.data;
-      this.openDrawer("invoice-generation");
+      this.invoiceDrawerType = 'edit'
+      this.openDrawer("invoice-generation",this.invoiceData);
     } else {
       this.invoiceData = event.data;
-      var yourUl = document.getElementById("pdfTable");
-      yourUl.style.display = "block";
-      const isExist = document.getElementsByTagName("div")[0];
-      if (isExist) {
-        const doc = new jsPDF("p", "pt", "a4");
-        //pdf.html(doc).then(() => pdf.save('fileName.pdf'));
+      if (this.invoiceData) {
+        setTimeout(() => {
+          var pdfTable = document.getElementById("pdfTable");
+          pdfTable.style.display = "block";
+          const isExist = document.getElementsByTagName("div")[0];
+          if (isExist) {
+            const doc = new jsPDF("p", "pt", "a4");
+            doc.setFont("Helvetica");
+            //pdf.html(doc).then(() => pdf.save('fileName.pdf'));
 
-        doc.html(this.pdfTable.nativeElement, {
-          callback: (doc) => {
-            doc.deletePage(13);
-            doc.deletePage(12);
-            doc.deletePage(11);
-            doc.deletePage(10);
-            doc.deletePage(9);
-            doc.deletePage(8);
-            doc.deletePage(7);
-            doc.deletePage(6);
-            doc.deletePage(5);
-            doc.deletePage(4);
-            doc.deletePage(3);
-            doc.deletePage(2);
-            const filename = new Date().toDateString() + "invoice.pdf";
-            doc.save(filename);
-            yourUl.style.display = "none";
-          },
-        });
+            doc.html(this.pdfTable.nativeElement, {
+              callback: (doc) => {
+                doc.deletePage(13);
+                doc.deletePage(12);
+                doc.deletePage(11);
+                doc.deletePage(10);
+                doc.deletePage(9);
+                doc.deletePage(8);
+                doc.deletePage(7);
+                doc.deletePage(6);
+                doc.deletePage(5);
+                doc.deletePage(4);
+                doc.deletePage(3);
+                doc.deletePage(2);
+
+                const filename =
+                  new Date().toDateString() +
+                  "_" +
+                  this.invoiceData.invoiceNo +
+                  "_invoice.pdf";
+                doc.save(filename);
+                pdfTable.style.display = "none";
+              },
+            });
+          }
+        }, 500);
       }
     }
   }
@@ -181,7 +197,7 @@ export class InvoicesComponent implements OnInit {
         this.drawerControllerService.toggleDrawer(true);
         this.drawerControllerService.showCloseButton(false);
         this.drawerControllerService.setEscClose(false);
-        this.drawerControllerService.setTitle(`Create New Invoice`);
+        this.drawerControllerService.setTitle(data ? `Edit/View Invoice` : `Create New Invoice`);
         this.drawerControllerService.changeDrawerSize("extra-large");
         break;
       default:
@@ -218,17 +234,137 @@ export class InvoicesComponent implements OnInit {
   }
 
   // API Calls
-  getInvoices() {
+  getInvoices(event?: string, isFilterChanged?: boolean) {
     const searchFilter = {
       filter: this.selectedFilterType,
       ...this.searchForm.value,
     };
     this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
-      if (res) {
+      if (res.data) {
         this.rowData = res.data;
         // TEMP
         // this.invoiceData = res.data[0];
-        this.statistics[0].value = this.rowData.length;
+        if (!isFilterChanged) {
+          const all = {
+            label: "All",
+            type: "all",
+            value: res.data.length ? res.data.length : 0,
+          };
+          this.statistics.push(all);
+
+          const draft = {
+            label: "Draft",
+            type: "draft",
+            value: res.data.filter(
+              (row: any) =>
+                row.isActive == 1 &&
+                (row.isCompleted == 0 || null) &&
+                row.isDeleted == 0
+            ).length,
+          };
+          this.statistics.push(draft);
+
+          const notApproved = {
+            label: "Not Approved",
+            type: "not_approved",
+            value: res.data.filter(
+              (row: any) =>
+                row.isActive == 1 &&
+                (row.isApproved == 0 || null) &&
+                row.isDeleted == 0
+            ).length,
+          };
+          this.statistics.push(notApproved);
+
+          const notDownloaded = {
+            label: "Not Downloaded",
+            type: "not_downloaded",
+            value: res.data.filter(
+              (row: any) =>
+                row.isActive == 1 &&
+                (row.isDownloaded == 0 || null) &&
+                row.isDeleted == 0
+            ).length,
+          };
+          this.statistics.push(notDownloaded);
+
+          const IRNGenerated = {
+            label: "IRN Generated",
+            type: "irn_generated",
+            value: res.data.filter(
+              (row: any) =>
+                row.isActive == 1 &&
+                row.isIRNGenerated == 1 &&
+                row.isDeleted == 0
+            ).length,
+          };
+          this.statistics.push(IRNGenerated);
+
+          const completed = {
+            label: "Completed",
+            type: "completed",
+            value: res.data.filter(
+              (row: any) =>
+                row.isActive == 1 && row.isCompleted == 1 && row.isDeleted == 0
+            ).length,
+          };
+          this.statistics.push(completed);
+        } else {
+          switch (event) {
+            case "all":
+              this.rowData = res.data;
+              break;
+
+            case "draft":
+              this.rowData = res.data.filter(
+                (row: any) =>
+                  row.isActive == 1 &&
+                  (row.isCompleted == 0 || null) &&
+                  row.isDeleted == 0
+              );
+              break;
+
+            case "not_approved":
+              this.rowData = res.data.filter(
+                (row: any) =>
+                  row.isActive == 1 &&
+                  (row.isApproved == 0 || null) &&
+                  row.isDeleted == 0
+              );
+              break;
+
+            case "not_downloaded":
+              this.rowData = res.data.filter(
+                (row: any) =>
+                  row.isActive == 1 &&
+                  (row.isDownloaded == 0 || null) &&
+                  row.isDeleted == 0
+              );
+              break;
+
+            case "irn_generated":
+              this.rowData = res.data.filter(
+                (row: any) =>
+                  row.isActive == 1 &&
+                  row.isIRNGenerated == 1 &&
+                  row.isDeleted == 0
+              );
+              break;
+
+            case "completed":
+              this.rowData = res.data.filter(
+                (row: any) =>
+                  row.isActive == 1 &&
+                  row.isCompleted == 1 &&
+                  row.isDeleted == 0
+              );
+              break;
+
+            default:
+              this.rowData = res.data;
+              break;
+          }
+        }
       }
     });
   }

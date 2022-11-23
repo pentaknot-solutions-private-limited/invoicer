@@ -17,6 +17,7 @@
       [stepControl]="step?.formGroup"
       [optional]="step?.isOptional"
       [label]="step.stepLabel"
+      [completed]="step.isCompleted"
     >
       <ng-container *ngTemplateOutlet="step.stepTemplate"></ng-container>
     </mat-step>

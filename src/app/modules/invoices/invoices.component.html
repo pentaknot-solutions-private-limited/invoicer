@@ -113,7 +113,7 @@
             <ng-container *ngFor="let item of statistics">
               <div
                 class="col-2"
-                (click)="selectedFilterType = item!.type; getInvoices()"
+                (click)="selectedFilterType = item!.type; getInvoices(item!.type, true)"
               >
                 <div
                   class="box"
@@ -123,10 +123,10 @@
                 >
                   <div class="content">
                     <p class="title">
-                      {{ item!.value | number }}
+                      {{ item?.value | number }}
                       <!-- {{ item | json }} -->
                     </p>
-                    <span class="description"> {{ item!.label }} </span>
+                    <span class="description"> {{ item.label }} </span>
                   </div>
                 </div>
               </div>
@@ -135,7 +135,7 @@
         </div>
       </div>
     </div>
-    <form class="searchForm" [formGroup]="searchForm">
+    <!-- <form class="searchForm" [formGroup]="searchForm">
       <div class="row">
         <div class="col-2 pr5">
           <vsa-input
@@ -153,7 +153,7 @@
           >
           </vsa-input>
         </div>
-        <!-- <div class="col-2 pr5">
+        <div class="col-2 pr5">
           <vsa-input
             [config]="searchFormConfig?.ewayNoInput"
             formControlName="ewayNo"
@@ -168,8 +168,7 @@
             [dataModel]="searchInvoiceModel"
           >
           </vsa-input>
-        </div> -->
-        <!-- class="col-2 pr5" -->
+        </div>
         <div class="col-4 pt5">
           <vsa-button
             [type]="'submit'"
@@ -190,7 +189,7 @@
           </vsa-button>
         </div>
       </div>
-    </form>
+    </form> -->
     <div class="row" *ngIf="!showGrid">
       <div class="col-12">
         <div class="empty-layout">
@@ -223,6 +222,7 @@
   <invoice-generation
     (onBtnClick)="drawerAction($event)"
     [invoiceData]="invoiceData"
+    [invoiceDrawerType]="invoiceDrawerType"
     *ngIf="pageComponentVisibility?.showInvoiceGeneration"
   ></invoice-generation>
 </ng-template>
@@ -251,7 +251,7 @@
           <div class="row">
             <div class="col-md-6">
               <div class="row">
-                <div class="col-md-3"><strong></strong>STATE</div>
+                <div class="col-md-3"><strong>STATE</strong></div>
                 <!-- <div class="col-md-9">[00] State Name</div> -->
                 <div class="col-md-9">
                   [00]
@@ -259,7 +259,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-3"><strong></strong>CIN</div>
+                <div class="col-md-3"><strong>CIN</strong></div>
                 <!-- <div class="col-md-9">XXXXXXXX</div> -->
                 <div class="col-md-9">
                   {{ invoiceData?.companyDetails?.organization?.cinNo }}
@@ -268,14 +268,14 @@
             </div>
             <div class="col-md-6">
               <div class="row">
-                <div class="col-md-3"><strong></strong>GSTIN</div>
+                <div class="col-md-3"><strong>GSTIN</strong></div>
                 <!-- <div class="col-md-9">xxxxxxxxxxxxxxx</div> -->
                 <div class="col-md-9">
                   {{ invoiceData?.companyDetails?.organizationBranch?.gstin }}
                 </div>
               </div>
               <div class="row">
-                <div class="col-md-3"><strong></strong>PAN</div>
+                <div class="col-md-3"><strong>PAN</strong></div>
                 <!-- <div class="col-md-9">xxxxxxxxxx</div> -->
                 <div class="col-md-9">
                   {{ invoiceData?.companyDetails?.organizationBranch?.panNo }}
@@ -442,7 +442,7 @@
             <!-- <div class="col-md-7">24 Oct, 2022</div> -->
             <div class="col-md-7">
               {{
-                invoiceData?.shipmentDetails?.date1 || "-" | date: "mediumDate"
+                (invoiceData?.shipmentDetails?.date1 | date: "mediumDate") || "-"
               }}
             </div>
           </div>
@@ -451,7 +451,7 @@
             <!-- <div class="col-md-7">24 Oct, 2022</div> -->
             <div class="col-md-7">
               {{
-                invoiceData?.shipmentDetails?.date2 || "-" | date: "mediumDate"
+                (invoiceData?.shipmentDetails?.date2 | date: "mediumDate") || "-"
               }}
             </div>
           </div>
@@ -460,8 +460,7 @@
             <!-- <div class="col-md-7">24 Oct, 2022</div> -->
             <div class="col-md-7">
               {{
-                invoiceData?.shipmentDetails?.arrivalDate
-                  | date: "mediumDate" || "-"
+                (invoiceData?.shipmentDetails?.arrivalDate | date: "mediumDate") || "-"
               }}
             </div>
           </div>
@@ -592,13 +591,15 @@
                 </td>
                 <!-- <td>198.00</td> -->
                 <td>
-                  {{ invoiceData?.rateDetails?.rate | currency: "INR" || "-" }}
+                  Rs. {{
+                    (invoiceData?.rateDetails?.rate | currency:'':'') || "0.00"
+                  }}
                 </td>
                 <td>INR</td>
                 <!-- <td>2,67,498.00</td> -->
                 <td>
-                  {{
-                    invoiceData?.rateDetails?.amount | currency: "INR" || "-"
+                  Rs. {{
+                    (invoiceData?.rateDetails?.amount | currency:'':'') || "0.00"
                   }}
                 </td>
               </tr>
@@ -611,7 +612,9 @@
                 <td>Taxable Amount&nbsp;:</td>
                 <!-- <td>2,67,498.00</td> -->
                 <td>
-                  {{ invoiceData?.rateDetails?.amount | currency: "INR" }}
+                  Rs. {{
+                    (invoiceData?.rateDetails?.amount | currency:'':'') || "0.00"
+                  }}
                 </td>
               </tr>
               <tr class="content">
@@ -622,7 +625,7 @@
                 <td></td>
                 <!-- <td>IGST @ 18%&nbsp;:</td> -->
                 <td>
-                  IGST @
+                  GST @
                   {{
                     invoiceData?.rateDetails?.cgstRate +
                       invoiceData?.rateDetails?.sgstRate ==
@@ -634,10 +637,10 @@
                 </td>
                 <!-- <td>48,149.64</td> -->
                 <td>
-                  {{
-                    invoiceData?.rateDetails?.taxableAmount?.toLocaleString(
+                  Rs. {{
+                    (invoiceData?.rateDetails?.taxableAmount?.toLocaleString(
                       "en-IN"
-                    ) || "-"
+                    )) || "0.00"
                   }}
                 </td>
               </tr>
@@ -650,9 +653,8 @@
                 <td><b>Total</b></td>
                 <!-- <td><b>3,15,647.64</b></td> -->
                 <td>
-                  <b>{{
-                    invoiceData?.rateDetails?.totalAmount
-                      | currency: "INR" || "-"
+                  <b>Rs. {{
+                    (invoiceData?.rateDetails?.totalAmount | currency:'':'') || "0.00"
                   }}</b>
                 </td>
               </tr>

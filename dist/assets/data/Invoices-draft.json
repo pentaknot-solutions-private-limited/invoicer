@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "customerId": 1,
+    "customerName": "Rajesh Yadav",
+    "invoiceNo": "AEAMDC22-2301",
+    "invoiceDate": "2021-05-20",
+    "amount": 50000
+  },
+  {
+    "id": 2,
+    "customerId": 2,
+    "customerName": "Abdul Khan",
+    "invoiceNo": "AEAMDC22-2302",
+    "invoiceDate": "2021-05-20",
+    "amount": 60000
+  }
+]

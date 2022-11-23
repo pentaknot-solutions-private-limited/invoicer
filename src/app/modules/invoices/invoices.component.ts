@@ -227,7 +227,8 @@ export class InvoicesComponent implements OnInit {
       if (res) {
         this.rowData = res.data;
         // TEMP
-        this.invoiceData = res.data[0];
+        // this.invoiceData = res.data[0];
+        this.statistics[0].value = this.rowData.length;
       }
     });
   }

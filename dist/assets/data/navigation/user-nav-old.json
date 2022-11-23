@@ -1,0 +1,76 @@
+
+[{
+  "top":[
+    {
+      "name": "Search",
+      "icon": "search",
+      "isActive": false,
+      "size": "small",
+      "route": "/search"
+    },
+    {
+      "name": "Home",
+      "icon": "home",
+      "isActive": false,
+      "size": "small",
+      "route": "/dashboard"
+    },
+    {
+      "name": "Extract AI",
+      "icon": "show_chart",
+      "isActive": false,
+      "size": "medium",
+      "route": "/extract-ai"
+    },
+    {
+      "name": "Policies",
+      "icon": "assignment",
+      "isActive": false,
+      "size": "medium",
+      "route": "/policies"
+    },
+    {
+      "name": "Governance",
+      "icon": "security",
+      "isActive": false,
+      "size": "medium",
+      "route": "/wip"
+    }
+  ],
+  "bottom":[
+    {
+      "id": 1,
+      "name": "Notifications",
+      "icon": "notification_important",
+      "isActive": false,
+      "size": "small",
+      "route": "/wip"
+    },
+    {
+      "id": 2,
+      "name": "Settings",
+      "icon": "settings",
+      "isActive": false,
+      "size": "small",
+      "route": "/wip"
+    },
+    {
+      "id": 3,
+      "name": "Profile",
+      "icon": "person",
+      "isActive": false,
+      "size": "medium",
+      "route": "/wip"
+    },
+    {
+      "id": 4,
+      "name": "Logout",
+      "icon": "exit_to_app",
+      "isActive": false,
+      "size": "medium",
+      "route": "/"
+    }
+  ]
+} 
+]
+

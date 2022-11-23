@@ -1,0 +1,38 @@
+[
+  {
+    "id": 6,
+    "type": "all",
+    "label": "ALL",
+    "value": 0
+  },
+  {
+    "id": 1,
+    "type": "draft",
+    "label": "Draft",
+    "value": 0
+  },
+  {
+    "id": 2,
+    "type": "not_approved",
+    "label": "Not Approved",
+    "value": 0
+  },
+  {
+    "id": 3,
+    "type": "not_downloaded",
+    "label": "Not Downloaded",
+    "value": 0
+  },
+  {
+    "id": 4,
+    "type": "irn_generated",
+    "label": "IRN Generated",
+    "value": 0
+  },
+  {
+    "id": 5,
+    "type": "completed",
+    "label": "Completed",
+    "value": 0
+  }
+]

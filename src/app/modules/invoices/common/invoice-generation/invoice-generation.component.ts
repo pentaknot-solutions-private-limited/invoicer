@@ -4,6 +4,7 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -35,13 +36,14 @@ import { VSAToastyService } from "src/app/shared/components/vsa-toasty/vsa-toast
 import { Country, State, City } from "country-state-city";
 import { FilterService } from "primeng/api";
 import { AutoComplete } from "primeng/autocomplete";
+import * as _ from "lodash";
 
 @Component({
   selector: "invoice-generation",
   templateUrl: "./invoice-generation.component.html",
   styleUrls: ["./invoice-generation.component.scss"],
 })
-export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
+export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() invoiceData?: any;
   @Input() invoiceDrawerType: string;
   @Output() onBtnClick: EventEmitter<any> = new EventEmitter();
@@ -320,15 +322,25 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
       this.rateDetailsConfig.taxableAmount.attributes.disable = true
       this.rateDetailsConfig.totalAmount.attributes.disable = true
       // consignmentDetailConfigrateDetailsConfig
+    } else if (this.invoiceDrawerType == 'add') {
+      console.log("working add");
+      this.stepperConfig.steps = _.cloneDeep(this.stepperConfig.steps.map((row: any) => {
+        row["isCompleted"] = false
+        return {
+          ...row
+        }
+      }))
     }
-    if (this.invoiceData) {
+    if (this.invoiceData && this.invoiceDrawerType != 'add') {
       // Set Stepper Config
-      this.stepperConfig.steps.map((row: any) => {
+      console.log(this.invoiceData);
+      
+      this.stepperConfig.steps = _.cloneDeep(this.stepperConfig.steps.map((row: any) => {
         row["isCompleted"] = true
         return {
           ...row
         }
-      })
+      }))
       // Basic Details
       this.companyDetailsModel.customerBranchId = this.invoiceData.companyDetails.customerBranchId;
       this.companyDetailsModel.customerId = this.invoiceData.companyDetails.customer.customerId
@@ -349,6 +361,10 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
       // Bank Details
       this.bankDetailsModel = this.invoiceData.bankDetails
     }
+  }
+
+  ngOnDestroy(): void {
+    this.stepperConfig.steps = []
   }
 
   ngAfterViewInit() {
@@ -477,27 +493,27 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
       case "quantity":
       case "rate":
         this.rateDetailsModel.amount =
-          Number(this.rateDetailsModel.quantity) *
-          Number(this.rateDetailsModel.rate);
+          Number(this.rateDetailsModel?.quantity) *
+          Number(this.rateDetailsModel?.rate);
 
         // Update Taxable Amount
         const cgstRateValue =
-          Number(this.rateDetailsModel.cgstRate.toString().split("%")[0]) / 100;
+          Number(this.rateDetailsModel?.cgstRate.toString().split("%")[0]) / 100;
         const sgstRateValue =
-          Number(this.rateDetailsModel.sgstRate.toString().split("%")[0]) / 100;
+          Number(this.rateDetailsModel?.sgstRate.toString().split("%")[0]) / 100;
         const igstRateValue =
-          Number(this.rateDetailsModel.igstRate.toString().split("%")[0]) / 100;
+          Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) / 100;
         this.rateDetailsModel.taxableAmount =
           Math.round(
-            Number(this.rateDetailsModel.amount) *
+            Number(this.rateDetailsModel?.amount) *
               Number(cgstRateValue + sgstRateValue) *
               100
           ) / 100;
 
         // Update Total Amount
         this.rateDetailsModel.totalAmount = Math.round(
-          Number(this.rateDetailsModel.amount) +
-            Number(this.rateDetailsModel.taxableAmount)
+          Number(this.rateDetailsModel?.amount) +
+            Number(this.rateDetailsModel?.taxableAmount)
         );
 
         // Update Amount in Words
@@ -508,7 +524,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit {
         //   Number(parseInt(totalAmt[0]))) +"and"+convertAmountToWords(
         //     Number(parseInt(totalAmt[1])));
         this.rateDetailsModel.amountInWords = convertAmountToWords(
-          Math.round(Number(this.rateDetailsModel.totalAmount))
+          Math.round(Number(this.rateDetailsModel?.totalAmount))
         );
         break;
 

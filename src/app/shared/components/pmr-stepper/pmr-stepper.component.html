@@ -12,14 +12,16 @@
   <ng-template matStepperIcon="pending">
     <mat-icon>insert_drive_file</mat-icon>
   </ng-template>
-  <ng-container *ngFor="let step of config.steps">
+  <ng-container *ngFor="let step of config.steps;let i = index">
+    
     <mat-step
       [stepControl]="step?.formGroup"
       [optional]="step?.isOptional"
       [label]="step.stepLabel"
       [completed]="step.isCompleted"
-    >
+    >{{step.isCompleted}}
       <ng-container *ngTemplateOutlet="step.stepTemplate"></ng-container>
     </mat-step>
+    <!--  -->
   </ng-container>
 </mat-horizontal-stepper>

@@ -58,6 +58,7 @@ export class PMRStepperComponent implements OnInit {
       // this.userStepperForm._steps.toArray()[event.previouslySelectedIndex].completed = true;
     }
     this.stepIndex = this.stepper.selectedIndex;
+    this.config.steps[this.stepIndex].isCompleted = true
     this.stepIndexChange.emit(this.stepIndex);
     // this.stepper._steps.toArray()[event.previouslySelectedIndex].interacted = false;
   }

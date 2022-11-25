@@ -1134,7 +1134,7 @@
                     </b>
                   </p>
                   <p class="mb-0">
-                    {{ (invoiceData ? invoiceData?.rateDetails?.amountInWords : rateDetails.amountInWords) || "-" }}
+                    {{ (invoiceData?.rateDetails?.amountInWords) || (rateDetails?.amountInWords) || "-" }}
                   </p>
                 </div>
               </div>

@@ -206,6 +206,8 @@ export class InvoicesComponent implements OnInit {
   }
 
   clearDrawerData() {
+    this.invoiceData = {}
+    this.pageComponentVisibility.showInvoiceGeneration = false;
     this.drawerControllerService.toggleDrawer(false);
     this.drawerControllerService.setEscClose(false);
     this.drawerControllerService.setTitle(null);
@@ -223,7 +225,7 @@ export class InvoicesComponent implements OnInit {
     switch (event) {
       case "done":
         this.clearDrawerData();
-        this.getInvoices();
+        this.getInvoices('all',true);
         break;
 
       default:

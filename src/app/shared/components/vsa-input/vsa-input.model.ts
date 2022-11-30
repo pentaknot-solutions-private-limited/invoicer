@@ -6,6 +6,7 @@ export interface IRules {
 export interface ITextAttribute {
     label?: string;
     type?: string;
+    max?: number;
     placeholder?: string;
     matlabel?: string;
     disable?: boolean;

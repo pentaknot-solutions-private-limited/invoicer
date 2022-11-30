@@ -43,7 +43,9 @@ import * as _ from "lodash";
   templateUrl: "./invoice-generation.component.html",
   styleUrls: ["./invoice-generation.component.scss"],
 })
-export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDestroy {
+export class InvoiceGenerationComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @Input() invoiceData?: any;
   @Input() invoiceDrawerType: string;
   @Output() onBtnClick: EventEmitter<any> = new EventEmitter();
@@ -88,7 +90,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
     invoiceDateInputConfig: this.baseConfig.invoiceDateInput,
     invoiceDueDateInputConfig: this.baseConfig.invoiceDueDateInput,
   };
-  
+
   shipmentDetailConfig = {
     mawbNo: this.baseConfig.mawbNoInput,
     hawbNo: this.baseConfig.hawbNoInput,
@@ -110,7 +112,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
     shipperRef: this.baseConfig.shipperRefInput,
     incoTerms: this.baseConfig.incoTermsInput,
   };
-  
+
   consignmentDetailConfig = {
     shipper: this.baseConfig.shipperSelect,
     consignee: this.baseConfig.consigneeSelect,
@@ -124,7 +126,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
     dischargePort: this.baseConfig.dischargePortSelect,
     destinationPort: this.baseConfig.destinatonPortSelect,
   };
-  
+
   rateDetailsConfig = {
     serviceTypeConfig: this.baseConfig.serviceTypeSelectorConfig,
     hsnCode: this.baseConfig.hsnCodeInput,
@@ -214,6 +216,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
   filteredData: any[] = [];
   disabled: boolean = true;
   editMode: boolean = false;
+  disableNext: boolean = false;
   disablePlaceOfRecieptState: boolean = true;
   disablePlaceOfRecieptCity: boolean = true;
   downloadLoading: boolean = false;
@@ -234,6 +237,12 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
   selectedPlaceOfDeliveryCountry: any = "";
   selectedPlaceOfDeliveryState: any = "";
   selectedPlaceOfDeliveryCity: any = "";
+  organizationName = 'UNIFIED LOGISTICS SOLUTIONS PRIVATE LIMITED'
+  customerName = "QWERTY India Ltd."
+  cargoType = "Airways"
+  airline = "Air India"
+  serviceType = "AIR"
+  currency = "INR"
 
   constructor(
     private invoiceGenerationService: InvoiceGenerationService,
@@ -248,6 +257,9 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
     this.rateDetailsModel.cgstRate = "9%"; //0.09;
     this.rateDetailsModel.sgstRate = "9%"; //0.09;
     this.rateDetailsModel.igstRate = "";
+    // Temp
+    this.consignmentDetailsModel.placeOfDeliveryId = 1;
+    this.consignmentDetailsModel.placeOfRecieptId = 1;
   }
 
   ngOnInit(): void {
@@ -271,100 +283,121 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
   }
 
   ngOnChanges() {
-    if (this.invoiceDrawerType == 'view') {
-      this.companyDetailConfig.branchSelectorConfig.attributes.disable = true
-      this.companyDetailConfig.customerBranchSelectorConfig.attributes.disable = true
-      this.companyDetailConfig.customerSelectorConfig.attributes.disable = true
-      this.companyDetailConfig.invoiceDateInputConfig.attributes.disable = true
-      this.companyDetailConfig.invoiceDueDateInputConfig.attributes.disable = true
-      this.companyDetailConfig.invoiceNoGenerationInputConfig.attributes.disable = true
-      this.companyDetailConfig.organizationConfig.attributes.disable = true
-
-      this.shipmentDetailConfig.airlineConfig.attributes.disable = true
-      this.shipmentDetailConfig.arrivalDate.attributes.disable = true
-      this.shipmentDetailConfig.cargoTypeConfig.attributes.disable = true
-      this.shipmentDetailConfig.chargeableWt.attributes.disable = true
-      this.shipmentDetailConfig.date1.attributes.disable = true
-      this.shipmentDetailConfig.date2.attributes.disable = true
-      this.shipmentDetailConfig.flightNo.attributes.disable = true
-      this.shipmentDetailConfig.grossWt.attributes.disable = true
-      this.shipmentDetailConfig.hawbNo.attributes.disable = true
-      this.shipmentDetailConfig.incoTerms.attributes.disable = true
-      this.shipmentDetailConfig.mawbNo.attributes.disable = true
-      this.shipmentDetailConfig.netWt.attributes.disable = true
-      this.shipmentDetailConfig.packageQty.attributes.disable = true
-      this.shipmentDetailConfig.sbNo.attributes.disable = true
-      this.shipmentDetailConfig.shipperRef.attributes.disable = true
-      this.shipmentDetailConfig.volume.attributes.disable = true
-
-      this.consignmentDetailConfig.consignee.attributes.disable = true
-      this.consignmentDetailConfig.deliveryCity.attributes.disable = true
-      this.consignmentDetailConfig.deliveryCountry.attributes.disable = true
-      this.consignmentDetailConfig.deliveryState.attributes.disable = true
-      this.consignmentDetailConfig.destinationPort.attributes.disable = true
-      this.consignmentDetailConfig.dischargePort.attributes.disable = true
-      this.consignmentDetailConfig.loadingPort.attributes.disable = true
-      this.consignmentDetailConfig.recieptCity.attributes.disable = true
-      this.consignmentDetailConfig.recieptCountry.attributes.disable = true
-      this.consignmentDetailConfig.recieptState.attributes.disable = true
-      this.consignmentDetailConfig.shipper.attributes.disable = true
-
-      this.rateDetailsConfig.amount.attributes.disable = true
-      this.rateDetailsConfig.amountInWords.attributes.disable = true
-      this.rateDetailsConfig.cgstRate.attributes.disable = true
-      this.rateDetailsConfig.currencyConfig.attributes.disable = true
-      this.rateDetailsConfig.hsnCode.attributes.disable = true
-      this.rateDetailsConfig.igstRate.attributes.disable = true
-      this.rateDetailsConfig.quantity.attributes.disable = true
-      this.rateDetailsConfig.rate.attributes.disable = true
-      this.rateDetailsConfig.serviceTypeConfig.attributes.disable = true
-      this.rateDetailsConfig.sgstRate.attributes.disable = true
-      this.rateDetailsConfig.taxableAmount.attributes.disable = true
-      this.rateDetailsConfig.totalAmount.attributes.disable = true
-      // consignmentDetailConfigrateDetailsConfig
-    } else if (this.invoiceDrawerType == 'add') {
-      console.log("working add");
-      this.stepperConfig.steps = _.cloneDeep(this.stepperConfig.steps.map((row: any) => {
-        row["isCompleted"] = false
-        return {
-          ...row
-        }
-      }))
+    if (this.invoiceData) {
+      console.log(this.invoiceData);
     }
-    if (this.invoiceData && this.invoiceDrawerType != 'add') {
+
+    if (this.invoiceDrawerType == "view") {
+      this.companyDetailConfig.branchSelectorConfig.attributes.disable = true;
+      this.companyDetailConfig.customerBranchSelectorConfig.attributes.disable =
+        true;
+      this.companyDetailConfig.customerSelectorConfig.attributes.disable = true;
+      this.companyDetailConfig.invoiceDateInputConfig.attributes.disable = true;
+      this.companyDetailConfig.invoiceDueDateInputConfig.attributes.disable =
+        true;
+      this.companyDetailConfig.invoiceNoGenerationInputConfig.attributes.disable =
+        true;
+      this.companyDetailConfig.organizationConfig.attributes.disable = true;
+
+      this.shipmentDetailConfig.airlineConfig.attributes.disable = true;
+      this.shipmentDetailConfig.arrivalDate.attributes.disable = true;
+      this.shipmentDetailConfig.cargoTypeConfig.attributes.disable = true;
+      this.shipmentDetailConfig.chargeableWt.attributes.disable = true;
+      this.shipmentDetailConfig.date1.attributes.disable = true;
+      this.shipmentDetailConfig.date2.attributes.disable = true;
+      this.shipmentDetailConfig.flightNo.attributes.disable = true;
+      this.shipmentDetailConfig.grossWt.attributes.disable = true;
+      this.shipmentDetailConfig.hawbNo.attributes.disable = true;
+      this.shipmentDetailConfig.incoTerms.attributes.disable = true;
+      this.shipmentDetailConfig.mawbNo.attributes.disable = true;
+      this.shipmentDetailConfig.netWt.attributes.disable = true;
+      this.shipmentDetailConfig.packageQty.attributes.disable = true;
+      this.shipmentDetailConfig.sbNo.attributes.disable = true;
+      this.shipmentDetailConfig.shipperRef.attributes.disable = true;
+      this.shipmentDetailConfig.volume.attributes.disable = true;
+
+      this.consignmentDetailConfig.consignee.attributes.disable = true;
+      this.consignmentDetailConfig.deliveryCity.attributes.disable = true;
+      this.consignmentDetailConfig.deliveryCountry.attributes.disable = true;
+      this.consignmentDetailConfig.deliveryState.attributes.disable = true;
+      this.consignmentDetailConfig.destinationPort.attributes.disable = true;
+      this.consignmentDetailConfig.dischargePort.attributes.disable = true;
+      this.consignmentDetailConfig.loadingPort.attributes.disable = true;
+      this.consignmentDetailConfig.recieptCity.attributes.disable = true;
+      this.consignmentDetailConfig.recieptCountry.attributes.disable = true;
+      this.consignmentDetailConfig.recieptState.attributes.disable = true;
+      this.consignmentDetailConfig.shipper.attributes.disable = true;
+
+      this.rateDetailsConfig.amount.attributes.disable = true;
+      this.rateDetailsConfig.amountInWords.attributes.disable = true;
+      this.rateDetailsConfig.cgstRate.attributes.disable = true;
+      this.rateDetailsConfig.currencyConfig.attributes.disable = true;
+      this.rateDetailsConfig.hsnCode.attributes.disable = true;
+      this.rateDetailsConfig.igstRate.attributes.disable = true;
+      this.rateDetailsConfig.quantity.attributes.disable = true;
+      this.rateDetailsConfig.rate.attributes.disable = true;
+      this.rateDetailsConfig.serviceTypeConfig.attributes.disable = true;
+      this.rateDetailsConfig.sgstRate.attributes.disable = true;
+      this.rateDetailsConfig.taxableAmount.attributes.disable = true;
+      this.rateDetailsConfig.totalAmount.attributes.disable = true;
+      // consignmentDetailConfigrateDetailsConfig
+    } else if (this.invoiceDrawerType == "add") {
+      console.log("working add");
+      this.stepperConfig.steps = _.cloneDeep(
+        this.stepperConfig.steps.map((row: any) => {
+          row["isCompleted"] = false;
+          return {
+            ...row,
+          };
+        })
+      );
+    }
+    if (this.invoiceData && this.invoiceDrawerType != "add") {
       // Set Stepper Config
       console.log(this.invoiceData);
-      
-      this.stepperConfig.steps = _.cloneDeep(this.stepperConfig.steps.map((row: any) => {
-        row["isCompleted"] = true
-        return {
-          ...row
-        }
-      }))
+
+      this.stepperConfig.steps = _.cloneDeep(
+        this.stepperConfig.steps.map((row: any) => {
+          row["isCompleted"] = true;
+          return {
+            ...row,
+          };
+        })
+      );
       // Basic Details
-      this.companyDetailsModel.customerBranchId = this.invoiceData.companyDetails.customerBranchId;
-      this.companyDetailsModel.customerId = this.invoiceData.companyDetails.customer.customerId
-      this.companyDetailsModel.invoiceDate = this.invoiceData.invoiceDate
-      this.companyDetailsModel.invoiceDueDate = this.invoiceData.dueDate
-      this.companyDetailsModel.invoiceNo = this.invoiceData.invoiceNo
-      this.companyDetailsModel.organizationBranchId = this.invoiceData.companyDetails.organizationBranchId
-      this.companyDetailsModel.organizationId = this.invoiceData.companyDetails.organization.id
+      this.companyDetailsModel.customerBranchId =
+        this.invoiceData.companyDetails.customerBranchId;
+      this.companyDetailsModel.customerId =
+        this.invoiceData.companyDetails.customer.customerId;
+      this.companyDetailsModel.invoiceDate = this.invoiceData.invoiceDate;
+      this.companyDetailsModel.invoiceDueDate = this.invoiceData.dueDate;
+      this.companyDetailsModel.invoiceNo = this.invoiceData.invoiceNo;
+      this.companyDetailsModel.organizationBranchId =
+        this.invoiceData.companyDetails.organizationBranchId;
+      this.companyDetailsModel.organizationId =
+        this.invoiceData.companyDetails.organization.id;
       // Shipment Details
-      this.shipmentDetailsModel = this.invoiceData.shipmentDetails
+      this.shipmentDetailsModel = this.invoiceData.shipmentDetails;
       // Consignment Details
-      this.consignmentDetailsModel = this.invoiceData.consignmentDetails
+      this.consignmentDetailsModel = this.invoiceData.consignmentDetails;
       // Rate Details
-      this.rateDetailsModel = this.invoiceData.rateDetails
-      this.rateDetailsModel.cgstRate = this.invoiceData.rateDetails.cgstRate ? `${this.invoiceData.rateDetails.cgstRate}%` : ""
-      this.rateDetailsModel.sgstRate = this.invoiceData.rateDetails.sgstRate ? `${this.invoiceData.rateDetails.sgstRate}%` : ""
-      this.rateDetailsModel.igstRate = this.invoiceData.rateDetails.igstRate ? `${this.invoiceData.rateDetails.igstRate}%` : ""
+      this.rateDetailsModel = this.invoiceData.rateDetails;
+      this.rateDetailsModel.cgstRate = this.invoiceData.rateDetails.cgstRate
+        ? `${this.invoiceData.rateDetails.cgstRate}%`
+        : "";
+      this.rateDetailsModel.sgstRate = this.invoiceData.rateDetails.sgstRate
+        ? `${this.invoiceData.rateDetails.sgstRate}%`
+        : "";
+      this.rateDetailsModel.igstRate = this.invoiceData.rateDetails.igstRate
+        ? `${this.invoiceData.rateDetails.igstRate}%`
+        : "";
       // Bank Details
-      this.bankDetailsModel = this.invoiceData.bankDetails
+      this.bankDetailsModel = this.invoiceData.bankDetails;
     }
   }
 
   ngOnDestroy(): void {
-    this.stepperConfig.steps = []
+    this.stepperConfig.steps = [];
   }
 
   ngAfterViewInit() {
@@ -395,12 +428,62 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
     // console.log(this.stepper);
   }
 
+  get setNextButtonDisabled() {
+    if (
+      this.currentStepIndex == 0 &&
+      (!this.companyDetailsModel.invoiceNo ||
+        !this.companyDetailsModel.invoiceDate ||
+        !this.companyDetailsModel.invoiceDueDate)
+    ) {
+      return true;
+    } else if (
+      this.currentStepIndex == 1 &&
+      (!this.shipmentDetailsModel.mawbNo ||
+        !this.shipmentDetailsModel.hawbNo ||
+        !this.shipmentDetailsModel.sbNo ||
+        !this.shipmentDetailsModel.packageQty ||
+        !this.shipmentDetailsModel.chargeableWt ||
+        !this.shipmentDetailsModel.grossWt ||
+        !this.shipmentDetailsModel.netWt ||
+        !this.shipmentDetailsModel.volume ||
+        !this.shipmentDetailsModel.date1 ||
+        !this.shipmentDetailsModel.date2 ||
+        !this.shipmentDetailsModel.arrivalDate ||
+        !this.shipmentDetailsModel.flightNo ||
+        !this.shipmentDetailsModel.shipperRef ||
+        !this.shipmentDetailsModel.incoTerms)
+    ) {
+      return true;
+    } else if (
+      this.currentStepIndex == 2 &&
+      (!this.consignmentDetailsModel.shipperId ||
+        !this.consignmentDetailsModel.consigneeId ||
+        !this.consignmentDetailsModel.loadingPortId ||
+        !this.consignmentDetailsModel.dischargePortId ||
+        !this.consignmentDetailsModel.destinatonPortId ||
+        !this.consignmentDetailsModel.placeOfDeliveryId ||
+        !this.consignmentDetailsModel.placeOfRecieptId)
+    ) {
+      return true;
+    } else if (
+      this.currentStepIndex == 3 &&
+      (!this.rateDetailsModel.hsnCode ||
+        !this.rateDetailsModel.quantity ||
+        !this.rateDetailsModel.rate)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   // Drawer Action Events
   actionEvent(event) {
     // let eventData = null;
     switch (event) {
       case "next":
         // Next Click
+
         this.stepper.nextStep();
         break;
       case "previous":
@@ -420,10 +503,10 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
           bankAccountNumber: this.bankDetailsModel.accountNumber,
           bankSwiftCode: this.bankDetailsModel.swiftCode,
         };
-        this.consignmentDetailsModel.placeOfDeliveryId = 1
-        this.consignmentDetailsModel.placeOfRecieptId = 1
+
+        console.log(this.invoiceData);
         const data = {
-          id: this.invoiceData.id ? this.invoiceData.id : null,
+          id: this.invoiceData?.id ? this.invoiceData?.id : null,
           companyDetails: this.companyDetailsModel,
           shipmentDetails: this.shipmentDetailsModel,
           consignmentDetails: this.consignmentDetailsModel,
@@ -434,9 +517,9 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
           dueDate: this.companyDetailsModel.invoiceDueDate,
           shipmentNo: "",
           shipmentTypeId: 0,
-          isCompleted: 1
+          isCompleted: 1,
         };
-
+        console.log(data);
         this.addUpdateInvoice(data);
         break;
       case "draft":
@@ -447,10 +530,10 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
           bankAccountNumber: this.bankDetailsModel.accountNumber,
           bankSwiftCode: this.bankDetailsModel.swiftCode,
         };
-        this.consignmentDetailsModel.placeOfDeliveryId = 1
-        this.consignmentDetailsModel.placeOfRecieptId = 1
+        this.consignmentDetailsModel.placeOfDeliveryId = 1;
+        this.consignmentDetailsModel.placeOfRecieptId = 1;
         const editData = {
-          id: this.invoiceData.id ? this.invoiceData.id : null,
+          id: this.invoiceData?.id ? this.invoiceData?.id : null,
           companyDetails: this.companyDetailsModel,
           shipmentDetails: this.shipmentDetailsModel,
           consignmentDetails: this.consignmentDetailsModel,
@@ -461,7 +544,7 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
           dueDate: this.companyDetailsModel.invoiceDueDate,
           shipmentNo: "",
           shipmentTypeId: 0,
-          isCompleted: 0
+          isCompleted: 0,
         };
 
         this.addUpdateInvoice(editData);
@@ -473,8 +556,8 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  selectionChanged(type: any) {
-    // console.log(type);
+  selectionChanged(type: any, event?: any) {
+    console.log(event.source.triggerValue);
 
     switch (type) {
       case "org":
@@ -498,11 +581,14 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
 
         // Update Taxable Amount
         const cgstRateValue =
-          Number(this.rateDetailsModel?.cgstRate.toString().split("%")[0]) / 100;
+          Number(this.rateDetailsModel?.cgstRate.toString().split("%")[0]) /
+          100;
         const sgstRateValue =
-          Number(this.rateDetailsModel?.sgstRate.toString().split("%")[0]) / 100;
+          Number(this.rateDetailsModel?.sgstRate.toString().split("%")[0]) /
+          100;
         const igstRateValue =
-          Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) / 100;
+          Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) /
+          100;
         this.rateDetailsModel.taxableAmount =
           Math.round(
             Number(this.rateDetailsModel?.amount) *
@@ -596,6 +682,10 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
+  getNumber(data) {
+    return Number(data)
+  }
+
   // API Call
   getAllOrganization() {
     this.invoiceGenerationService.getAllOrganization().subscribe((res: any) => {
@@ -612,7 +702,8 @@ export class InvoiceGenerationComponent implements OnInit, AfterViewInit, OnDest
       .getAllBranchByOrgId(this.companyDetailsModel.organizationId)
       .subscribe((res: any) => {
         this.companyDetailConfig.branchSelectorConfig.options = res.filter(
-          (item: any) => item.organizationId === this.companyDetailsModel.organizationId
+          (item: any) =>
+            item.organizationId === this.companyDetailsModel.organizationId
         );
         // Set First Value
         if (this.companyDetailConfig.branchSelectorConfig.options?.length > 0) {

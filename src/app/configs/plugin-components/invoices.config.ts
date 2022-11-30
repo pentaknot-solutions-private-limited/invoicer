@@ -222,6 +222,7 @@ export class InvoicesConfigs {
     attributes: {
       title: "Chargeable (Wt)",
       showBorder: true,
+      type: "number",
       // Unit dropdown required
     },
   };
@@ -230,6 +231,7 @@ export class InvoicesConfigs {
     attributes: {
       title: "Gross (Wt)",
       showBorder: true,
+      type: "number",
       // Unit dropdown required
     },
   };
@@ -238,6 +240,7 @@ export class InvoicesConfigs {
     attributes: {
       title: "Net (Wt)",
       showBorder: true,
+      type: "number",
       // Unit dropdown required
     },
   };
@@ -246,6 +249,7 @@ export class InvoicesConfigs {
     attributes: {
       title: "Volume",
       showBorder: true,
+      type: "number",
       // Unit dropdown required
     },
   };
@@ -526,6 +530,8 @@ export class InvoicesConfigs {
       title: "HSN Code",
       type: "number",
       showBorder: true,
+      max: 999999
+      
     },
   };
 

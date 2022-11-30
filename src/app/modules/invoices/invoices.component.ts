@@ -174,8 +174,6 @@ export class InvoicesComponent implements OnInit {
                 doc.deletePage(2);
 
                 const filename =
-                  new Date().toDateString() +
-                  "_" +
                   this.invoiceData.invoiceNo +
                   "_invoice.pdf";
                 doc.save(filename);

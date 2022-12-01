@@ -241,7 +241,7 @@ export class InvoicesComponent implements OnInit {
     };
     this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
       if (res.data) {
-        this.rowData = res.data;
+        this.rowData = res.data.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
         // TEMP
         // this.invoiceData = res.data[0];
         if (!isFilterChanged) {
@@ -258,7 +258,7 @@ export class InvoicesComponent implements OnInit {
             value: res.data.filter(
               (row: any) =>
                 row.isActive == 1 &&
-                (row.isCompleted == 0 || null) &&
+                (!row.isCompleted || (row.isCompleted == (0 || null)) ) &&
                 row.isDeleted == 0
             ).length,
           };
@@ -312,7 +312,7 @@ export class InvoicesComponent implements OnInit {
         } else {
           switch (event) {
             case "all":
-              this.rowData = res.data;
+              this.rowData = res.data.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
               break;
 
             case "draft":
@@ -321,7 +321,7 @@ export class InvoicesComponent implements OnInit {
                   row.isActive == 1 &&
                   (row.isCompleted == 0 || null) &&
                   row.isDeleted == 0
-              );
+              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
               break;
 
             case "not_approved":
@@ -330,7 +330,7 @@ export class InvoicesComponent implements OnInit {
                   row.isActive == 1 &&
                   (row.isApproved == 0 || null) &&
                   row.isDeleted == 0
-              );
+              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
               break;
 
             case "not_downloaded":
@@ -339,7 +339,7 @@ export class InvoicesComponent implements OnInit {
                   row.isActive == 1 &&
                   (row.isDownloaded == 0 || null) &&
                   row.isDeleted == 0
-              );
+              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
               break;
 
             case "irn_generated":
@@ -348,7 +348,7 @@ export class InvoicesComponent implements OnInit {
                   row.isActive == 1 &&
                   row.isIRNGenerated == 1 &&
                   row.isDeleted == 0
-              );
+              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
               break;
 
             case "completed":
@@ -357,11 +357,11 @@ export class InvoicesComponent implements OnInit {
                   row.isActive == 1 &&
                   row.isCompleted == 1 &&
                   row.isDeleted == 0
-              );
+              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
               break;
 
             default:
-              this.rowData = res.data;
+              this.rowData = res.data.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
               break;
           }
         }

@@ -625,9 +625,8 @@
                 <div class="col-md-8 text-left">
                   <h3 class="invoice-title mb-0 xl">
                     <b>{{
-                      invoiceData
-                        ? invoiceData?.companyDetails?.organization?.name
-                        : organizationName
+                      invoiceData?.companyDetails?.organization?.name
+                        || organizationName
                     }}</b>
                   </h3>
                   <p class="mb-0">
@@ -662,10 +661,9 @@
                         <div class="col-md-9">
                           [00]
                           {{
-                            invoiceData
-                              ? invoiceData?.companyDetails?.organizationBranch
+                            invoiceData?.companyDetails?.organizationBranch
                                   ?.stateId
-                              : "xxxxxxx"
+                              || "xxxxxxx"
                           }}
                         </div>
                       </div>
@@ -673,9 +671,8 @@
                         <div class="col-md-3"><strong>CIN</strong></div>
                         <div class="col-md-9">
                           {{
-                            invoiceData
-                              ? invoiceData?.companyDetails?.organization?.cinNo
-                              : "xxxxxxx"
+                            invoiceData?.companyDetails?.organization?.cinNo
+                              || "xxxxxxx"
                           }}
                         </div>
                       </div>
@@ -685,10 +682,9 @@
                         <div class="col-md-3"><strong>GSTIN</strong></div>
                         <div class="col-md-9">
                           {{
-                            invoiceData
-                              ? invoiceData?.companyDetails?.organizationBranch
+                            invoiceData?.companyDetails?.organizationBranch
                                   ?.gstin
-                              : "xxxxxxx"
+                              || "xxxxxxx"
                           }}
                         </div>
                       </div>
@@ -696,10 +692,9 @@
                         <div class="col-md-3"><strong>PAN</strong></div>
                         <div class="col-md-9">
                           {{
-                            invoiceData
-                              ? invoiceData?.companyDetails?.organizationBranch
+                            invoiceData?.companyDetails?.organizationBranch
                                   ?.panNo
-                              : "xxxxxxx"
+                              || "xxxxxxx"
                           }}
                         </div>
                       </div>
@@ -710,7 +705,7 @@
                   <p class="invoice-title mb-0">
                     <b>Tax Invoice</b>
                   </p>
-                  <p>#{{ invoiceData ? invoiceData?.invoiceNo : companyDetailsModel?.invoiceNo ? companyDetailsModel?.invoiceNo : "xxxxxx" }}</p>
+                  <p>#{{ invoiceData?.invoiceNo || companyDetailsModel?.invoiceNo || "xxxxxx" }}</p>
                 </div>
               </div>
               <hr />
@@ -721,70 +716,52 @@
                   </p>
                   <p class="mb-0">
                     <b>{{
-                      invoiceData
-                        ? invoiceData?.companyDetails?.customer?.name
-                        : customerName
+                      invoiceData?.companyDetails?.customer?.name
+                        || customerName
                     }}</b>
                   </p>
                   <p class="mb-0">
                     {{
-                      invoiceData
-                        ? invoiceData?.companyDetails?.customerBranch?.address
-                        : "xxxxxxxx"
+                      invoiceData?.companyDetails?.customerBranch?.address
+                        || "xxxxxxxx"
                     }}
                   </p>
                   <p class="mb-0">
                     {{
-                      invoiceData
-                        ? invoiceData?.companyDetails?.customerBranch?.cityId
-                        : "xxxxxx"
+                      invoiceData?.companyDetails?.customerBranch?.cityId
+                        || "xxxxxx"
                     }}
                     -
                     {{
-                      invoiceData
-                        ? invoiceData?.companyDetails?.customerBranch?.pincode
-                        : "xxxxx"
+                      invoiceData?.companyDetails?.customerBranch?.pincode
+                        || "xxxxx"
                     }},
                     {{
-                      invoiceData
-                        ? invoiceData?.companyDetails?.customerBranch?.stateId
-                        : "xxxxx"
+                      invoiceData?.companyDetails?.customerBranch?.stateId
+                        || "xxxxx"
                     }}
                     ({{
-                      invoiceData
-                        ? invoiceData?.companyDetails?.customerBranch?.countryId
-                        : "xxxxx"
+                      invoiceData?.companyDetails?.customerBranch?.countryId
+                        || "xxxxx"
                     }})
                   </p>
                   <div class="row">
                     <div class="col-md-3"><strong>PAN NO</strong></div>
                     <div class="col-md-9">
-                      {{
-                        invoiceData
-                          ? invoiceData?.companyDetails?.customerBranch?.panNo
-                          : "xxxx"
-                      }}
+                      {{ invoiceData?.companyDetails?.customerBranch?.panNo || "xxxx" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-3"><strong>GST NO</strong></div>
                     <div class="col-md-9">
-                      {{
-                        invoiceData
-                          ? invoiceData?.companyDetails?.customerBranch?.gstin
-                          : "xxxx"
-                      }}
+                      {{ invoiceData?.companyDetails?.customerBranch?.gstin || "xxxx" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-3"><strong>STATE</strong></div>
                     <!-- <div class="col-md-9">Customer Branch GST</div> -->
                     <div class="col-md-9">
-                      {{
-                        invoiceData
-                          ? invoiceData?.companyDetails?.customerBranch?.stateId
-                          : "xxxx"
-                      }}
+                      {{ invoiceData?.companyDetails?.customerBranch?.stateId || "xxxx" }}
                     </div>
                   </div>
                 </div>

@@ -264,29 +264,29 @@ export class InvoicesComponent implements OnInit {
           };
           this.statistics.push(draft);
 
-          const notApproved = {
-            label: "Not Approved",
-            type: "not_approved",
-            value: res.data.filter(
-              (row: any) =>
-                row.isActive == 1 &&
-                (row.isApproved == 0 || null) &&
-                row.isDeleted == 0
-            ).length,
-          };
-          this.statistics.push(notApproved);
+          // const notApproved = {
+          //   label: "Not Approved",
+          //   type: "not_approved",
+          //   value: res.data.filter(
+          //     (row: any) =>
+          //       row.isActive == 1 &&
+          //       (row.isApproved == 0 || null) &&
+          //       row.isDeleted == 0
+          //   ).length,
+          // };
+          // this.statistics.push(notApproved);
 
-          const notDownloaded = {
-            label: "Not Downloaded",
-            type: "not_downloaded",
-            value: res.data.filter(
-              (row: any) =>
-                row.isActive == 1 &&
-                (row.isDownloaded == 0 || null) &&
-                row.isDeleted == 0
-            ).length,
-          };
-          this.statistics.push(notDownloaded);
+          // const notDownloaded = {
+          //   label: "Not Downloaded",
+          //   type: "not_downloaded",
+          //   value: res.data.filter(
+          //     (row: any) =>
+          //       row.isActive == 1 &&
+          //       (row.isDownloaded == 0 || null) &&
+          //       row.isDeleted == 0
+          //   ).length,
+          // };
+          // this.statistics.push(notDownloaded);
 
           const IRNGenerated = {
             label: "IRN Generated",

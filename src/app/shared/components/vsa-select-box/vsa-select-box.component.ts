@@ -23,7 +23,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatSelect } from '@angular/material/select';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 import { of } from 'rxjs';
 import { skipWhile, take } from 'rxjs/operators';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
@@ -182,9 +182,15 @@ export class VSASelectBoxComponent
     }
   }
 
-  selectionChangeCall(event) {
+  selectionChangeCall(event: MatSelectChange) {
     this.query = undefined;
-    this.onSelectionChange.emit(event);
+    const obj = this.config.options.find((item: any) => item[this.config.returnKey] == event.value)
+    const data = {
+      event: event.source,
+      value: event.value,
+      selectedObj: obj
+    }
+    this.onSelectionChange.emit(data);
   }
 
   /**

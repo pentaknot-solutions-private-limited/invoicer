@@ -17,7 +17,10 @@
           <vsa-select
             [config]="companyDetailConfig?.organizationConfig"
             [dataModel]="companyDetailsModel"
-            (onSelectionChange)="selectionChanged('org',$event);organizationName = $event.source.triggerValue"
+            (onSelectionChange)="
+              selectionChanged('org', $event);
+              organizationName = $event.source.triggerValue
+            "
           >
           </vsa-select>
         </div>
@@ -27,7 +30,7 @@
             <vsa-select
               [config]="companyDetailConfig?.branchSelectorConfig"
               [dataModel]="companyDetailsModel"
-              (onSelectionChange)="selectionChanged('',$event)"
+              (onSelectionChange)="selectionChanged('orgBranch', $event)"
             >
             </vsa-select>
           </div>
@@ -44,7 +47,10 @@
           <vsa-select
             [config]="companyDetailConfig?.customerSelectorConfig"
             [dataModel]="companyDetailsModel"
-            (onSelectionChange)="selectionChanged('customer', $event);customerName = $event.source.triggerValue"
+            (onSelectionChange)="
+              selectionChanged('customer', $event);
+              customerName = $event.source.triggerValue
+            "
           >
           </vsa-select>
         </div>
@@ -54,46 +60,11 @@
             <vsa-select
               [config]="companyDetailConfig?.customerBranchSelectorConfig"
               [dataModel]="companyDetailsModel"
-              (onSelectionChange)="selectionChanged('',$event)"
+              (onSelectionChange)="selectionChanged('', $event)"
             >
             </vsa-select>
           </div>
         </ng-container>
-      </div>
-      <hr class="dashed-divider" />
-      <div class="row mt-4">
-        <!-- Title -->
-        <div class="col-12">
-          <h3>Invoice Details</h3>
-        </div>
-        <!-- Invoice Details -->
-        <div class="col-3">
-          <!-- Invoice No -->
-          <vsa-input
-            [config]="companyDetailConfig?.invoiceNoGenerationInputConfig"
-            formControlName="invoiceNo"
-            [dataModel]="companyDetailsModel"
-          >
-          </vsa-input>
-        </div>
-        <!-- Invoice Date -->
-        <div class="col-3">
-          <vsa-input
-            [config]="companyDetailConfig?.invoiceDateInputConfig"
-            formControlName="invoiceDate"
-            [dataModel]="companyDetailsModel"
-          >
-          </vsa-input>
-        </div>
-        <!-- invoice Due Date -->
-        <div class="col-3">
-          <vsa-input
-            [config]="companyDetailConfig?.invoiceDueDateInputConfig"
-            formControlName="invoiceDueDate"
-            [dataModel]="companyDetailsModel"
-          >
-          </vsa-input>
-        </div>
       </div>
     </ng-template>
     <!-- Step 2. Shipment Details -->
@@ -104,50 +75,94 @@
           <div class="col-12">
             <h3>Package Details</h3>
           </div>
+          <!-- Shipper Select -->
+          <div class="col-3">
+            <vsa-select
+              [config]="consignmentDetailConfig?.shipper"
+              [dataModel]="shipmentDetailsModel"
+              (onSelectionChange)="selectionChanged('', $event)"
+            >
+            </vsa-select>
+          </div>
+          <!-- Consignee -->
+          <div class="col-3">
+            <vsa-select
+              [config]="consignmentDetailConfig?.consignee"
+              [dataModel]="shipmentDetailsModel"
+              (onSelectionChange)="selectionChanged('', $event)"
+            >
+            </vsa-select>
+          </div>
           <!-- MAWB No -->
           <div class="col-3">
             <vsa-input
-              [config]="shipmentDetailConfig?.mawbNo"
+              [config]="shipmentDetailConfig?.awbNo"
               formControlName="mawbNo"
               [dataModel]="shipmentDetailsModel"
             >
             </vsa-input>
           </div>
-          <!-- HAWB No -->
+          <!-- Flight No  -->
           <div class="col-3">
             <vsa-input
-              [config]="shipmentDetailConfig?.hawbNo"
-              formControlName="hawbNo"
+              [config]="shipmentDetailConfig?.flightNo"
+              formControlName="flightNo"
               [dataModel]="shipmentDetailsModel"
             >
             </vsa-input>
           </div>
-          <!-- SB No -->
+          <!-- Departure Date -->
           <div class="col-3">
             <vsa-input
-              [config]="shipmentDetailConfig?.sbNo"
-              formControlName="sbNo"
+              [config]="shipmentDetailConfig?.departureDate"
+              formControlName="departureDate"
               [dataModel]="shipmentDetailsModel"
             >
             </vsa-input>
           </div>
-          <!-- Package (Qty) -->
+          <!-- Loading Port -->
+          <div class="col-3 custom-col">
+            <vsa-select
+              [config]="consignmentDetailConfig?.loadingPort"
+              [dataModel]="shipmentDetailsModel"
+              (onSelectionChange)="selectionChanged('', $event)"
+            >
+            </vsa-select>
+          </div>
+          <!-- Destination Country Port -->
+          <div class="col-3 custom-col">
+            <vsa-select
+              [config]="consignmentDetailConfig?.destinationPortCountry"
+              [dataModel]="locationModel"
+              (onSelectionChange)="selectionChanged('country', $event)"
+            >
+            </vsa-select>
+          </div>
+          <!-- Destination Port -->
+          <div class="col-3 custom-col">
+            <vsa-select
+              [config]="consignmentDetailConfig?.destinationPort"
+              [dataModel]="shipmentDetailsModel"
+              (onSelectionChange)="selectionChanged('', $event)"
+            >
+            </vsa-select>
+          </div>
+          <!-- Dispatch Doc No -->
+          <div class="col-3">
+            <vsa-input
+              [config]="shipmentDetailConfig?.dispatchDocNo"
+              formControlName="dispatchDocNo"
+              [dataModel]="shipmentDetailsModel"
+            >
+            </vsa-input>
+          </div>
+          <!-- Pcs (Qty) -->
           <div class="col-3">
             <vsa-input
               [config]="shipmentDetailConfig?.packageQty"
               formControlName="packageQty"
               [dataModel]="shipmentDetailsModel"
-            >
-            </vsa-input>
-          </div>
-          <!-- Second Row -->
-
-          <!-- Chargeable (Wt) -->
-          <div class="col-3">
-            <vsa-input
-              [config]="shipmentDetailConfig?.chargeableWt"
-              formControlName="chargeableWt"
-              [dataModel]="shipmentDetailsModel"
+              (onBlur)="onPackageQuantityChange($event)"
             >
             </vsa-input>
           </div>
@@ -160,256 +175,298 @@
             >
             </vsa-input>
           </div>
-          <!-- Net (Wt) -->
+
+          <!-- Chargeable (Wt) -->
           <div class="col-3">
             <vsa-input
-              [config]="shipmentDetailConfig?.netWt"
-              formControlName="netWt"
+              [config]="shipmentDetailConfig?.chargeableWt"
+              formControlName="chargeableWt"
               [dataModel]="shipmentDetailsModel"
+              (onBlur)="onChargeableWtChange($event)"
             >
             </vsa-input>
           </div>
-          <!-- Volume -->
+
+          <!-- Cargo Type -->
           <div class="col-3">
-            <vsa-input
-              [config]="shipmentDetailConfig?.volume"
-              formControlName="volume"
+            <vsa-select
+              [config]="shipmentDetailConfig?.cargoTypeConfig"
               [dataModel]="shipmentDetailsModel"
+              (onSelectionChange)="
+                selectionChanged('cargoType', $event);
+                cargoType = $event.source.triggerValue
+              "
             >
-            </vsa-input>
+            </vsa-select>
           </div>
         </div>
         <hr class="dashed-divider" />
         <div class="row mt-4">
           <!-- Title -->
           <div class="col-12">
-            <h3>Airline Details</h3>
+            <h3>Invoice Details</h3>
           </div>
-          <!-- Date 1 -->
+          <!-- Invoice Details -->
           <div class="col-3">
+            <!-- Invoice No -->
             <vsa-input
-              [config]="shipmentDetailConfig?.date1"
-              formControlName="date1"
-              [dataModel]="shipmentDetailsModel"
+              [config]="companyDetailConfig?.invoiceNoGenerationInputConfig"
+              formControlName="invoiceNo"
+              [dataModel]="basicDetailsModel"
             >
             </vsa-input>
           </div>
-          <!-- Date 2 -->
+          <!-- Invoice Date -->
           <div class="col-3">
             <vsa-input
-              [config]="shipmentDetailConfig?.date2"
-              formControlName="date2"
-              [dataModel]="shipmentDetailsModel"
+              [config]="companyDetailConfig?.invoiceDateInputConfig"
+              formControlName="invoiceDate"
+              [dataModel]="basicDetailsModel"
             >
             </vsa-input>
           </div>
-          <!-- Arrival Date  -->
+          <!-- invoice Due Date -->
           <div class="col-3">
             <vsa-input
-              [config]="shipmentDetailConfig?.arrivalDate"
-              formControlName="arrivalDate"
-              [dataModel]="shipmentDetailsModel"
-            >
-            </vsa-input>
-          </div>
-          <!-- Cargo Type Select -->
-          <div class="col-3">
-            <vsa-select
-              [config]="shipmentDetailConfig?.cargoTypeConfig"
-              [dataModel]="shipmentDetailsModel"
-              (onSelectionChange)="selectionChanged('cargoType',$event);cargoType = $event.source.triggerValue"
-            >
-            </vsa-select>
-          </div>
-          <!-- Second Row (Airline) -->
-
-          <!-- Airline Select -->
-          <div class="col-3">
-            <vsa-select
-              [config]="shipmentDetailConfig?.airlineConfig"
-              [dataModel]="shipmentDetailsModel"
-              (onSelectionChange)="selectionChanged('airline',$event);airline = $event.source.triggerValue"
-            >
-            </vsa-select>
-          </div>
-          <!-- Flight No  -->
-          <div class="col-3">
-            <vsa-input
-              [config]="shipmentDetailConfig?.flightNo"
-              formControlName="flightNo"
-              [dataModel]="shipmentDetailsModel"
-            >
-            </vsa-input>
-          </div>
-          <!-- Shipper Ref  -->
-          <div class="col-3">
-            <vsa-input
-              [config]="shipmentDetailConfig?.shipperRef"
-              formControlName="shipperRef"
-              [dataModel]="shipmentDetailsModel"
-            >
-            </vsa-input>
-          </div>
-          <!-- Inco Terms  -->
-          <div class="col-3">
-            <vsa-input
-              [config]="shipmentDetailConfig?.incoTerms"
-              formControlName="incoTerms"
-              [dataModel]="shipmentDetailsModel"
+              [config]="companyDetailConfig?.invoiceDueDateInputConfig"
+              formControlName="invoiceDueDate"
+              [dataModel]="basicDetailsModel"
             >
             </vsa-input>
           </div>
         </div>
       </form>
     </ng-template>
-    <!-- Step 3. Consignment Details -->
-    <ng-template #consignmentDetails>
-      <!-- <form class="consignmentDetailsForm" [formGroup]="consignmentDetailsForm"> -->
+    <!-- Step 3. Rates Details -->
+    <ng-template #rates>
       <div class="row mt-4 mb-4">
         <!-- Title -->
         <div class="col-12">
-          <h3>Consignment Details</h3>
+          <h3>Rate Setup {{lineItemForm.get("lineItemList").value.length}}</h3>
         </div>
-        <!-- Shipper Select -->
-        <div class="col-3">
-          <vsa-select
-            [config]="consignmentDetailConfig?.shipper"
-            [dataModel]="consignmentDetailsModel"
-            (onSelectionChange)="selectionChanged('',$event)"
+        <form [formGroup]="lineItemForm">
+          <ng-container
+            formArrayName="lineItemList"
+            *ngFor="
+              let address of lineItemForm.get('lineItemList')['controls'];
+              let i = index
+            "
           >
-          </vsa-select>
-        </div>
-        <!-- Consignee -->
-        <div class="col-3">
-          <vsa-select
-            [config]="consignmentDetailConfig?.consignee"
-            [dataModel]="consignmentDetailsModel"
-            (onSelectionChange)="selectionChanged('',$event)"
-          >
-          </vsa-select>
-        </div>
-        <!-- Loading Port -->
-        <div class="col-3 custom-col">
+            <div [formGroupName]="i" class="row spacer">
+              <div class="col-1 addNewButton">
+                <p class="srno">#{{ i + 1 }}</p>
+              </div>
+              <!-- Service Type Select -->
+              <div class="col-2 servicetype">
+                <vsa-select
+                  [config]="lineItemFormConfigList[i].serviceTypeConfig"
+                  [dataModel]="getLineItem(i)"
+                  [fControl]="lineItemForm.get('serviceTypeId')"
+                  (onSelectionChange)="
+                    selectionChanged('serviceType', $event, i)
+                  "
+                >
+                </vsa-select>
+              </div>
+              <!-- HSN -->
+              <!-- <div class="col-2">
+                <vsa-input
+                  [config]="rateDetailsConfig?.hsnCode"
+                  formControlName="hsnCode"
+                  [dataModel]="getLineItem(i)"
+                >
+                </vsa-input>
+              </div> -->
+              <!-- Pcs -->
+              <div class="col-2">
+                <vsa-input
+                  [config]="shipmentDetailConfig?.packageQty"
+                  formControlName="packageQty"
+                  [dataModel]="getLineItem(i)"
+                  style="pointer-events: none"
+                >
+                </vsa-input>
+              </div>
+              <!-- Chargeable (Wt) -->
+              <div class="col-2">
+                <vsa-input
+                  [config]="shipmentDetailConfig?.chargeableWt"
+                  formControlName="chargeableWt"
+                  [dataModel]="getLineItem(i)"
+                  style="pointer-events: none"
+                >
+                </vsa-input>
+              </div>
+              <!-- Quantity (in Kgs) -->
+              <div class="col-2">
+                <vsa-input
+                  [config]="rateDetailsConfig?.quantity"
+                  formControlName="quantity"
+                  [dataModel]="getLineItem(i)"
+                  (focusout)="valueChanged('quantity', i)"
+                >
+                </vsa-input>
+              </div>
+              <!-- Unit -->
+              <div class="col-1">
+                <vsa-select
+                  [config]="rateDetailsConfig?.unitConfig"
+                  [dataModel]="getLineItem(i)"
+                  [fControl]="lineItemForm.get('unitId')"
+                  (onSelectionChange)="selectionChanged('unit', $event, i)"
+                ></vsa-select>
+              </div>
+              <!-- Rate -->
+              <div class="col-1">
+                <vsa-input
+                  [config]="rateDetailsConfig?.rate"
+                  formControlName="rate"
+                  [dataModel]="getLineItem(i)"
+                  (focusout)="valueChanged('rate', i)"
+                >
+                </vsa-input>
+              </div>
+              <div class="col-1 addNewButton">
+                <!--  || rateDetailsModel.unit -->
+                <!-- <vsa-button
+                  [type]="'button'"
+                  [role]="'primary'"
+                  color="red"
+                  size="small"
+                  [disabled]="lineItems.length < 2"
+                  (onClick)="onDeleteLineItemClick(i)"
+                  >Delete
+                </vsa-button> -->
+                <vsa-icon
+                  icon="delete-bin-1"
+                  customColor="#DE350B"
+                  [disabled]="lineItems.length < 2"
+                  (onClick)="onDeleteLineItemClick(i)"
+                  state="hover"
+                ></vsa-icon>
+              </div>
+            </div>
+          </ng-container>
+        </form>
+
+        <!-- Currency -->
+        <!-- <div class="col-4">
+            <vsa-select
+              [config]="rateDetailsConfig?.currencyConfig"
+              [dataModel]="rateDetailsModel"
+              (onSelectionChange)="
+                selectionChanged('currency', $event);
+                currency = $event.source.triggerValue
+              "
+            >
+            </vsa-select>
+          </div> -->
+
+        <!-- Second Row -->
+        <!-- Quantity (in Kgs) -->
+        <div class="col-4 addNewButton">
           <!-- <vsa-input
-              [config]="consignmentDetailConfig?.loadingPort"
-              formControlName="loadingPort"
-              [dataModel]="consignmentDetailsModel"
+              [config]="rateDetailsConfig?.quantity"
+              formControlName="quantity"
+              [dataModel]="rateDetailsModel"
+              (onBlur)="valueChanged('quantity')"
             >
             </vsa-input> -->
-          <vsa-select
-            [config]="consignmentDetailConfig?.loadingPort"
-            [dataModel]="consignmentDetailsModel"
-            (onSelectionChange)="selectionChanged('',$event)"
+          <vsa-button
+            [type]="'button'"
+            [role]="'primary'"
+            size="small"
+            (onClick)="onAddNewLineItemClick(true)"
+            >Add Line Item </vsa-button
           >
-          </vsa-select>
         </div>
-        <!-- Discharge Port -->
-        <div class="col-3 custom-col">
+        <!-- <span>x</span> -->
+        <!-- Rate -->
+        <div class="col-4">
           <!-- <vsa-input
-              [config]="consignmentDetailConfig?.dischargePort"
-              formControlName="dischargePort"
-              [dataModel]="consignmentDetailsModel"
+              [config]="rateDetailsConfig?.rate"
+              formControlName="rate"
+              [dataModel]="rateDetailsModel"
+              (onBlur)="valueChanged('rate')"
             >
             </vsa-input> -->
-          <vsa-select
-            [config]="consignmentDetailConfig?.dischargePort"
-            [dataModel]="consignmentDetailsModel"
-            (onSelectionChange)="selectionChanged('',$event)"
-          >
-          </vsa-select>
         </div>
-        <!-- Destination Port -->
-        <div class="col-3 custom-col">
-          <!-- <vsa-input
-              [config]="consignmentDetailConfig?.destinationPort"
-              formControlName="destinationPort"
-              [dataModel]="consignmentDetailsModel"
-            >
-            </vsa-input> -->
-          <vsa-select
-            [config]="consignmentDetailConfig?.destinationPort"
-            [dataModel]="consignmentDetailsModel"
-            (onSelectionChange)="selectionChanged('',$event)"
+        <!-- <span>=</span> -->
+        <!-- Amount -->
+        <div class="col-4">
+          <vsa-input
+            [config]="rateDetailsConfig?.amount"
+            formControlName="amount"
+            [dataModel]="rateDetailsModel"
           >
-          </vsa-select>
+          </vsa-input>
+        </div>
+        <!-- Third Row -->
+        <!-- GST  -->
+        <!-- CSGT -->
+        <div class="col-4">
+          <vsa-input
+            [config]="rateDetailsConfig?.cgstRate"
+            formControlName="cgstRate"
+            [dataModel]="rateDetailsModel"
+          >
+          </vsa-input>
+        </div>
+        <!-- SGST -->
+        <div class="col-4">
+          <vsa-input
+            [config]="rateDetailsConfig?.sgstRate"
+            formControlName="sgstRate"
+            [dataModel]="rateDetailsModel"
+          >
+          </vsa-input>
+        </div>
+        <!-- IGST -->
+        <div class="col-4">
+          <vsa-input
+            [config]="rateDetailsConfig?.igstRate"
+            formControlName="igstRate"
+            [dataModel]="rateDetailsModel"
+          >
+          </vsa-input>
+        </div>
+
+        <!-- Single Row -->
+        <!-- Taxable Amount -->
+        <!-- dummy -->
+        <div class="col-8">
+          <!-- empty -->
+        </div>
+        <div class="col-4">
+          <vsa-input
+            [config]="rateDetailsConfig?.taxableAmount"
+            formControlName="taxableAmount"
+            [dataModel]="rateDetailsModel"
+          >
+          </vsa-input>
+        </div>
+        <!-- Final Row -->
+        <!-- Total Amount ($CURRENCY$) -->
+        <div class="col-4">
+          <vsa-input
+            [config]="rateDetailsConfig?.totalAmount"
+            formControlName="totalAmount"
+            [dataModel]="rateDetailsModel"
+          >
+          </vsa-input>
+        </div>
+        <div class="col-8">
+          <vsa-input
+            [config]="rateDetailsConfig?.amountInWords"
+            formControlName="amountInWords"
+            [dataModel]="rateDetailsModel"
+          >
+          </vsa-input>
         </div>
       </div>
-      <hr class="dashed-divider" />
-      <!-- Place of Reciept -->
-      <div class="row mt-4 mb-4">
-        <div class="col-12">
-          <h3>Place of Reciept</h3>
-        </div>
-        <!-- Country -->
-        <div class="col-3 custom-col">
-          <vsa-select
-            [config]="consignmentDetailConfig?.recieptCountry"
-            [dataModel]="locationModel"
-            (onSelectionChange)="onCountrySelection('reciept', $event)"
-          >
-          </vsa-select>
-        </div>
-
-        <!-- State -->
-        <div class="col-3 custom-col">
-          <vsa-select
-            [config]="consignmentDetailConfig?.recieptState"
-            [dataModel]="locationModel"
-            (onSelectionChange)="onStateSelection('reciept', $event)"
-          >
-          </vsa-select>
-        </div>
-
-        <!-- City -->
-        <div class="col-3 custom-col">
-          <vsa-select
-            [config]="consignmentDetailConfig?.recieptCity"
-            [dataModel]="locationModel"
-            (onSelectionChange)="onCitySelection('reciept', $event)"
-          >
-          </vsa-select>
-        </div>
-      </div>
-      <hr class="dashed-divider" />
-      <!-- Place of Delivery -->
-      <div class="row mt-4 mb-4">
-        <div class="col-12">
-          <h3>Place of Delivery</h3>
-        </div>
-        <!-- Country -->
-        <div class="col-3 custom-col">
-          <vsa-select
-            [config]="consignmentDetailConfig?.deliveryCountry"
-            [dataModel]="locationModel"
-            (onSelectionChange)="onCountrySelection('delivery', $event)"
-          >
-          </vsa-select>
-        </div>
-
-        <!-- State -->
-        <div class="col-3 custom-col">
-          <vsa-select
-            [config]="consignmentDetailConfig?.deliveryState"
-            [dataModel]="locationModel"
-            (onSelectionChange)="onStateSelection('delivery', $event)"
-          >
-          </vsa-select>
-        </div>
-
-        <!-- City -->
-        <div class="col-3 custom-col">
-          <vsa-select
-            [config]="consignmentDetailConfig?.deliveryCity"
-            [dataModel]="locationModel"
-            (onSelectionChange)="onCitySelection('delivery', $event)"
-          >
-          </vsa-select>
-        </div>
-      </div>
-      <!-- </form> -->
     </ng-template>
-    <!-- Step 4. Rates Details -->
-    <ng-template #rates>
+    <!-- Step 4. Consignment Details -->
+    <ng-template #consignmentDetails>
       <form class="rateDetailsForm" [formGroup]="rateDetailsForm">
         <div class="row mt-4 mb-4">
           <!-- Title -->
@@ -421,7 +478,10 @@
             <vsa-select
               [config]="rateDetailsConfig?.serviceTypeConfig"
               [dataModel]="rateDetailsModel"
-              (onSelectionChange)="selectionChanged('serviceType',$event);serviceType = $event.source.triggerValue"
+              (onSelectionChange)="
+                selectionChanged('serviceType', $event);
+                serviceType = $event.source.triggerValue
+              "
             >
             </vsa-select>
           </div>
@@ -439,7 +499,10 @@
             <vsa-select
               [config]="rateDetailsConfig?.currencyConfig"
               [dataModel]="rateDetailsModel"
-              (onSelectionChange)="selectionChanged('currency',$event);currency = $event.source.triggerValue"
+              (onSelectionChange)="
+                selectionChanged('currency', $event);
+                currency = $event.source.triggerValue
+              "
             >
             </vsa-select>
           </div>
@@ -612,519 +675,21 @@
           </vsa-button> -->
         </div>
 
-        <div class="invoice-template">
+        <div class="invoice-template" id="iframeContainer">
           <!-- companyDetailsModel: {{ companyDetailsModel | json }}<br />
           shipmentDetailsModel: {{ shipmentDetailsModel | json }}<br />
           consignmentDetailsModel: {{ consignmentDetailsModel | json }}<br />
           rateDetailsModel: {{ rateDetailsModel | json }}<br />
           bankDetailsModel: {{ bankDetailsModel | json }}
           invoiceData: {{ invoiceData | json}} -->
-          <div class="row d-flex justify-content-center">
-            <div class="col-md-8 centeredContent">
-              <div class="row">
-                <div class="col-md-8 text-left">
-                  <h3 class="invoice-title mb-0 xl">
-                    <b>{{
-                      invoiceData?.companyDetails?.organization?.name
-                        || organizationName
-                    }}</b>
-                  </h3>
-                  <p class="mb-0">
-                    <ng-container *ngIf="invoiceData">
-                      {{
-                        invoiceData?.companyDetails?.organizationBranch?.address
-                      }}
-                      {{
-                        invoiceData?.companyDetails?.organizationBranch?.cityId
-                      }}
-                      -
-                      {{
-                        invoiceData?.companyDetails?.organizationBranch
-                          ?.pincode
-                      }},
-                      {{
-                        invoiceData?.companyDetails?.organizationBranch?.stateId
-                      }}
-                      ({{
-                        invoiceData?.companyDetails?.organizationBranch
-                          ?.countryId
-                      }})<br />
-                    </ng-container>
-                    <ng-container *ngIf="!invoiceData">
-                      {{ companyDetailsModel?.organizationBranchId }}<br />
-                    </ng-container>
-                  </p>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-3"><strong>STATE</strong></div>
-                        <div class="col-md-9">
-                          [00]
-                          {{
-                            invoiceData?.companyDetails?.organizationBranch
-                                  ?.stateId
-                              || "xxxxxxx"
-                          }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-3"><strong>CIN</strong></div>
-                        <div class="col-md-9">
-                          {{
-                            invoiceData?.companyDetails?.organization?.cinNo
-                              || "xxxxxxx"
-                          }}
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="row">
-                        <div class="col-md-3"><strong>GSTIN</strong></div>
-                        <div class="col-md-9">
-                          {{
-                            invoiceData?.companyDetails?.organizationBranch
-                                  ?.gstin
-                              || "xxxxxxx"
-                          }}
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-3"><strong>PAN</strong></div>
-                        <div class="col-md-9">
-                          {{
-                            invoiceData?.companyDetails?.organizationBranch
-                                  ?.panNo
-                              || "xxxxxxx"
-                          }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 text-right">
-                  <p class="invoice-title mb-0">
-                    <b>Tax Invoice</b>
-                  </p>
-                  <p>#{{ invoiceData?.invoiceNo || companyDetailsModel?.invoiceNo || "xxxxxx" }}</p>
-                </div>
-              </div>
-              <hr />
-              <div class="row">
-                <div class="col-md-6">
-                  <p class="details-title mb-0">
-                    <b>Recipient (Company Details)</b>
-                  </p>
-                  <p class="mb-0">
-                    <b>{{
-                      invoiceData?.companyDetails?.customer?.name
-                        || customerName
-                    }}</b>
-                  </p>
-                  <p class="mb-0">
-                    {{
-                      invoiceData?.companyDetails?.customerBranch?.address
-                        || "xxxxxxxx"
-                    }}
-                  </p>
-                  <p class="mb-0">
-                    {{
-                      invoiceData?.companyDetails?.customerBranch?.cityId
-                        || "xxxxxx"
-                    }}
-                    -
-                    {{
-                      invoiceData?.companyDetails?.customerBranch?.pincode
-                        || "xxxxx"
-                    }},
-                    {{
-                      invoiceData?.companyDetails?.customerBranch?.stateId
-                        || "xxxxx"
-                    }}
-                    ({{
-                      invoiceData?.companyDetails?.customerBranch?.countryId
-                        || "xxxxx"
-                    }})
-                  </p>
-                  <div class="row">
-                    <div class="col-md-3"><strong>PAN NO</strong></div>
-                    <div class="col-md-9">
-                      {{ invoiceData?.companyDetails?.customerBranch?.panNo || "xxxx" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3"><strong>GST NO</strong></div>
-                    <div class="col-md-9">
-                      {{ invoiceData?.companyDetails?.customerBranch?.gstin || "xxxx" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-3"><strong>STATE</strong></div>
-                    <!-- <div class="col-md-9">Customer Branch GST</div> -->
-                    <div class="col-md-9">
-                      {{ invoiceData?.companyDetails?.customerBranch?.stateId || "xxxx" }}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 pt-5">
-                  <div class="row">
-                    <div class="col-md-5"><strong>INVOICE DATE</strong></div>
-                    <div class="col-md-7">
-                      {{
-                        (invoiceData?.invoiceDate | date: "mediumDate") || (companyDetailsModel?.invoiceDate | date: "mediumDate")  || "-"
-                      }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>DATE DUE</strong></div>
-                    <div class="col-md-7">
-                      {{ (invoiceData?.dueDate | date: "mediumDate") || (companyDetailsModel?.invoiceDueDate | date: "mediumDate") || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>PLACE OF SUPPLY</strong></div>
-                    <div class="col-md-7">
-                      [xx] {{ invoiceData?.placeOfSupply || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>SHIPMENT NO</strong></div>
-                    <div class="col-md-7">
-                      {{ invoiceData?.shipmentNo || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>SHIPMENT TYPE</strong></div>
-                    <div class="col-md-7">
-                      {{ invoiceData?.shipmentTypeId || "-" }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <p class="details-title mb-0">
-                    <b>Shipment Details</b>
-                  </p>
-                  <div class="row">
-                    <div class="col-md-6"><strong>MAWB NO</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.mawbNo || shipmentDetailsModel?.mawbNo || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>HAWB NO</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.hawbNo || shipmentDetailsModel?.hawbNo || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>SB NO</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.sbNo || shipmentDetailsModel?.sbNo || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>PACKAGES</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.packageQty || shipmentDetailsModel?.packageQty || 0 }} (NOS)
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>CHARGEABLE WT.</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.chargeableWt || shipmentDetailsModel?.chargeableWt || 0 }}
-                      (KGS)
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>GROSS WT.</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.grossWt || shipmentDetailsModel?.grossWt || 0 }} (KGS)
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>NET WT.</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.netWt || shipmentDetailsModel?.netWt || 0 }} (KGS)
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>VOLUME</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.volume || shipmentDetailsModel?.volume || "-" }} (CBM)
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <p class="details-title mb-0">
-                    <b>Airline Details</b>
-                  </p>
-                  <div class="row">
-                    <div class="col-md-5"><strong>DATE 1</strong></div>
-                    <div class="col-md-7">
-                      {{
-                        (invoiceData?.shipmentDetails?.date1
-                          | date: "mediumDate") || (shipmentDetailsModel?.date1
-                          | date: "mediumDate") || "-"
-                      }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>DATE 2</strong></div>
-                    <div class="col-md-7">
-                      {{
-                        (invoiceData?.shipmentDetails?.date2
-                          | date: "mediumDate") || (shipmentDetailsModel?.date2
-                          | date: "mediumDate") || "-"
-                      }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>ARRIVAL DATE</strong></div>
-                    <div class="col-md-7">
-                      {{
-                        (invoiceData?.shipmentDetails?.arrivalDate
-                          | date: "mediumDate") || (shipmentDetailsModel?.arrivalDate
-                          | date: "mediumDate") || "-"
-                      }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>CARGO TYPE</strong></div>
-                    <div class="col-md-7">
-                      {{ invoiceData?.shipmentDetails?.cargoTypeName || cargoType || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>AIRLINE</strong></div>
-                    <div class="col-md-7">
-                      {{ invoiceData?.shipmentDetails?.airlineName || airline || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>FLIGHT NO.</strong></div>
-                    <div class="col-md-7">
-                      {{ invoiceData?.shipmentDetails?.flightNo || shipmentDetailsModel?.flightNo || "-" }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <p class="details-title mb-0">
-                    <b>Consignment Details</b>
-                  </p>
-                  <div class="row">
-                    <div class="col-md-6"><strong>SHIPPER</strong></div>
-                    <div class="col-md-6">Shree Rang Logistics Pvt. Ltd.</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>CONSIGNEE</strong></div>
-                    <div class="col-md-6">United Business Express Ltd.</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <strong>PLACE OF RECIEPT</strong>
-                    </div>
-                    <div class="col-md-6">Ahemdabad</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>LOADING PORT</strong></div>
-                    <div class="col-md-6">Ahemdabad</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>DISCHARGE PORT</strong></div>
-                    <div class="col-md-6">Heathrow Apt/ London</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <strong>PLACE OF DELIVERY</strong>
-                    </div>
-                    <div class="col-md-6">Heathrow Apt/ London</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <strong>DESTINATION PORT</strong>
-                    </div>
-                    <div class="col-md-6">
-                      Heathrow Apt/ London (GBLHR), GTL)
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>SHIPPER REF.</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.shipperRef || shipmentDetailsModel?.shipperRef || "-" }}
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-6"><strong>INCO TERMS</strong></div>
-                    <div class="col-md-6">
-                      {{ invoiceData?.shipmentDetails?.incoTerms || shipmentDetailsModel?.incoTerms || "-" }}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <p class="details-title mb-0">
-                    <b>Payment Details</b>
-                  </p>
-                  <div class="row">
-                    <div class="col-md-5"><strong>BANK NAME</strong></div>
-                    <div class="col-md-7">DBS Bank Limited</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>BRANCH NAME</strong></div>
-                    <div class="col-md-7">Vikhroli West</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>A/C NO</strong></div>
-                    <div class="col-md-7">820200147293</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>IFSC CODE</strong></div>
-                    <div class="col-md-7">DBSS0IN0854</div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-5"><strong>SWIFT CODE</strong></div>
-                    <div class="col-md-7">DBSS0IN0854</div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <p class="details-title mb-0">
-                    <b>Charges</b>
-                  </p>
-                  <table class="table table-borderless">
-                    <tbody>
-                      <tr class="add">
-                        <td><strong>Sr. No.</strong></td>
-                        <td><strong>Description</strong></td>
-                        <td><strong>SAC/HSN</strong></td>
-                        <td><strong>Qty</strong></td>
-                        <td><strong>RATE</strong></td>
-                        <td><strong>CURRENCY</strong></td>
-                        <td><strong>Amount</strong></td>
-                      </tr>
-                      <tr class="content">
-                        <td>1</td>
-                        <td>Air Export Freight</td>
-                        <td>{{ invoiceData?.rateDetails?.hsnCode || rateDetailsModel?.hsnCode || '-' }}</td>
-                        <td>
-                          {{ invoiceData?.rateDetails?.quantity || rateDetailsModel?.quantity || 0 }} (KGS)
-                        </td>
-                        <td>
-                          Rs.
-                          {{
-                            (invoiceData?.rateDetails?.rate
-                              | currency: "":"") || (rateDetailsModel?.rate
-                              | currency: "":"") || "0.00"
-                          }}
-                        </td>
-                        <td>{{ currency }}</td>
-                        <td>
-                          Rs.
-                          {{
-                            (invoiceData?.rateDetails?.amount
-                              | currency: "":"") || (rateDetailsModel?.amount
-                              | currency: "":"") || "0.00"
-                          }}
-                        </td>
-                      </tr>
-                      <tr class="content">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Taxable Amount&nbsp;:</td>
-                        <td>
-                          Rs.
-                          {{
-                            (invoiceData?.rateDetails?.amount
-                              | currency: "":"") || (rateDetailsModel?.amount
-                              | currency: "":"") || "0.00"
-                          }}
-                        </td>
-                      </tr>
-                      <tr class="content">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                          <ng-container *ngIf="invoiceData?.id; else flatDetails">
-                            GST @
-                          {{
-                            getNumber(invoiceData?.rateDetails?.cgstRate.split('')[0]) +
-                            getNumber(invoiceData?.rateDetails?.sgstRate.split('')[0]) ==
-                            0
-                              ? getNumber(invoiceData?.rateDetails?.igstRate.split('')[0])
-                              : getNumber(invoiceData?.rateDetails?.cgstRate.split('')[0]) +
-                              getNumber(invoiceData?.rateDetails?.sgstRate.split('')[0])
-                          }}%&nbsp;:
-                          </ng-container>
-                          <ng-template #flatDetails>
-                            GST @
-                            {{
-                              getNumber(rateDetailsModel?.cgstRate.split('')[0]) +
-                              getNumber(rateDetailsModel?.sgstRate.split('')[0]) ==
-                              0
-                                ? getNumber(rateDetailsModel?.igstRate.split('')[0])
-                                : getNumber(rateDetailsModel?.cgstRate.split('')[0]) +
-                                getNumber(rateDetailsModel?.sgstRate.split('')[0])
-                            }}%&nbsp;:
-                          </ng-template>
-                        </td>
-                        <td>
-                          Rs.
-                          {{
-                            invoiceData?.rateDetails?.taxableAmount?.toLocaleString(
-                              "en-IN"
-                            ) || rateDetailsModel?.taxableAmount?.toLocaleString(
-                              "en-IN"
-                            ) || "0.00"
-                          }}
-                        </td>
-                      </tr>
-                      <tr class="content">
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><b>Total</b></td>
-                        <td>
-                          <b
-                            >Rs.
-                            {{
-                              (invoiceData?.rateDetails?.totalAmount
-                                | currency: "":"") || (rateDetailsModel?.totalAmount
-                                | currency: "":"") || "0.00"
-                            }}</b
-                          >
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <p class="mb-0">
-                    <b
-                      >Amount in words ({{
-                        (invoiceData ? invoiceData?.rateDetails?.currencyName : rateDetailsModel?.currencyName) || "INR"
-                      }}):
-                    </b>
-                  </p>
-                  <p class="mb-0">
-                    {{ (invoiceData?.rateDetails?.amountInWords) || (rateDetailsModel?.amountInWords) || "-" }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+          
+            <pdf-viewer
+            #pdfViewer
+            [src]="srcdata"
+            (after-load-complete)="test($event)"
+            (error)="test($event)"
+            (on-progress)="test($event)"
+          ></pdf-viewer>
         </div>
       </div>
     </ng-template>

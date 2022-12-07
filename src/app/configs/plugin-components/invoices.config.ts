@@ -165,6 +165,8 @@ export class InvoicesConfigs {
     attributes: {
       title: "Invoice No.",
       showBorder: true,
+      readonly: true,
+      disable: true,
       hint: "Note: If no Invoice No. is entered it will be generated automatically.",
     },
   };
@@ -188,17 +190,17 @@ export class InvoicesConfigs {
   };
 
   // Shipment Details
-  mawbNoInput: ITextConfig = {
-    fieldKey: "mawbNo",
+  awbNoInput: ITextConfig = {
+    fieldKey: "awbNo",
     attributes: {
-      title: "MAWB No",
+      title: "AWB No",
       showBorder: true,
     },
   };
-  hawbNoInput: ITextConfig = {
-    fieldKey: "hawbNo",
+  dispatchDocNoInput: ITextConfig = {
+    fieldKey: "dispatchDocNo",
     attributes: {
-      title: "HAWB No",
+      title: "Disptach Doc No",
       showBorder: true,
     },
   };
@@ -212,7 +214,7 @@ export class InvoicesConfigs {
   packageQtyInput: ITextConfig = {
     fieldKey: "packageQty",
     attributes: {
-      title: "Package (Qty)",
+      title: "Pcs (Qty)",
       type: "number",
       showBorder: true,
     },
@@ -220,7 +222,7 @@ export class InvoicesConfigs {
   chargeableWtInput: ITextConfig = {
     fieldKey: "chargeableWt",
     attributes: {
-      title: "Chargeable (Wt)",
+      title: "Chargeable Wt.",
       showBorder: true,
       type: "number",
       // Unit dropdown required
@@ -229,7 +231,7 @@ export class InvoicesConfigs {
   grossWtInput: ITextConfig = {
     fieldKey: "grossWt",
     attributes: {
-      title: "Gross (Wt)",
+      title: "Gross Weight in KGs",
       showBorder: true,
       type: "number",
       // Unit dropdown required
@@ -258,7 +260,7 @@ export class InvoicesConfigs {
   date1Input: ITextConfig = {
     fieldKey: "date1",
     attributes: {
-      title: "Date 1",
+      title: "Departure Date",
       type: "datepicker",
       showBorder: true,
       // Validation Needed
@@ -273,10 +275,10 @@ export class InvoicesConfigs {
       // Validation Needed
     },
   };
-  arrivalDateInput: ITextConfig = {
-    fieldKey: "arrivalDate",
+  departureDateInput: ITextConfig = {
+    fieldKey: "departureDate",
     attributes: {
-      title: "Arrival Date",
+      title: "Departure Date",
       type: "datepicker",
       showBorder: true,
       // Validation Needed
@@ -499,6 +501,7 @@ export class InvoicesConfigs {
   destinatonPortSelect: ISelectConfig = {
     fieldKey: "destinatonPortId",
     attributes: {
+      type: 'select-search',
       class: "header-item",
       title: "Destination Port",
     },
@@ -512,12 +515,42 @@ export class InvoicesConfigs {
     ],
   };
 
+  destinatonPortCountrySelect: ISelectConfig = {
+    fieldKey: "countryId",
+    attributes: {
+      type: 'select-search',
+      class: "header-item",
+      title: "Destination Port Country",
+    },
+    dataKey: "name",
+    returnKey: "id",
+    options: [],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+    
+  };
+
   // Rate Details
   serviceTypeSelectorConfig: ISelectConfig = {
     fieldKey: "serviceTypeId",
     attributes: {
       class: "header-item",
       title: "Service Type",
+    },
+    dataKey: "name",
+    returnKey: "id",
+    options: [],
+    disableBoolKey: 'disabled'
+  };
+
+  unitConfig: ISelectConfig = {
+    fieldKey: "unitId",
+    attributes: {
+      class: "header-item",
+      title: "Unit",
     },
     dataKey: "name",
     returnKey: "id",
@@ -529,6 +562,8 @@ export class InvoicesConfigs {
     attributes: {
       title: "HSN Code",
       type: "number",
+      disable: true,
+      readonly: true,
       showBorder: true,
       max: 999999
       
@@ -553,7 +588,7 @@ export class InvoicesConfigs {
   quantityInput: ITextConfig = {
     fieldKey: "quantity",
     attributes: {
-      title: "Quantity (in Kgs)",
+      title: "Quantity",
       type: "number",
       showBorder: true,
     },

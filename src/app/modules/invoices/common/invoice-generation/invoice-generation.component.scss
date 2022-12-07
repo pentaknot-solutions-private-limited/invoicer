@@ -69,6 +69,11 @@ hr {
   }
 }
 
+.addNewButton {
+  display: flex;
+  align-items: center;
+}
+
 .invoice-template {
   * {
     font-size: 12px;
@@ -78,7 +83,7 @@ hr {
   b {
     font-size: 16px;
   }
-  padding: 3em;
+  padding: 0em;
   hr {
     margin: 0.5rem 0;
     color: inherit;
@@ -167,4 +172,20 @@ hr {
     padding: 0px;
     padding-left: 35px;
   }
+  .mat-form-field-appearance-legacy .mat-hint {
+    padding-top: 10px;
+  }
+}
+
+p.srno {
+  font-size: 18px;
+}
+
+.servicetype {
+  margin-left: -5em;
+}
+
+.spacer {
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 10px;
 }

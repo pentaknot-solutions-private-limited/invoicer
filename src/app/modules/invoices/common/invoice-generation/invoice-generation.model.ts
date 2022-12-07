@@ -3,52 +3,51 @@ export class CompanyDetails {
   organizationBranchId!: string;
   customerId: string;
   customerBranchId!: string;
-  invoiceNo!: string;
-  invoiceDate!: Date;
-  invoiceDueDate!: Date;
+  companyCode: string;
+  cityCode: string;
 }
 export class ShipmentDetails {
-  mawbNo: string;
-  hawbNo: string;
-  sbNo: string;
-  packageQty: string;
+  shipperId: string;
+  consigneeId: string;
+  awbNo: string;
+  hawbNo: string; // Not required
+  sbNo: string; // Not required
+  packageQty: number;
   chargeableWt: number;
   grossWt: number;
-  netWt: number;
-  volume: number;
-  date1: Date;
-  date2: Date;
-  arrivalDate: Date;
+  netWt: number; // Not required
+  volume: number; // Not required
+  date1: Date; // Not required
+  date2: Date; // Not required
+  departureDate: Date;
   flightNo: string;
   cargoTypeId: string;
-  airlineId: string;
-  shipperRef!: string;
-  incoTerms!: string;
-  
+  airlineId: string; // Not required
+  shipperRef!: string; // Not required
+  incoTerms!: string; // Not required
+  loadingPortId: string;
+  destinatonPortId: string;
+  dispatchDocNo: string;
 }
 
 export class ConsignmentDetails {
-  shipperId: string;
-  consigneeId: string;
   placeOfRecieptId: string | number;
   placeOfDeliveryId: string | number;
-  loadingPortId: string;
-  dischargePortId: string;
-  destinatonPortId: string;
 }
 
 export class RateDetails {
-  serviceTypeId: string;
-  hsnCode: string;
+  // serviceTypeId: string;
+  // hsnCode: string | number;
+  // quantity: number;
+  // unit?: string;
   currencyId: string;
-  quantity: number;
   rate: number;
-  amount: string | number;
+  amount: any;
   cgstRate: string | number;
   sgstRate: string | number;
   igstRate: string | number;
-  taxableAmount: number | string;
-  totalAmount: number | string;
+  taxableAmount: any;
+  totalAmount: any;
   amountInWords: string;
 }
 
@@ -76,4 +75,22 @@ export class LocationModel {
   deliveryState: string;
   recieptcity: string;
   deliverycity: string;
+  countryId: number;
+}
+
+export class LineItem {
+  serviceTypeId: number;
+  hsnCode: number;
+  packageQty: number;
+  chargeableWt: number;
+  quantity: number;
+  unitId: number;
+  rate: number;
+  invoiceId?: number
+}
+
+export class BasicDetails {
+  invoiceNo!: string;
+  invoiceDate!: Date;
+  invoiceDueDate!: Date;
 }

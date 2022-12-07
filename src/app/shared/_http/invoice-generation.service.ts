@@ -97,6 +97,11 @@ export class InvoiceGenerationService {
 
   // All Countries Data
   getAllCountriesData() {
-    return this.http.get<any>(`${this.baseUrl}/countries.json`);
+    return this.http.get<any>(`${this.liveUrl}/countries`);
+  }
+
+  // Unit data
+  getAllUnitData() {
+    return this.http.get(`${this.liveUrl}/units`);
   }
 }

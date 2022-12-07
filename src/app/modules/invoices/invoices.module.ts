@@ -21,6 +21,7 @@ import { VSAStepperModule } from "src/app/shared/components/vsa-stepper/package.
 import { PMRStepperModule } from "src/app/shared/components/pmr-stepper/package.module";
 import { InvoiceGenerationService } from "src/app/shared/_http/invoice-generation.service";
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { PdfViewerModule } from "ng2-pdf-viewer";
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     VSAStepperModule,
     PMRStepperModule,
     AutoCompleteModule,
+    PdfViewerModule,
     VSAToastyModule.forRoot(),
     RouterModule.forChild([
       {

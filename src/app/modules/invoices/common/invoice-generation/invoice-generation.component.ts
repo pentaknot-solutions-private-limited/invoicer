@@ -911,81 +911,38 @@ export class InvoiceGenerationComponent
   generatePostData() {
     return {
       companyDetails: {
-        organizationId: this.invoiceData?.companyDetails?.organization?.id
-          ? this.invoiceData?.companyDetails?.organization?.id
-          : this.companyDetailsModel?.organizationId,
-        organizationBranchId: this.invoiceData?.companyDetails
-          ?.organizationBranchId
-          ? this.invoiceData?.companyDetails?.organizationBranchId
-          : this.companyDetailsModel?.organizationBranchId,
-        customerId: this.invoiceData?.companyDetails?.customer?.customerId
-          ? this.invoiceData?.companyDetails?.customer?.customerId
-          : this.companyDetailsModel?.customerId,
-        customerBranchId: this.invoiceData?.companyDetails?.customerBranchId
-          ? this.invoiceData?.companyDetails?.customerBranchId
-          : this.companyDetailsModel?.customerBranchId,
+        organizationId: this.companyDetailsModel?.organizationId,
+        organizationBranchId: this.companyDetailsModel?.organizationBranchId,
+        customerId: this.companyDetailsModel?.customerId,
+        customerBranchId: this.companyDetailsModel?.customerBranchId,
         companyCode: this.companyDetailsModel?.companyCode,
         cityCode: this.companyDetailsModel?.cityCode,
       },
       shipmentDetails: {
-        shipperId: this.invoiceData?.shipmentDetails?.shipperId
-          ? this.invoiceData?.shipmentDetails?.shipperId
-          : this.shipmentDetailsModel?.shipperId,
-        consigneeId: this.invoiceData?.shipmentDetails?.consigneeId
-          ? this.invoiceData?.shipmentDetails?.consigneeId
-          : this.shipmentDetailsModel?.consigneeId,
-        awbNo: this.invoiceData?.shipmentDetails?.awbNo
-          ? this.invoiceData?.shipmentDetails?.awbNo
-          : this.shipmentDetailsModel?.awbNo,
-        flightNo: this.invoiceData?.shipmentDetails?.flightNo
-          ? this.invoiceData?.shipmentDetails?.flightNo
-          : this.shipmentDetailsModel?.flightNo,
-        departureDate: this.invoiceData?.shipmentDetails?.departureDate
-          ? this.invoiceData?.shipmentDetails?.departureDate
-          : this.shipmentDetailsModel?.departureDate,
-        loadingPortId: this.invoiceData?.shipmentDetails?.loadingPortId
-          ? this.invoiceData?.shipmentDetails?.loadingPortId
-          : this.shipmentDetailsModel?.loadingPortId,
-        destinationPortId: this.invoiceData?.shipmentDetails?.destinationPortId
-          ? this.invoiceData?.shipmentDetails?.destinationPortId
-          : this.shipmentDetailsModel?.destinationPortId,
-        dispatchDocNo: this.invoiceData?.shipmentDetails?.dispatchDocNo
-          ? this.invoiceData?.shipmentDetails?.dispatchDocNo
-          : this.shipmentDetailsModel?.dispatchDocNo,
-        packageQty: this.invoiceData?.shipmentDetails?.packageQty
-          ? this.invoiceData?.shipmentDetails?.packageQty
-          : Number(this.shipmentDetailsModel?.packageQty),
-        chargeableWt: this.invoiceData?.shipmentDetails?.chargeableWt
-          ? this.invoiceData?.shipmentDetails?.chargeableWt
-          : Number(this.shipmentDetailsModel?.chargeableWt),
-        grossWt: this.invoiceData?.shipmentDetails?.grossWt
-          ? this.invoiceData?.shipmentDetails?.grossWt
-          : Number(this.shipmentDetailsModel?.grossWt),
-        cargoTypeId: this.invoiceData?.shipmentDetails?.cargoTypeId
-          ? this.invoiceData?.shipmentDetails?.cargoTypeId
-          : this.shipmentDetailsModel?.cargoTypeId,
+        shipperId: this.shipmentDetailsModel?.shipperId,
+        consigneeId: this.shipmentDetailsModel?.consigneeId,
+        awbNo: this.shipmentDetailsModel?.awbNo,
+        flightNo: this.shipmentDetailsModel?.flightNo,
+        departureDate: this.shipmentDetailsModel?.departureDate,
+        loadingPortId: this.shipmentDetailsModel?.loadingPortId,
+        destinationPortId: this.shipmentDetailsModel?.destinationPortId,
+        dispatchDocNo: this.shipmentDetailsModel?.dispatchDocNo,
+        packageQty: Number(this.shipmentDetailsModel?.packageQty),
+        chargeableWt: Number(this.shipmentDetailsModel?.chargeableWt),
+        grossWt: Number(this.shipmentDetailsModel?.grossWt),
+        cargoTypeId: this.shipmentDetailsModel?.cargoTypeId,
       },
       rateDetails: {
         invoiceItems: this.invoiceData?.invoiceItems
           ? JSON.parse(this.invoiceData?.invoiceItems)
-          : this.lineItemForm?.get("lineItemList")?.value,
-        amount: this.invoiceData?.rateDetails?.amount
-          ? Number(this.invoiceData?.rateDetails?.amount)
-          : Number(this.rateDetailsModel?.amount),
+          : this.lineItems,
+        amount: Number(this.rateDetailsModel?.amount),
         cgstRate: 0,
         sgstRate: 0,
-        igstRate: this.invoiceData?.rateDetails?.igstRate
-          ? Number(this.invoiceData?.rateDetails?.igstRate)
-          : Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]),
-        taxableAmount: this.invoiceData?.rateDetails?.taxableAmount
-          ? Number(this.invoiceData?.rateDetails?.taxableAmount)
-          : Number(this.rateDetailsModel?.taxableAmount),
-        totalAmount: this.invoiceData?.rateDetails?.totalAmount
-          ? Number(this.invoiceData?.rateDetails?.totalAmount)
-          : Number(this.rateDetailsModel?.totalAmount),
-        amountInWords: this.invoiceData?.rateDetails?.amountInWords
-          ? this.invoiceData?.rateDetails?.amountInWords
-          : this.rateDetailsModel?.amountInWords,
+        igstRate: Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]),
+        taxableAmount: Number(this.rateDetailsModel?.taxableAmount),
+        totalAmount: Number(this.rateDetailsModel?.totalAmount),
+        amountInWords: this.rateDetailsModel?.amountInWords,
       },
       bankDetails: {
         id: 1,

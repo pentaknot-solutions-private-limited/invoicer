@@ -47,6 +47,8 @@ export class PMRStepperComponent implements OnInit {
   }
 
   public changeStep(event) {
+    console.log(event.selectedIndex);
+    
     if (event.selectedIndex < event.previouslySelectedIndex) {
       // this.stepper._steps.toArray()[event.previouslySelectedIndex].completed =
       //   false;
@@ -59,7 +61,7 @@ export class PMRStepperComponent implements OnInit {
     }
     this.stepIndex = this.stepper.selectedIndex;
     this.config.steps[this.stepIndex].isCompleted = true
-    this.stepIndexChange.emit(this.stepIndex);
+    this.stepIndexChange.emit(event.selectedIndex);
     // this.stepper._steps.toArray()[event.previouslySelectedIndex].interacted = false;
   }
 }

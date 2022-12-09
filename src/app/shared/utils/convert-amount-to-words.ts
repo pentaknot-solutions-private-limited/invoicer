@@ -73,7 +73,7 @@ export const convertAmountToWords = (price: any) => {
                   sglDigit[digit] +
                   " Hundred" +
                   (0 != price[digitIdx + 1] && 0 != price[digitIdx + 2]
-                    ? " and"
+                    ? " "
                     : "")
               : ""
           );
@@ -103,7 +103,7 @@ export const convertAmountToWords = (price: any) => {
                   sglDigit[digit] +
                   " Hundred" +
                   (0 != price[digitIdx + 1] || 0 != price[digitIdx + 2]
-                    ? " and"
+                    ? " "
                     : " Crore")
               : ""
           );

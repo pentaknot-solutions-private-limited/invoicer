@@ -11,5 +11,6 @@ export interface IPMRStepConfig {
     stepTemplate: TemplateRef<any>;
     isOptional?: boolean;
     isCompleted?: boolean;
+    
     formGroup?: FormGroup;
 }

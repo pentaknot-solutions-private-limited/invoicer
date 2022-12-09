@@ -22,6 +22,10 @@ export class InvoiceService {
     return this.http.get(`${this.liveUrl}/invoices`);
   }
 
+  getInvoiceById(id: number): Observable<any> {
+    return this.http.get(`${this.liveUrl}/invoices/${id}`);
+  }
+
   
 
   

@@ -189,3 +189,21 @@ p.srno {
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 10px;
 }
+
+.please-wait {
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 390px) !important;
+}
+
+:host ::ng-deep {
+  .ng2-pdf-viewer-container {
+    height: calc(100vh - 342px) !important;
+  } 
+  .custom-height {
+    .ng2-pdf-viewer-container {
+      height: calc(100vh - 240px) !important;
+    } 
+  }
+}

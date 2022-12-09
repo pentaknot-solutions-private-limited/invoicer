@@ -125,6 +125,7 @@ export class InvoicesConfigs {
     dataKey: "name",
     returnKey: "id",
     options: [],
+    isMultiple: false
   };
   branchSelectorConfig: ISelectConfig = {
     fieldKey: "organizationBranchId",
@@ -134,8 +135,9 @@ export class InvoicesConfigs {
       title: "Branch",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "organizationBranchId",
     options: [],
+    isMultiple: false
   };
   customerSelectorConfig: ISelectConfig = {
     fieldKey: "customerId",
@@ -145,8 +147,9 @@ export class InvoicesConfigs {
       title: "Bill to Customer",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "customerId",
     options: [],
+    isMultiple: false
   };
   customerBranchSelectorConfig: ISelectConfig = {
     fieldKey: "customerBranchId",
@@ -156,8 +159,9 @@ export class InvoicesConfigs {
       title: "Customer Branch",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "customerBranchId",
     options: [],
+    isMultiple: false
   };
 
   invoiceNoGenerationInput: ITextConfig = {
@@ -298,8 +302,9 @@ export class InvoicesConfigs {
       title: "Cargo Type",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "cargoTypeId",
     options: [],
+    isMultiple: false
   };
   airlineSelectorConfig: ISelectConfig = {
     fieldKey: "airlineId",
@@ -310,6 +315,7 @@ export class InvoicesConfigs {
     dataKey: "name",
     returnKey: "id",
     options: [],
+    isMultiple: false
   };
   shipperRefInput: ITextConfig = {
     fieldKey: "shipperRef",
@@ -335,13 +341,14 @@ export class InvoicesConfigs {
       title: "Shipper",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "shipperId",
     options: [],
     searchBy: [
       {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   consigneeSelect: ISelectConfig = {
@@ -352,13 +359,14 @@ export class InvoicesConfigs {
       title: "Consignee",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "consigneeId",
     options: [],
     searchBy: [
       {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   recieptCountrySelect: ISelectConfig = {
@@ -376,6 +384,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   recieptStateSelect: ISelectConfig = {
@@ -394,6 +403,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   recieptCitySelect: ISelectConfig = {
@@ -412,6 +422,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   deliveryCountrySelect: ISelectConfig = {
@@ -429,6 +440,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   deliveryStateSelect: ISelectConfig = {
@@ -447,6 +459,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   deliveryCitySelect: ISelectConfig = {
@@ -464,6 +477,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   loadingPortSelect: ISelectConfig = {
@@ -473,13 +487,14 @@ export class InvoicesConfigs {
       title: "Loading Port",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "loadingPortId",
     options: [],
     searchBy: [
       {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   dischargePortSelect: ISelectConfig = {
@@ -496,10 +511,11 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
-  destinatonPortSelect: ISelectConfig = {
-    fieldKey: "destinatonPortId",
+  destinationPortSelect: ISelectConfig = {
+    fieldKey: "destinationPortId",
     attributes: {
       type: 'select-search',
       class: "header-item",
@@ -513,6 +529,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
+    isMultiple: false
   };
 
   destinatonPortCountrySelect: ISelectConfig = {
@@ -523,13 +540,14 @@ export class InvoicesConfigs {
       title: "Destination Port Country",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "countryId",
     options: [],
     searchBy: [
       {
         key: "name",
       },
     ],
+    isMultiple: false
     
   };
 
@@ -541,9 +559,10 @@ export class InvoicesConfigs {
       title: "Service Type",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "serviceId",
     options: [],
-    disableBoolKey: 'disabled'
+    disableBoolKey: 'disabled',
+    isMultiple: false
   };
 
   unitConfig: ISelectConfig = {
@@ -553,8 +572,9 @@ export class InvoicesConfigs {
       title: "Unit",
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "unitId",
     options: [],
+    isMultiple: false
   };
 
   hsnCodeInput: ITextConfig = {
@@ -584,6 +604,7 @@ export class InvoicesConfigs {
         name: "INR",
       },
     ],
+    isMultiple: false
   };
   quantityInput: ITextConfig = {
     fieldKey: "quantity",

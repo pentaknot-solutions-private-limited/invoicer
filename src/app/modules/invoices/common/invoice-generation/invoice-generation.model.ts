@@ -26,7 +26,7 @@ export class ShipmentDetails {
   shipperRef!: string; // Not required
   incoTerms!: string; // Not required
   loadingPortId: string;
-  destinatonPortId: string;
+  destinationPortId: string;
   dispatchDocNo: string;
 }
 
@@ -80,11 +80,13 @@ export class LocationModel {
 
 export class LineItem {
   serviceTypeId: number;
+  serviceName?: string;
   hsnCode: number;
   packageQty: number;
   chargeableWt: number;
   quantity: number;
   unitId: number;
+  unitName?: string;
   rate: number;
   invoiceId?: number
 }

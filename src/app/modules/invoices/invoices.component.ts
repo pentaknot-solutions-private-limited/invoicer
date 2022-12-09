@@ -98,8 +98,7 @@ export class InvoicesComponent implements OnInit {
     this.selectedStepData = event;
     // this.openDrawer("invoice-generation", event);
     this.invoiceDrawerType = 'view'
-    this.invoiceData = event
-    this.openDrawer("invoice-generation", event);
+    this.getInvoiceById(event.id)
   }
 
   // Filter Function
@@ -143,9 +142,8 @@ export class InvoicesComponent implements OnInit {
   actionClicked(event) {
     this.invoiceData = {};
     if (event.event == "edit") {
-      this.invoiceData = event.data;
       this.invoiceDrawerType = 'edit'
-      this.openDrawer("invoice-generation",this.invoiceData);
+      this.getInvoiceById(event.data.id)
     } else {
       this.invoiceData = event.data;
       if (this.invoiceData) {
@@ -195,7 +193,7 @@ export class InvoicesComponent implements OnInit {
         this.drawerControllerService.toggleDrawer(true);
         this.drawerControllerService.showCloseButton(false);
         this.drawerControllerService.setEscClose(false);
-        this.drawerControllerService.setTitle(data ? `Edit/View Invoice` : `Create New Invoice`);
+        this.drawerControllerService.setTitle(this.invoiceDrawerType == 'view' ? `View Invoice` : this.invoiceDrawerType == 'edit' ? `Edit Invoice` : `Create New Invoice`);
         this.drawerControllerService.changeDrawerSize("extra-large");
         break;
       default:
@@ -242,6 +240,7 @@ export class InvoicesComponent implements OnInit {
     this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
       if (res.data) {
         this.rowData = res.data.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+        
         // TEMP
         // this.invoiceData = res.data[0];
         if (!isFilterChanged) {
@@ -367,6 +366,18 @@ export class InvoicesComponent implements OnInit {
         }
       }
     });
+  }
+
+  // GET INOVICE BY ID
+  getInvoiceById(id) {
+    this.invoiceService.getInvoiceById(id).subscribe(
+      (res: any) => {
+        if (res?.data) {
+          this.invoiceData = res?.data
+          this.openDrawer("invoice-generation",res?.data);
+        }
+      }
+    )
   }
 
   // Dashboard API

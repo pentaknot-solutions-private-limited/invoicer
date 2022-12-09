@@ -8,15 +8,15 @@
   <mat-form-field
     [ngClass]="{
       readonly: config?.attributes?.readonly,
-      'no-label': !config.attributes?.label,
+      'no-label': !config?.attributes?.label,
       'pristine': pristine,
       'valid': valid,
       'no-border': !config?.attributes?.showBorder
     }"
     [floatLabel]="'never'"
   >
-    <mat-label *ngIf="config.attributes?.label">{{
-      config.attributes.label
+    <mat-label *ngIf="config?.attributes?.label">{{
+      config?.attributes.label
     }}</mat-label>
     <!-- Non Lazy Loaded -->
     <!-- [ngModelOptions]="{ standalone: true }" -->
@@ -24,18 +24,18 @@
       *ngIf="!config?.isLazyLoaded"
       #ref
       [formControl]="fControl"
-      name="config.fieldKey"
-      [multiple]="config.isMultiple"
-      [placeholder]="config.attributes?.placeholder"
+      name="config?.fieldKey"
+      [multiple]="config?.isMultiple"
+      [placeholder]="config?.attributes?.placeholder"
       disableOptionCentering
       panelClass="dropdownPosition {{
         config?.attributes?.rowSize == 'double' ? 'doubleRow' : ''
       }} {{ config?.attributes?.rowSize == 'triple' ? 'tripleRow' : '' }} {{
-        !config.attributes?.label ? 'no-label' : ''
-      }} {{ config.isMultiple ? 'multi' : '' }}"
-      [(ngModel)]="dataModel[config.fieldKey]"
+        !config?.attributes?.label ? 'no-label' : ''
+      }} {{ config?.isMultiple ? 'multi' : '' }}"
+      [(ngModel)]="dataModel[config?.fieldKey]"
       (selectionChange)="selectionChangeCall($event); onChange()"
-      [disabled]="config.attributes?.disable"
+      [disabled]="config?.attributes?.disable"
       [required]="
         config?.attributes?.isMandatory && !config?.attributes?.readonly
       "
@@ -57,12 +57,12 @@
           "
         ></ng-container>
       </mat-select-trigger> -->
-      <select-check-all
+      <!-- <select-check-all
         *ngIf="config?.isMultiple"
         [model]="fControl"
         (modelChanges)="modelChanged($event)"
-        [values]="config.options"
-      ></select-check-all>
+        [values]="config?.options"
+      ></select-check-all> -->
       <mat-option
         style="height: 3em"
         [disabled]="true"
@@ -88,15 +88,15 @@
       <mat-option
         [disabled]="option[config?.disableBoolKey]"
         *ngFor="
-          let option of config.options | SelectSearch: query;
+          let option of config?.options | SelectSearch: query;
           let i = index
         "
         [value]="
-          option[config.returnKey] == null && option[config.dataKey] == null
+          option[config?.returnKey] == null && option[config?.dataKey] == null
             ? option
-            : option[config.returnKey] == null
-            ? option[config.dataKey]
-            : option[config.returnKey]
+            : option[config?.returnKey] == null
+            ? option[config?.dataKey]
+            : option[config?.returnKey]
         "
       >
         <!-- Show Grid Data -->
@@ -136,7 +136,7 @@
             config?.attributes?.type !== 'select-template-search'
           "
         >
-          {{ option[config.dataKey] }}
+          {{ option[config?.dataKey] }}
         </div>
       </mat-option>
     </mat-select>
@@ -146,16 +146,16 @@
       *ngIf="config?.isLazyLoaded"
       #refLazyLoad
       [formControl]="fControl"
-      name="config.fieldKey"
-      [multiple]="config.isMultiple"
-      [placeholder]="config.attributes?.placeholder"
+      name="config?.fieldKey"
+      [multiple]="config?.isMultiple"
+      [placeholder]="config?.attributes?.placeholder"
       disableOptionCentering
       panelClass="dropdownPosition {{
-        !config.attributes?.label ? 'no-label' : ''
-      }} {{ config.isMultiple ? 'multi' : '' }}"
-      [(ngModel)]="dataModel[config.fieldKey]"
+        !config?.attributes?.label ? 'no-label' : ''
+      }} {{ config?.isMultiple ? 'multi' : '' }}"
+      [(ngModel)]="dataModel[config?.fieldKey]"
       (selectionChange)="selectionChangeCall($event); onChange()"
-      [disabled]="config.attributes?.disable"
+      [disabled]="config?.attributes?.disable"
       (openedChange)="openChange($event)"
       [required]="
         config?.attributes?.isMandatory && !config?.attributes?.readonly
@@ -201,15 +201,15 @@
         <mat-option
           [disabled]="option[config?.disableBoolKey]"
           *cdkVirtualFor="
-            let option of config.options | SelectSearch: query;
+            let option of config?.options | SelectSearch: query;
             let i = index
           "
           [value]="
-            option[config.returnKey] == null && option[config.dataKey] == null
+            option[config?.returnKey] == null && option[config?.dataKey] == null
               ? option
-              : option[config.returnKey] == null
-              ? option[config.dataKey]
-              : option[config.returnKey]
+              : option[config?.returnKey] == null
+              ? option[config?.dataKey]
+              : option[config?.returnKey]
           "
         >
           <!-- Show Grid Data -->
@@ -234,25 +234,25 @@
               config?.attributes?.type !== 'select-template-search'
             "
           >
-            {{ option[config.dataKey] }}
+            {{ option[config?.dataKey] }}
           </div>
         </mat-option>
       </cdk-virtual-scroll-viewport>
     </mat-select>
 
-    <!-- <span *ngIf="config?.attributes?.readonly && (!dataModel[config.fieldKey] && dataModel[config.fieldKey] != '')" style="position: absolute;left: 0;"> N/A </span> -->
+    <!-- <span *ngIf="config?.attributes?.readonly && (!dataModel[config?.fieldKey] && dataModel[config?.fieldKey] != '')" style="position: absolute;left: 0;"> N/A </span> -->
     <span
       matPrefix
-      *ngIf="config.attributes?.prefixIcon"
-      [ngClass]="config.attributes?.prefixIcon"
+      *ngIf="config?.attributes?.prefixIcon"
+      [ngClass]="config?.attributes?.prefixIcon"
     ></span>
     <mat-error *ngIf="showError && !config?.attributes?.readonly">
       {{ errors }}
     </mat-error>
     <span
       matSuffix
-      *ngIf="config.attributes?.suffixIcon"
-      [ngClass]="config.attributes?.suffixIcon"
+      *ngIf="config?.attributes?.suffixIcon"
+      [ngClass]="config?.attributes?.suffixIcon"
     ></span>
     <mat-hint *ngIf="config?.attributes?.hint">{{
       config?.attributes?.hint

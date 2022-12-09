@@ -135,7 +135,7 @@ export class InvoiceGenerationComponent
     deliveryCity: this.baseConfig.deliveryCitySelect,
     loadingPort: this.baseConfig.loadingPortSelect,
     dischargePort: this.baseConfig.dischargePortSelect,
-    destinationPort: this.baseConfig.destinatonPortSelect,
+    destinationPort: this.baseConfig.destinationPortSelect,
     destinationPortCountry: this.baseConfig.destinatonPortCountrySelect,
   };
 
@@ -271,70 +271,10 @@ export class InvoiceGenerationComponent
   };
   calc = 0;
   serviceTypeData: any[] = [];
-
-  dummyPayload = {
-    companyDetails: {
-      organizationId: 1,
-      organizationBranchId: 1,
-      customerId: 1,
-      customerBranchId: 1,
-      companyCode: "ULS",
-      cityCode: "BOM",
-    },
-    shipmentDetails: {
-      shipperId: 1,
-      consigneeId: 1,
-      awbNo: "049-00028825",
-      flightNo: "3L-102",
-      departureDate: "2022-12-05T05:22:53.000Z",
-      loadingPortId: 1,
-      destinatonPortId: 1,
-      dispatchDocNo: "M03014",
-      packageQty: 1200,
-      chargeableWt: 100,
-      grossWt: 1300,
-      cargoTypeId: 1,
-    },
-    rateDetails: {
-      invoiceItems: [
-        {
-          serviceTypeId: 1,
-          quantity: 12,
-          unitId: 1,
-          rate: 2,
-          invoiceId: null,
-        },
-        {
-          serviceTypeId: 2,
-          quantity: 12,
-          unitId: 2,
-          rate: 3,
-          invoiceId: null,
-        },
-      ],
-      amount: 60,
-      cgstRate: 0,
-      sgstRate: 0,
-      igstRate: 18,
-      taxableAmount: 10.8,
-      totalAmount: 71,
-      amountInWords: "Seventy One",
-    },
-    bankDetails: {
-      id: 1,
-      organizationId: 1,
-      name: "AXIS BANK LTD",
-      branchName: "Mahim",
-      ifscCode: "UTIB0001243",
-      accountNumber: "920020018286808",
-      swiftCode: "UTIB0001243",
-    },
-    invoiceNo: "ULS/22120001/BOM",
-    invoiceDate: "2022-12-05T05:22:53.000Z",
-    invoiceDueDate: "2022-12-05T05:22:53.000Z",
-  };
+  invoiceFinalData: any = {};
   portData: any;
   srcdata: any;
+  showPDFTemplate: boolean = false;
 
   constructor(
     private invoiceGenerationService: InvoiceGenerationService,
@@ -342,12 +282,80 @@ export class InvoiceGenerationComponent
     private filterService: FilterService,
     private fb: FormBuilder
   ) {
+    this.getAllPorts();
+    this.getAllOrganization();
+    this.getAllCustomer();
+    this.getMyAccountDetails();
+    this.getAllCargoTypes();
+    this.getAllAirlines();
+    this.getAllCurrency();
+    this.getAllCountryData();
+    this.getAllServiceType();
+    this.getAllShippers();
+    this.getAllConsignees();
+
+    this.getAllUnitData();
     // Set Initial Values
     this.setInitValues();
     this.lineItemForm = this.fb.group({
       lineItemList: this.fb.array([], minLengthArray(1)),
     });
     this.createLineItemForm();
+    this.invoiceFinalData = {
+      companyDetails: {
+        organization: {
+          name: "",
+          address: "",
+          gstin: "",
+          stateName: "",
+          stateTinCode: "",
+          emailId: "",
+        },
+        customer: {
+          name: "",
+          address: "",
+          gstin: "",
+          stateName: "",
+          stateTinCode: "",
+        },
+      },
+      shipmentDetails: {
+        dispatchDocNo: "",
+        awbNo: "",
+        flightNo: "",
+        departureDate: null,
+        portCode: "",
+        packageQty: 0,
+      },
+      rateDetails: {
+        invoiceItems: [],
+        amount: 0,
+        igstRate: 0,
+        taxableAmount: 0,
+        totalAmount: 0,
+        amountInWords: "",
+      },
+      bankDetails: {
+        id: 1,
+        organizationId: 1,
+        name: "AXIS BANK LTD",
+        branchName: "Mahim",
+        ifscCode: "UTIB0001243",
+        accountNumber: "920020018286808",
+        swiftCode: "UTIB0001243",
+      },
+      hsnCodeItems: [],
+      hsnListTaxableTotalValue: 0,
+      hsnListTaxableTotalAmount: 0,
+      hsnTotalValueInWords: "",
+      invoiceNo: "",
+      invoiceDate: "",
+      invoiceDueDate: "",
+      ackDate: "",
+      ackNo: null,
+      qrCode: "",
+      irn: "",
+    };
   }
 
   getControl(lineItem: FormGroup, controlName: string) {
@@ -357,11 +365,13 @@ export class InvoiceGenerationComponent
   createLineItemForm() {
     return this.fb.group({
       serviceTypeId: [""],
+      serviceName: [""],
       hsnCode: [""],
       packageQty: new FormControl(""),
       chargeableWt: new FormControl(""),
       quantity: [""],
       unitId: [""],
+      unit: [""],
       rate: [""],
     });
 
@@ -381,112 +391,15 @@ export class InvoiceGenerationComponent
   }
 
   ngOnInit(): void {
-    this.getAllOrganization();
-    this.getAllCustomer();
-    this.getMyAccountDetails();
-    this.getAllCargoTypes();
-    this.getAllAirlines();
-    this.getAllCurrency();
-    this.getAllCountryData();
-    this.getAllServiceType();
-    this.getAllShippers();
-    this.getAllConsignees();
-    this.getAllPorts();
-    this.getAllUnitData();
-    this.onAddNewLineItemClick(true);
     setTimeout(() => {
       this.getAllBranchByOrgId();
       this.getAllBranchByCustomerId();
     }, 500);
-
-    new InvoicePDF({ invoiceData: null }).getArrayBuffer().then((data) => {
-      
-    });
-
-    new InvoicePDF({ invoiceData: null }).getBase64().then((data) => {
-      this.setDataUrl(data);
-      
-    });
-  }
-
-  setDataUrl(dataUrl) {
-    // const obj = {
-    //   data: dataUrl
-    // }
-    this.srcdata = "data:application/pdf;base64,"+dataUrl;
-    // this.srcdata = "https://vadimdez.github.io/ng2-pdf-viewer/assets/pdf-test.pdf";
-    setTimeout(() => {
-      console.log(this.pdfViewer);
-    }, 100);
-    
-  }
-
-  test(event) {
-    console.log(event);
-    
   }
 
   ngOnChanges() {
-    if (this.invoiceData) {
-      console.log(this.invoiceData);
-    }
-
-    if (this.invoiceDrawerType == "view") {
-      this.companyDetailConfig.branchSelectorConfig.attributes.disable = true;
-      this.companyDetailConfig.customerBranchSelectorConfig.attributes.disable =
-        true;
-      this.companyDetailConfig.customerSelectorConfig.attributes.disable = true;
-      this.companyDetailConfig.invoiceDateInputConfig.attributes.disable = true;
-      this.companyDetailConfig.invoiceDueDateInputConfig.attributes.disable =
-        true;
-      this.companyDetailConfig.invoiceNoGenerationInputConfig.attributes.disable =
-        true;
-      this.companyDetailConfig.organizationConfig.attributes.disable = true;
-
-      this.shipmentDetailConfig.airlineConfig.attributes.disable = true;
-      this.shipmentDetailConfig.departureDate.attributes.disable = true;
-      this.shipmentDetailConfig.cargoTypeConfig.attributes.disable = true;
-      this.shipmentDetailConfig.chargeableWt.attributes.disable = true;
-      this.shipmentDetailConfig.date1.attributes.disable = true;
-      this.shipmentDetailConfig.date2.attributes.disable = true;
-      this.shipmentDetailConfig.flightNo.attributes.disable = true;
-      this.shipmentDetailConfig.grossWt.attributes.disable = true;
-      this.shipmentDetailConfig.dispatchDocNo.attributes.disable = true;
-      this.shipmentDetailConfig.incoTerms.attributes.disable = true;
-      this.shipmentDetailConfig.awbNo.attributes.disable = true;
-      this.shipmentDetailConfig.netWt.attributes.disable = true;
-      this.shipmentDetailConfig.packageQty.attributes.disable = true;
-      this.shipmentDetailConfig.sbNo.attributes.disable = true;
-      this.shipmentDetailConfig.shipperRef.attributes.disable = true;
-      this.shipmentDetailConfig.volume.attributes.disable = true;
-
-      this.consignmentDetailConfig.consignee.attributes.disable = true;
-      this.consignmentDetailConfig.deliveryCity.attributes.disable = true;
-      this.consignmentDetailConfig.deliveryCountry.attributes.disable = true;
-      this.consignmentDetailConfig.deliveryState.attributes.disable = true;
-      this.consignmentDetailConfig.destinationPort.attributes.disable = true;
-      this.consignmentDetailConfig.dischargePort.attributes.disable = true;
-      this.consignmentDetailConfig.loadingPort.attributes.disable = true;
-      this.consignmentDetailConfig.recieptCity.attributes.disable = true;
-      this.consignmentDetailConfig.recieptCountry.attributes.disable = true;
-      this.consignmentDetailConfig.recieptState.attributes.disable = true;
-      this.consignmentDetailConfig.shipper.attributes.disable = true;
-
-      this.rateDetailsConfig.amount.attributes.disable = true;
-      this.rateDetailsConfig.amountInWords.attributes.disable = true;
-      this.rateDetailsConfig.cgstRate.attributes.disable = true;
-      this.rateDetailsConfig.currencyConfig.attributes.disable = true;
-      this.rateDetailsConfig.hsnCode.attributes.disable = true;
-      this.rateDetailsConfig.igstRate.attributes.disable = true;
-      this.rateDetailsConfig.quantity.attributes.disable = true;
-      this.rateDetailsConfig.rate.attributes.disable = true;
-      this.rateDetailsConfig.serviceTypeConfig.attributes.disable = true;
-      this.rateDetailsConfig.sgstRate.attributes.disable = true;
-      this.rateDetailsConfig.taxableAmount.attributes.disable = true;
-      this.rateDetailsConfig.totalAmount.attributes.disable = true;
-      // consignmentDetailConfigrateDetailsConfig
-    } else if (this.invoiceDrawerType == "add") {
-      console.log("working add");
+    if (this.invoiceDrawerType == "add") {
+      this.onAddNewLineItemClick(true);
       this.stepperConfig.steps = _.cloneDeep(
         this.stepperConfig.steps.map((row: any) => {
           row["isCompleted"] = false;
@@ -495,8 +408,7 @@ export class InvoiceGenerationComponent
           };
         })
       );
-    }
-    if (this.invoiceData && this.invoiceDrawerType != "add") {
+    } else {
       // Set Stepper Config
       console.log(this.invoiceData);
 
@@ -509,34 +421,74 @@ export class InvoiceGenerationComponent
         })
       );
       // Basic Details
-      this.companyDetailsModel.customerBranchId =
-        this.invoiceData.companyDetails.customerBranchId;
+      this.companyDetailsModel.organizationId =
+        this.invoiceData?.companyDetails?.organization?.id;
       this.companyDetailsModel.customerId =
-        this.invoiceData.companyDetails.customer.customerId;
-      this.basicDetailsModel.invoiceDate = this.invoiceData.invoiceDate;
-      this.basicDetailsModel.invoiceDueDate = this.invoiceData.dueDate;
-      this.basicDetailsModel.invoiceNo = this.invoiceData.invoiceNo;
+        this.invoiceData?.companyDetails?.customer?.customerId;
+      this.companyDetailsModel.customerBranchId =
+        this.invoiceData?.companyDetails?.customerBranchId;
       this.companyDetailsModel.organizationBranchId =
         this.invoiceData.companyDetails.organizationBranchId;
-      this.companyDetailsModel.organizationId =
-        this.invoiceData.companyDetails.organization.id;
+
       // Shipment Details
-      this.shipmentDetailsModel = this.invoiceData.shipmentDetails;
-      // Consignment Details
-      this.consignmentDetailsModel = this.invoiceData.consignmentDetails;
+      this.shipmentDetailsModel.shipperId =
+        this.invoiceData?.shipmentDetails?.shipperId;
+      this.shipmentDetailsModel.consigneeId =
+        this.invoiceData?.shipmentDetails?.consigneeId;
+      this.shipmentDetailsModel.awbNo =
+        this.invoiceData?.shipmentDetails?.awbNo;
+      this.shipmentDetailsModel.flightNo =
+        this.invoiceData?.shipmentDetails?.flightNo;
+      this.shipmentDetailsModel.departureDate =
+        this.invoiceData?.shipmentDetails?.departureDate;
+      this.shipmentDetailsModel.loadingPortId =
+        this.invoiceData?.shipmentDetails?.loadingPortId;
+      this.shipmentDetailsModel.destinationPortId =
+        this.invoiceData?.shipmentDetails?.destinationPortId;
+      this.locationModel.countryId =
+        this.invoiceData?.shipmentDetails?.portCountryId;
+      this.invoiceFinalData.shipmentDetails.portCode =
+        this.invoiceData?.shipmentDetails?.portCode;
+
+      this.shipmentDetailsModel.dispatchDocNo =
+        this.invoiceData?.shipmentDetails?.dispatchDocNo;
+      this.shipmentDetailsModel.packageQty =
+        this.invoiceData?.shipmentDetails?.packageQty;
+      this.shipmentDetailsModel.grossWt =
+        this.invoiceData?.shipmentDetails?.grossWt;
+      this.shipmentDetailsModel.chargeableWt =
+        this.invoiceData?.shipmentDetails?.chargeableWt;
+      this.shipmentDetailsModel.cargoTypeId =
+        this.invoiceData?.shipmentDetails?.cargoTypeId;
+
+      // Basic Details
+      this.basicDetailsModel.invoiceDate = this.invoiceData?.invoiceDate;
+      this.basicDetailsModel.invoiceDueDate = this.invoiceData?.invoiceDueDate;
+      this.basicDetailsModel.invoiceNo =
+        this.invoiceData?.isCompleted == 1 ? this.invoiceData?.invoiceNo : "-";
+
       // Rate Details
-      this.rateDetailsModel = this.invoiceData.rateDetails;
-      // this.rateDetailsModel.cgstRate = this.invoiceData.rateDetails.cgstRate
-      //   ? `${this.invoiceData.rateDetails.cgstRate}%`
-      //   : "";
-      // this.rateDetailsModel.sgstRate = this.invoiceData.rateDetails.sgstRate
-      //   ? `${this.invoiceData.rateDetails.sgstRate}%`
-      //   : "";
-      // this.rateDetailsModel.igstRate = this.invoiceData.rateDetails.igstRate
-      //   ? `${this.invoiceData.rateDetails.igstRate}%`
-      //   : "";
+      this.rateDetailsModel.amount = Number(
+        this.invoiceData?.rateDetails?.amount
+      );
+      this.rateDetailsModel.amountInWords =
+        this.invoiceData?.rateDetails?.amountInWords;
+      this.rateDetailsModel.igstRate = Number(
+        this.invoiceData?.rateDetails?.igstRate
+      );
+      this.rateDetailsModel.taxableAmount = Number(
+        this.invoiceData?.rateDetails?.taxableAmount
+      );
+      this.rateDetailsModel.totalAmount = Number(
+        this.invoiceData?.rateDetails?.totalAmount
+      );
+
       // Bank Details
       this.bankDetailsModel = this.invoiceData.bankDetails;
+      if (this.invoiceDrawerType == 'view') {
+        this.lineItems = JSON.parse(this.invoiceData?.invoiceItems)
+        this.generatePDF()
+      }
     }
   }
 
@@ -553,15 +505,9 @@ export class InvoiceGenerationComponent
         case 1:
           step.stepTemplate = this.shipmentDetails;
           break;
-        // case 2:
-        //   step.stepTemplate = this.consignmentDetails;
-        //   break;
         case 2:
           step.stepTemplate = this.rates;
           break;
-        // case 3:
-        //   step.stepTemplate = this.bankDetails;
-        //   break;
         case 3:
           step.stepTemplate = this.preview;
           break;
@@ -581,7 +527,7 @@ export class InvoiceGenerationComponent
         !this.shipmentDetailsModel.flightNo ||
         !this.shipmentDetailsModel.departureDate ||
         !this.shipmentDetailsModel.loadingPortId ||
-        !this.shipmentDetailsModel.destinatonPortId ||
+        !this.shipmentDetailsModel.destinationPortId ||
         !this.shipmentDetailsModel.dispatchDocNo ||
         !this.shipmentDetailsModel.packageQty ||
         !this.shipmentDetailsModel.grossWt ||
@@ -592,88 +538,62 @@ export class InvoiceGenerationComponent
       return true;
     } else if (
       this.currentStepIndex == 2 &&
-      (!this.lineItemForm.get("lineItemList").value[0].quantity ||
-        !this.lineItemForm.get("lineItemList").value[0].rate)
+      (!this.lineItems[0].quantity || !this.lineItems[0].rate)
     ) {
       return true;
     } else {
       return false;
     }
-    // else if (
-    //   this.currentStepIndex == 1 &&
-    //   (!this.shipmentDetailsModel.mawbNo ||
-    //     !this.shipmentDetailsModel.dispatchDocNo ||
-    //     !this.shipmentDetailsModel.sbNo ||
-    //     !this.shipmentDetailsModel.packageQty ||
-    //     !this.shipmentDetailsModel.chargeableWt ||
-    //     !this.shipmentDetailsModel.grossWt ||
-    //     !this.shipmentDetailsModel.netWt ||
-    //     !this.shipmentDetailsModel.volume ||
-    //     !this.shipmentDetailsModel.date1 ||
-    //     !this.shipmentDetailsModel.date2 ||
-    //     !this.shipmentDetailsModel.departureDate ||
-    //     !this.shipmentDetailsModel.flightNo ||
-    //     !this.shipmentDetailsModel.shipperRef ||
-    //     !this.shipmentDetailsModel.incoTerms)
-    // ) {
-    //   return true;
-    // } else if (
-    //   this.currentStepIndex == 2 &&
-    //   (!this.consignmentDetailsModel.shipperId ||
-    //     !this.consignmentDetailsModel.consigneeId ||
-    //     !this.consignmentDetailsModel.loadingPortId ||
-    //     !this.consignmentDetailsModel.dischargePortId ||
-    //     !this.consignmentDetailsModel.destinatonPortId ||
-    //     !this.consignmentDetailsModel.placeOfDeliveryId ||
-    //     !this.consignmentDetailsModel.placeOfRecieptId)
-    // ) {
-    //   return true;
-    // } else if (
-    //   this.currentStepIndex == 3 &&
-    //   (!this.rateDetailsModel.hsnCode ||
-    //     !this.rateDetailsModel.quantity ||
-    //     !this.rateDetailsModel.rate)
-    // ) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
   }
 
   onAddNewLineItemClick(isNew) {
     this.lineItemListForm = this.lineItemForm.get("lineItemList") as FormArray;
-    this.lineItemListForm.push(this.createLineItemForm());
     const formIndex =
       this.lineItemFormConfigList.push(_.cloneDeep(this.lineItemFormConfig)) -
       1;
-    if (isNew) this.lineItems.push(new LineItem());
     this.lineItemFormConfigList[formIndex].serviceTypeConfig.options =
-      this.serviceTypeData;
+      formIndex == 0
+        ? this.serviceTypeData
+        : this.getServiceTypeData(
+            true,
+            this.lineItemForm.get("lineItemList").value[formIndex - 1]
+              .serviceTypeId
+          );
+
+    this.lineItemListForm.push(this.createLineItemForm());
+
+    if (isNew) this.lineItems.push(new LineItem());
+
     this.lineItemFormConfigList[formIndex].serviceTypeConfig.attributes.hint =
       "";
-    // this.lineItemFormConfigList[formIndex].unitConfig.options =
-    //   this.rateDetailsConfig.unitConfig.options;
-    // this.lineItems = this.lineItemForm.get("lineItemList").value;
+  }
+
+  loadLineItems(lineItems) {
+    console.log(this.serviceTypeData);
+
+    this.lineItemListForm = this.lineItemForm.get("lineItemList") as FormArray;
+    const formIndex =
+      this.lineItemFormConfigList.push(_.cloneDeep(this.lineItemFormConfig)) -
+      1;
+    this.lineItemFormConfigList[formIndex].serviceTypeConfig.options =
+      this.getServiceTypeData(true, lineItems?.serviceId);
+
+    this.lineItemListForm.push(this.createLineItemForm());
+    this.lineItems.push(lineItems);
+    this.lineItemForm.get("lineItemList")["controls"][formIndex].patchValue({
+      serviceTypeId: lineItems.serviceId,
+      hsnCode: lineItems.serviceId,
+      serviceName: lineItems.serviceName,
+      unitId: lineItems.unitId,
+      unit: lineItems.unit,
+    });
+    this.lineItemFormConfigList[
+      formIndex
+    ].serviceTypeConfig.attributes.hint = `HSN Code: ${lineItems?.hsnCode}`;
   }
 
   onDeleteLineItemClick(i) {
     this.lineItemListForm = this.lineItemForm.get("lineItemList") as FormArray;
-    this.lineItemFormConfigList.forEach((element, index) => {
-      if (index != i) {
-        this.lineItemFormConfigList[index].serviceTypeConfig.options =
-          this.serviceTypeData.map((row: any) => {
-            if (
-              row.id ==
-              this.lineItemForm.get("lineItemList").value[i].serviceTypeId
-            ) {
-              row["disabled"] = false;
-            }
-            return {
-              ...row,
-            };
-          });
-      }
-    });
     if (
       this.lineItemForm.get("lineItemList").value[i].quantity &&
       this.lineItemForm.get("lineItemList").value[i].rate
@@ -698,9 +618,20 @@ export class InvoiceGenerationComponent
         Math.round(Number(this.rateDetailsModel?.totalAmount))
       );
     }
+    const serviceTypeId =
+      this.lineItemForm.get("lineItemList").value[i].serviceTypeId;
+
     this.lineItemListForm.removeAt(i);
     this.lineItems.splice(i, 1);
-    console.log(this.lineItemForm.get("lineItemList").value);
+    this.lineItemFormConfigList.splice(i, 1);
+    this.getServiceTypeData(false, serviceTypeId);
+    // this.lineItemFormConfigList.map((row: any) => {
+    //   row.serviceTypeConfig.options = this.getServiceTypeData(false, serviceTypeId)
+    //   return {
+    //     ...row
+    //   }
+    // })
+    console.log();
   }
 
   getLineItem(i) {
@@ -721,14 +652,37 @@ export class InvoiceGenerationComponent
     this.lineItems[0].chargeableWt = event;
   }
 
+  generatePDF() {
+    new InvoicePDF({ invoiceData: this.getInvoiceData() })
+      .getBase64()
+      .then((data) => {
+        this.setDataUrl(data);
+        this.showPDFTemplate = true;
+      });
+  }
+
+  setDataUrl(dataUrl) {
+    this.srcdata = "data:application/pdf;base64," + dataUrl;
+  }
+
+  getServiceTypeData(isUsed: boolean, id) {
+    return this.serviceTypeData?.map((row: any) => {
+      if (row.id == id) {
+        row["disabled"] = isUsed ? true : false;
+      }
+      return {
+        ...row,
+      };
+    });
+  }
+
   // Drawer Action Events
   actionEvent(event) {
     // let eventData = null;
+    let data: any = {};
     switch (event) {
       case "next":
         // Next Click
-        console.log(this.currentStepIndex);
-
         this.stepper.nextStep();
         break;
       case "previous":
@@ -741,58 +695,15 @@ export class InvoiceGenerationComponent
         this.downloadLoading = false;
         break;
       case "save":
-        const bankDetails = {
-          bankDetailId: this.bankDetailsModel.id,
-          bankName: this.bankDetailsModel.name,
-          bankIfscCode: this.bankDetailsModel.ifscCode,
-          bankAccountNumber: this.bankDetailsModel.accountNumber,
-          bankSwiftCode: this.bankDetailsModel.swiftCode,
-        };
-
-        console.log(this.invoiceData);
-        const data = {
-          id: this.invoiceData?.id ? this.invoiceData?.id : null,
-          companyDetails: this.companyDetailsModel,
-          shipmentDetails: this.shipmentDetailsModel,
-          consignmentDetails: this.consignmentDetailsModel,
-          rateDetails: this.rateDetailsModel,
-          bankDetails: bankDetails,
-          invoiceNo: this.basicDetailsModel.invoiceNo,
-          invoiceDate: this.basicDetailsModel.invoiceDate,
-          dueDate: this.basicDetailsModel.invoiceDueDate,
-          shipmentNo: "",
-          shipmentTypeId: 0,
-          isCompleted: 1,
-        };
+        data = this.generatePostData();
+        data.isCompleted = 1;
         console.log(data);
         this.addUpdateInvoice(data);
         break;
       case "draft":
-        const editBankDetails = {
-          bankDetailId: this.bankDetailsModel.id,
-          bankName: this.bankDetailsModel.name,
-          bankIfscCode: this.bankDetailsModel.ifscCode,
-          bankAccountNumber: this.bankDetailsModel.accountNumber,
-          bankSwiftCode: this.bankDetailsModel.swiftCode,
-        };
-        this.consignmentDetailsModel.placeOfDeliveryId = 1;
-        this.consignmentDetailsModel.placeOfRecieptId = 1;
-        const editData = {
-          id: this.invoiceData?.id ? this.invoiceData?.id : null,
-          companyDetails: this.companyDetailsModel,
-          shipmentDetails: this.shipmentDetailsModel,
-          consignmentDetails: this.consignmentDetailsModel,
-          rateDetails: this.rateDetailsModel,
-          bankDetails: editBankDetails,
-          invoiceNo: this.basicDetailsModel.invoiceNo,
-          invoiceDate: this.basicDetailsModel.invoiceDate,
-          dueDate: this.basicDetailsModel.invoiceDueDate,
-          shipmentNo: "",
-          shipmentTypeId: 0,
-          isCompleted: 0,
-        };
-
-        this.addUpdateInvoice(editData);
+        data = this.generatePostData();
+        data.isCompleted = 0;
+        this.addUpdateInvoice(data);
         break;
 
       default:
@@ -819,53 +730,28 @@ export class InvoiceGenerationComponent
             (item: any) =>
               item.isLoadingPort != 1 && item.countryId == event.value
           );
-        console.log(
-          "port",
-          this.portData?.filter(
-            (item: any) =>
-              item.isLoadingPort != 1 && item.countryId == event.value
-          )
-        );
+
+        break;
+      case "destinationPort":
+        this.invoiceFinalData.shipmentDetails.portCode =
+          event?.selectedObj?.portCode;
 
         break;
       case "serviceType":
-        console.log(event, i);
-        this.lineItemForm.get("lineItemList")["controls"][i].patchValue({
-          serviceTypeId: event.value,
-          hsnCode: event.selectedObj.hsnCode,
-        });
         this.lineItemFormConfigList[
           i
         ].serviceTypeConfig.attributes.hint = `HSN Code: ${event.selectedObj.hsnCode}`;
-        // this.lineItemFormConfigList.forEach((element, index) => {
-
-        // });
-        for (
-          let index = 0;
-          index < this.lineItemFormConfigList.length;
-          index++
-        ) {
-          const element = this.lineItemFormConfigList[index];
-          if (index !== i) {
-            this.lineItemFormConfigList[index].serviceTypeConfig.options =
-              this.serviceTypeData.map((row: any) => {
-                if (row.id == event.value) {
-                  row["disabled"] = true;
-                }
-                return {
-                  ...row,
-                };
-              });
-            console.log(
-              this.lineItemFormConfigList[index].serviceTypeConfig.options
-            );
-          }
-        }
+        this.lineItemForm.get("lineItemList")["controls"][i].patchValue({
+          serviceTypeId: event.value,
+          hsnCode: event.selectedObj.hsnCode,
+          serviceName: event.selectedObj.name,
+        });
         break;
 
       case "unit":
         this.lineItemForm.get("lineItemList")["controls"][i].patchValue({
           unitId: event.value,
+          unit: event.selectedObj.unit,
         });
         break;
       default:
@@ -877,24 +763,24 @@ export class InvoiceGenerationComponent
     return Number(quantity) * Number(rate);
   }
 
+  calculateAmount(array) {
+    const initialValue = 0;
+    const sumWithInitial = array.reduce(
+      (accumulator, currentValue) =>
+        accumulator + Number(currentValue.quantity) * Number(currentValue.rate),
+      initialValue
+    );
+    return sumWithInitial;
+  }
+
   valueChanged(type: any, index: number) {
     console.log(this.calc);
     switch (type) {
       case "quantity":
       case "rate":
-        // this.rateDetailsModel.amount
-        let temp1: number;
-        if (
-          this.lineItemForm.get("lineItemList").value[index].quantity &&
-          this.lineItemForm.get("lineItemList").value[index].rate
-        ) {
-          temp1 = this.getAmount(
-            Number(this.lineItemForm.get("lineItemList").value[index].quantity),
-            Number(this.lineItemForm.get("lineItemList").value[index].rate)
-          );
-          this.calc += temp1;
-        }
-        this.rateDetailsModel.amount = this.calc;
+        this.rateDetailsModel.amount = this.calculateAmount(
+          this.lineItemForm.get("lineItemList").value
+        );
         // Update Taxable Amount
         const cgstRateValue =
           Number(this.rateDetailsModel?.cgstRate.toString().split("%")[0]) /
@@ -933,19 +819,204 @@ export class InvoiceGenerationComponent
     }
   }
 
-  getNumber(data) {
-    return Number(data);
+  getInvoiceData() {
+    if (this.invoiceData) {
+      this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails;
+    }
+    this.invoiceFinalData.shipmentDetails.dispatchDocNo =
+      this.shipmentDetailsModel?.dispatchDocNo;
+    this.invoiceFinalData.shipmentDetails.awbNo =
+      this.shipmentDetailsModel?.awbNo;
+    this.invoiceFinalData.shipmentDetails.flightNo =
+      this.shipmentDetailsModel?.flightNo;
+    this.invoiceFinalData.shipmentDetails.departureDate =
+      this.shipmentDetailsModel?.departureDate;
+    this.invoiceFinalData.shipmentDetails.packageQty =
+      this.shipmentDetailsModel?.packageQty;
+    this.invoiceFinalData.rateDetails.invoiceItems =
+      this.lineItems.filter((row: any) => row.rate) ||
+      this.lineItemForm?.get("lineItemList")?.value;
+    this.invoiceFinalData.rateDetails.amount = this.rateDetailsModel?.amount;
+    this.invoiceFinalData.rateDetails.igstRate = Number(
+      this.rateDetailsModel?.igstRate.toString().split("%")[0]
+    );
+    this.invoiceFinalData.invoiceDate = this.basicDetailsModel.invoiceDate;
+    this.invoiceFinalData.rateDetails.taxableAmount =
+      this.rateDetailsModel?.taxableAmount;
+    this.invoiceFinalData.rateDetails.totalAmount =
+      this.rateDetailsModel?.totalAmount;
+    this.invoiceFinalData.rateDetails.amountInWords =
+      this.rateDetailsModel?.amountInWords;
+    const groupedData = _(
+      this.lineItems.filter((row: any) => row.rate) ||
+        this.lineItemForm?.get("lineItemList")?.value
+    )
+      .groupBy("hsnCode")
+      .value();
+
+    var hsnCodeDataList = [];
+    for (let key in groupedData) {
+      let amount = 0;
+      groupedData[key]?.forEach((element) => {
+        amount += Number(element?.quantity) * Number(element?.rate);
+        return amount;
+      });
+      let value = amount;
+
+      const hsnData = {
+        hsnCode: key,
+        amount: value,
+      };
+      hsnCodeDataList?.push(hsnData);
+    }
+
+    hsnCodeDataList?.map((row) => {
+      const igstRateValue =
+        Number(this.rateDetailsModel?.igstRate?.toString().split("%")[0]) / 100;
+      row["taxableAmount"] =
+        Math.round(Number(row?.amount) * Number(igstRateValue) * 100) / 100;
+      return { ...row };
+    });
+
+    var hsnListTaxableTotalValue = 0;
+    hsnCodeDataList?.forEach((element) => {
+      hsnListTaxableTotalValue += Number(element?.amount);
+      return hsnListTaxableTotalValue;
+    });
+
+    var hsnListTaxableTotalAmount = 0;
+    hsnCodeDataList?.forEach((element) => {
+      hsnListTaxableTotalAmount += Number(element?.taxableAmount);
+      return hsnListTaxableTotalAmount;
+    });
+
+    this.invoiceFinalData.hsnCodeItems = hsnCodeDataList;
+    this.invoiceFinalData.hsnListTaxableTotalValue =
+      hsnListTaxableTotalValue.toFixed(2);
+
+    this.invoiceFinalData.hsnListTaxableTotalAmount =
+      hsnListTaxableTotalAmount.toFixed(2);
+
+    let hsnTotalValueInWords = `${convertAmountToWords(
+      this.invoiceFinalData?.hsnListTaxableTotalAmount?.toString().split(".")[0]
+    )} and ${convertAmountToWords(
+      this.invoiceFinalData.hsnListTaxableTotalAmount?.toString().split(".")[1]
+    )} Paise Only.`;
+    this.invoiceFinalData.hsnTotalValueInWords = hsnTotalValueInWords;
+    console.log(this.invoiceFinalData);
+
+    return this.invoiceFinalData;
+  }
+
+  generatePostData() {
+    return {
+      companyDetails: {
+        organizationId: this.invoiceData?.companyDetails?.organization?.id
+          ? this.invoiceData?.companyDetails?.organization?.id
+          : this.companyDetailsModel?.organizationId,
+        organizationBranchId: this.invoiceData?.companyDetails
+          ?.organizationBranchId
+          ? this.invoiceData?.companyDetails?.organizationBranchId
+          : this.companyDetailsModel?.organizationBranchId,
+        customerId: this.invoiceData?.companyDetails?.customer?.customerId
+          ? this.invoiceData?.companyDetails?.customer?.customerId
+          : this.companyDetailsModel?.customerId,
+        customerBranchId: this.invoiceData?.companyDetails?.customerBranchId
+          ? this.invoiceData?.companyDetails?.customerBranchId
+          : this.companyDetailsModel?.customerBranchId,
+        companyCode: this.companyDetailsModel?.companyCode,
+        cityCode: this.companyDetailsModel?.cityCode,
+      },
+      shipmentDetails: {
+        shipperId: this.invoiceData?.shipmentDetails?.shipperId
+          ? this.invoiceData?.shipmentDetails?.shipperId
+          : this.shipmentDetailsModel?.shipperId,
+        consigneeId: this.invoiceData?.shipmentDetails?.consigneeId
+          ? this.invoiceData?.shipmentDetails?.consigneeId
+          : this.shipmentDetailsModel?.consigneeId,
+        awbNo: this.invoiceData?.shipmentDetails?.awbNo
+          ? this.invoiceData?.shipmentDetails?.awbNo
+          : this.shipmentDetailsModel?.awbNo,
+        flightNo: this.invoiceData?.shipmentDetails?.flightNo
+          ? this.invoiceData?.shipmentDetails?.flightNo
+          : this.shipmentDetailsModel?.flightNo,
+        departureDate: this.invoiceData?.shipmentDetails?.departureDate
+          ? this.invoiceData?.shipmentDetails?.departureDate
+          : this.shipmentDetailsModel?.departureDate,
+        loadingPortId: this.invoiceData?.shipmentDetails?.loadingPortId
+          ? this.invoiceData?.shipmentDetails?.loadingPortId
+          : this.shipmentDetailsModel?.loadingPortId,
+        destinationPortId: this.invoiceData?.shipmentDetails?.destinationPortId
+          ? this.invoiceData?.shipmentDetails?.destinationPortId
+          : this.shipmentDetailsModel?.destinationPortId,
+        dispatchDocNo: this.invoiceData?.shipmentDetails?.dispatchDocNo
+          ? this.invoiceData?.shipmentDetails?.dispatchDocNo
+          : this.shipmentDetailsModel?.dispatchDocNo,
+        packageQty: this.invoiceData?.shipmentDetails?.packageQty
+          ? this.invoiceData?.shipmentDetails?.packageQty
+          : Number(this.shipmentDetailsModel?.packageQty),
+        chargeableWt: this.invoiceData?.shipmentDetails?.chargeableWt
+          ? this.invoiceData?.shipmentDetails?.chargeableWt
+          : Number(this.shipmentDetailsModel?.chargeableWt),
+        grossWt: this.invoiceData?.shipmentDetails?.grossWt
+          ? this.invoiceData?.shipmentDetails?.grossWt
+          : Number(this.shipmentDetailsModel?.grossWt),
+        cargoTypeId: this.invoiceData?.shipmentDetails?.cargoTypeId
+          ? this.invoiceData?.shipmentDetails?.cargoTypeId
+          : this.shipmentDetailsModel?.cargoTypeId,
+      },
+      rateDetails: {
+        invoiceItems: this.invoiceData?.invoiceItems
+          ? JSON.parse(this.invoiceData?.invoiceItems)
+          : this.lineItemForm?.get("lineItemList")?.value,
+        amount: this.invoiceData?.rateDetails?.amount
+          ? Number(this.invoiceData?.rateDetails?.amount)
+          : Number(this.rateDetailsModel?.amount),
+        cgstRate: 0,
+        sgstRate: 0,
+        igstRate: this.invoiceData?.rateDetails?.igstRate
+          ? Number(this.invoiceData?.rateDetails?.igstRate)
+          : Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]),
+        taxableAmount: this.invoiceData?.rateDetails?.taxableAmount
+          ? Number(this.invoiceData?.rateDetails?.taxableAmount)
+          : Number(this.rateDetailsModel?.taxableAmount),
+        totalAmount: this.invoiceData?.rateDetails?.totalAmount
+          ? Number(this.invoiceData?.rateDetails?.totalAmount)
+          : Number(this.rateDetailsModel?.totalAmount),
+        amountInWords: this.invoiceData?.rateDetails?.amountInWords
+          ? this.invoiceData?.rateDetails?.amountInWords
+          : this.rateDetailsModel?.amountInWords,
+      },
+      bankDetails: {
+        id: 1,
+        organizationId: this.companyDetailsModel?.organizationId,
+        name: this.bankDetailsModel?.name,
+        branchName: this.bankDetailsModel?.branchName,
+        ifscCode: this.bankDetailsModel?.ifscCode,
+        accountNumber: this.bankDetailsModel?.accountNumber,
+        swiftCode: this.bankDetailsModel?.swiftCode,
+      },
+      invoiceNo: this.invoiceData?.invoiceNo ? this.invoiceData?.invoiceNo : "",
+      invoiceDate: this.basicDetailsModel?.invoiceDate,
+      invoiceDueDate: this.basicDetailsModel?.invoiceDueDate,
+    };
   }
 
   // API Call
   getAllOrganization() {
     this.invoiceGenerationService.getAllOrganization().subscribe((res: any) => {
       this.companyDetailConfig.organizationConfig.options = res;
+      if (res) {
+        this.invoiceFinalData.companyDetails.organization.name = res[0]?.name;
+        this.invoiceFinalData.companyDetails.organization.emailId =
+          res[0]?.emailId;
+      }
       // Set First Value
       if (this.companyDetailConfig.organizationConfig.options?.length > 0) {
         this.companyDetailsModel.organizationId =
           this.companyDetailConfig.organizationConfig.options[0]!.id;
-        this.companyDetailsModel.companyCode = res[0].companyCode;
+        this.companyDetailsModel.companyCode = res[0]?.companyCode;
+        console.log(this.companyDetailsModel.companyCode);
       }
     });
   }
@@ -953,27 +1024,50 @@ export class InvoiceGenerationComponent
     this.invoiceGenerationService
       .getAllBranchByOrgId(this.companyDetailsModel.organizationId)
       .subscribe((res: any) => {
-        this.companyDetailConfig.branchSelectorConfig.options = res.filter(
-          (item: any) =>
-            item.organizationId === this.companyDetailsModel.organizationId
-        );
+        this.companyDetailConfig.branchSelectorConfig.options = res
+          .filter(
+            (item: any) =>
+              item.organizationId === this.companyDetailsModel.organizationId
+          )
+          .map((row: any) => {
+            row["organizationBranchId"] = row.id;
+            return {
+              ...row,
+            };
+          });
+        this.invoiceFinalData.companyDetails.organization.address =
+          res[0]?.address;
+        this.invoiceFinalData.companyDetails.organization.gstin = res[0]?.gstin;
+        this.invoiceFinalData.companyDetails.organization.stateName =
+          res[0]?.stateName;
+        this.invoiceFinalData.companyDetails.organization.stateTinCode =
+          res[0]?.stateTinCode;
         // Set First Value
         if (this.companyDetailConfig.branchSelectorConfig.options?.length > 0) {
           this.companyDetailsModel.organizationBranchId =
             this.companyDetailConfig.branchSelectorConfig.options[0]!.id;
           this.companyDetailsModel.cityCode = res[0].cityCode; //cityCode
+          console.log(this.companyDetailsModel.cityCode);
         }
       });
   }
   // Customer
   getAllCustomer() {
     this.invoiceGenerationService.getAllCustomer().subscribe((res: any) => {
-      this.companyDetailConfig.customerSelectorConfig.options = res;
+      this.companyDetailConfig.customerSelectorConfig.options = res.map(
+        (row: any) => {
+          row["customerId"] = row.id;
+          return {
+            ...row,
+          };
+        }
+      );
       // Set First Value
       if (this.companyDetailConfig.customerSelectorConfig.options?.length > 0) {
         this.companyDetailsModel.customerId =
           this.companyDetailConfig.customerSelectorConfig.options[0]!.id;
       }
+      this.invoiceFinalData.companyDetails.customer.name = res[0]?.name;
     });
   }
   getAllBranchByCustomerId() {
@@ -981,11 +1075,17 @@ export class InvoiceGenerationComponent
     this.invoiceGenerationService
       .getAllBranchByCustomerId(this.companyDetailsModel.customerId)
       .subscribe((res: any) => {
-        this.companyDetailConfig.customerBranchSelectorConfig.options =
-          res.filter(
+        this.companyDetailConfig.customerBranchSelectorConfig.options = res
+          .filter(
             (item: any) =>
               item.customerId === this.companyDetailsModel.customerId
-          );
+          )
+          .map((row: any) => {
+            row["customerBranchId"] = row.id;
+            return {
+              ...row,
+            };
+          });
         // Set First Value
         if (
           this.companyDetailConfig.customerBranchSelectorConfig.options
@@ -994,13 +1094,27 @@ export class InvoiceGenerationComponent
           this.companyDetailsModel.customerBranchId =
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]!.id;
         }
+        this.invoiceFinalData.companyDetails.customer.address =
+          res[0]?.address + ", " + res[0]?.address2;
+        this.invoiceFinalData.companyDetails.customer.gstin = res[0]?.gstin;
+        this.invoiceFinalData.companyDetails.customer.stateName =
+          res[0]?.stateName;
+        this.invoiceFinalData.companyDetails.customer.stateTinCode =
+          res[0]?.stateTinCode;
       });
   }
 
   // Cargo Details
   getAllCargoTypes() {
     this.invoiceGenerationService.getAllCargoTypes().subscribe((res: any) => {
-      this.shipmentDetailConfig.cargoTypeConfig.options = res;
+      this.shipmentDetailConfig.cargoTypeConfig.options = res.map(
+        (row: any) => {
+          row["cargoTypeId"] = row.id;
+          return {
+            ...row,
+          };
+        }
+      );
       // Set First Value
       if (this.shipmentDetailConfig.cargoTypeConfig.options?.length > 0) {
         this.shipmentDetailsModel.cargoTypeId =
@@ -1024,8 +1138,24 @@ export class InvoiceGenerationComponent
   // Service Type
   getAllServiceType() {
     this.invoiceGenerationService.getAllServiceType().subscribe((res: any) => {
-      this.serviceTypeData = res;
-      this.lineItemFormConfigList[0].serviceTypeConfig.options = res;
+      this.serviceTypeData = res.map((row: any) => {
+        row["serviceId"] = row.id;
+        return {
+          ...row,
+        };
+      });
+      if (!this.invoiceData?.invoiceItems) {
+        this.lineItemFormConfigList[0].serviceTypeConfig.options =
+          this.serviceTypeData;
+      } else {
+        const lineItems = JSON.parse(this.invoiceData?.invoiceItems);
+        lineItems.forEach((element) => {
+          if (element && element.quantity) {
+            this.loadLineItems(element);
+          }
+        });
+      }
+
       // this.rateDetailsConfig.serviceTypeConfig.options = res;
       // // Set First Value
       // if (this.rateDetailsConfig.serviceTypeConfig.options?.length > 0) {
@@ -1071,7 +1201,14 @@ export class InvoiceGenerationComponent
   getAllShippers() {
     this.invoiceGenerationService.getAllShippers().subscribe((res: any) => {
       if (res.data) {
-        this.consignmentDetailConfig.shipper.options = res.data;
+        this.consignmentDetailConfig.shipper.options = res.data.map(
+          (row: any) => {
+            row["shipperId"] = row.id;
+            return {
+              ...row,
+            };
+          }
+        );
       }
     });
   }
@@ -1079,7 +1216,14 @@ export class InvoiceGenerationComponent
   getAllConsignees() {
     this.invoiceGenerationService.getAllConsignees().subscribe((res: any) => {
       if (res.data) {
-        this.consignmentDetailConfig.consignee.options = res.data;
+        this.consignmentDetailConfig.consignee.options = res.data.map(
+          (row: any) => {
+            row["consigneeId"] = row.id;
+            return {
+              ...row,
+            };
+          }
+        );
       }
     });
   }
@@ -1088,9 +1232,26 @@ export class InvoiceGenerationComponent
     this.invoiceGenerationService.getAllPorts().subscribe((res: any) => {
       if (res.data) {
         this.portData = res.data;
-        this.consignmentDetailConfig.loadingPort.options = res.data.filter(
-          (item: any) => item.isLoadingPort == 1
-        );
+        this.consignmentDetailConfig.loadingPort.options = res.data
+          .filter((item: any) => item.isLoadingPort == 1)
+          .map((row: any) => {
+            row["loadingPortId"] = row.id;
+            row["destinationPortId"] = row.id;
+            return {
+              ...row,
+            };
+          });
+        if (this.invoiceData) {
+          if (this.portData) {
+            this.consignmentDetailConfig.destinationPort.options =
+              this.portData?.filter(
+                (item: any) =>
+                  item.isLoadingPort != 1 &&
+                  item.countryId ==
+                    this.invoiceData?.shipmentDetails?.portCountryId
+              );
+          }
+        }
         this.consignmentDetailConfig.dischargePort.options = res.data;
       }
     });
@@ -1099,7 +1260,12 @@ export class InvoiceGenerationComponent
   getAllUnitData() {
     this.invoiceGenerationService.getAllUnitData().subscribe((res: any) => {
       if (res.data) {
-        this.rateDetailsConfig.unitConfig.options = res.data;
+        this.rateDetailsConfig.unitConfig.options = res.data.map((row: any) => {
+          row["unitId"] = row.id;
+          return {
+            ...row,
+          };
+        });
       }
     });
   }
@@ -1110,7 +1276,12 @@ export class InvoiceGenerationComponent
       .subscribe((res: any) => {
         if (res.data) {
           this.consignmentDetailConfig.destinationPortCountry.options =
-            res.data;
+            res.data.map((row: any) => {
+              row["countryId"] = row.id;
+              return {
+                ...row,
+              };
+            });
         }
       });
   }

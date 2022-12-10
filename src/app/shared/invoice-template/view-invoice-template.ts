@@ -171,7 +171,8 @@ export class InvoicePDF {
                             stack: [
                                 { text: `${invoiceData?.irn ? invoiceData?.irn : '-'}`, bold: true, fontSize: 10 },
                                 { text: `${invoiceData?.ackNo ? invoiceData?.ackNo : '-'}`, bold: true, fontSize: 10 },
-                                { text: `${invoiceData?.ackDate ? moment(invoiceData?.ackDate).format('DD-MMM-YY') : '-'}`, bold: true, fontSize: 10 },
+                                { text: `${invoiceData?.ackDate ? invoiceData?.ackDate : '-'}`, bold: true, fontSize: 10 },
+                                // { text: `${invoiceData?.ackDate ? moment(invoiceData?.ackDate).format('DD-MMM-YY') : '-'}`, bold: true, fontSize: 10 },
                                 {
                                     stack: [
                                         {
@@ -238,6 +239,8 @@ export class InvoicePDF {
 
     private createInvoiceTable(invoiceData: any) {
         // data
+        console.log(invoiceData?.rateDetails?.invoiceItems);
+        
         const costItems = [
             {
                 description: `Air Freight`,

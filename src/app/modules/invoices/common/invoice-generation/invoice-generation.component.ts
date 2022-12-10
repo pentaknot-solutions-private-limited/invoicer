@@ -47,6 +47,7 @@ import * as _ from "lodash";
 import { minLengthArray } from "src/app/shared/utils/custom-validators";
 import { InvoicePDF } from "src/app/shared/invoice-template/view-invoice-template";
 import { PdfViewerComponent } from "ng2-pdf-viewer";
+import * as moment from "moment";
 
 @Component({
   selector: "invoice-generation",
@@ -486,9 +487,7 @@ export class InvoiceGenerationComponent
       // Bank Details
       this.bankDetailsModel = this.invoiceData.bankDetails;
       if (this.invoiceDrawerType == "view") {
-        this.lineItems = JSON.parse(this.invoiceData?.invoiceItems).filter(
-          (row: any) => row.isDeleted == 0
-        );
+        this.lineItems = JSON.parse(this.invoiceData?.invoiceItems);
         this.generatePDF();
       }
     }
@@ -847,7 +846,7 @@ export class InvoiceGenerationComponent
     this.invoiceFinalData.shipmentDetails.packageQty =
       this.shipmentDetailsModel?.packageQty;
     this.invoiceFinalData.rateDetails.invoiceItems =
-      this.lineItemForm.get("lineItemList").value;
+      this.invoiceDrawerType != 'view' ? this.lineItemForm.get("lineItemList").value : this.lineItems;
     this.invoiceFinalData.rateDetails.amount = this.rateDetailsModel?.amount;
     this.invoiceFinalData.rateDetails.igstRate = Number(
       this.rateDetailsModel?.igstRate.toString().split("%")[0]
@@ -869,7 +868,7 @@ export class InvoiceGenerationComponent
       this.rateDetailsModel?.totalAmount;
     this.invoiceFinalData.rateDetails.amountInWords =
       this.rateDetailsModel?.amountInWords;
-    const groupedData = _(this.lineItemForm.get("lineItemList").value)
+    const groupedData = _(this.invoiceDrawerType != 'view' ? this.lineItemForm.get("lineItemList").value : this.lineItems)
       .groupBy("hsnCode")
       .value();
 
@@ -990,6 +989,121 @@ export class InvoiceGenerationComponent
       qrCode: this.invoiceData?.qrCode ? this.invoiceData?.qrCode : null,
       ackDate: this.invoiceData?.ackDate ? this.invoiceData?.ackDate : null,
     };
+  }
+
+  generateIRNData(invoiceData: any) {
+    const data = {
+      Version: "1.1",
+      TranDtls: {
+        TaxSch: "GST",
+        SupTyp: "B2B",
+        RegRev: "N",
+        EcmGstin: null,
+        IgstOnIntra: "N",
+      },
+      DocDtls: {
+        No: invoiceData?.invoiceNo,
+        Typ: "INV", // Need clarity
+        Dt: moment(invoiceData?.invoiceDate).format("DD/DD/YYYY"),
+      },
+
+      SellerDtls: {
+        Gstin: invoiceData?.organization?.gstin,
+        LglNm: invoiceData?.organization?.name,
+        TrdNm: invoiceData?.organization?.name,
+        Addr1: invoiceData?.organization?.address,
+        Addr2: "",
+        Loc: invoiceData?.organization?.stateName,
+        Pin: invoiceData?.organization?.pincode,
+        Stcd: invoiceData?.organization?.stateTinCode,
+        Ph: invoiceData?.organization?.phoneNo,
+        Em: invoiceData?.organization?.emailId,
+      },
+
+      BuyerDtls: {
+        Gstin: invoiceData?.customer?.gstin,
+        LglNm: invoiceData?.customer?.customerName,
+
+        TrdNm: invoiceData?.customer?.customerName,
+        Pos: invoiceData?.customer?.stateTinCode,
+        Addr1: invoiceData?.customer?.address,
+        Addr2: invoiceData?.customer?.address2,
+        Loc: invoiceData?.customer?.stateName,
+        Pin: invoiceData?.customer?.pincode,
+        Stcd: invoiceData?.customer?.stateTinCode,
+        Ph: invoiceData?.customer?.phoneNo,
+        Em: invoiceData?.customer?.emailId
+      },
+
+      DispDtls: {
+        Nm: invoiceData?.organization?.name,
+        Addr1: invoiceData?.organization?.address,
+        Addr2: "",
+        Loc: invoiceData?.organization?.stateName,
+        Pin: invoiceData?.organization?.pincode,
+        Stcd: invoiceData?.organization?.stateTinCode,
+      },
+      ItemList: invoiceData?.rateDetails?.invoiceItems[0].map((row: any, index: number) => {
+        const igstRateValue =
+        Number(invoiceData?.rateDetails?.igstRate) / 100;
+        const igstAmt = ((Number(row?.quantity) * Number(row?.rate)) * Number(igstRateValue) * 100) / 100;
+        const totItemVal = (Number(row?.quantity) * Number(row?.rate)) + Number(igstAmt)
+        return {
+          SlNo: index+1,
+          PrdDesc: row?.serviceName,
+          IsServc: "N",
+          HsnCd: row?.hsnCode,
+          Barcde: "000", // Need Clarity
+          Qty: row?.quantity,
+          FreeQty: 0, // Need Clarity
+          Unit: row?.unit,
+          UnitPrice: row?.rate,
+          TotAmt: Number(row?.quantity) * Number(row?.rate),
+          Discount: 0,
+          PreTaxVal: Number(row?.quantity) * Number(row?.rate),
+          AssAmt: Number(row?.quantity) * Number(row?.rate),
+          GstRt: invoiceData?.rateDetails?.igstRate,
+          IgstAmt: igstAmt,
+          CgstAmt: 0,
+          SgstAmt: 0,
+          CesRt: 0, // Need Clarity
+          CesAmt: 0, // Need Clarity
+          CesNonAdvlAmt: 0, // Need Clarity
+          StateCesRt: 0, // Need Clarity
+          StateCesAmt: 0, // Need Clarity
+          StateCesNonAdvlAmt: 0, // Need Clarity
+          OthChrg: 0,
+          TotItemVal: totItemVal,
+          OrdLineRef: "0",
+          OrgCntry: "IN",
+          PrdSlNo: "0",
+          AttribDtls: [
+            {
+              Nm: row?.serviceName,
+              Val: totItemVal,
+            },
+          ],
+        }
+      }),
+
+      ValDtls: {
+        AssVal: Number(invoiceData?.rateDetails?.amount),
+        CgstVal: 0,
+        SgstVal: 0,
+        IgstVal: Number(invoiceData?.rateDetails?.taxableAmount),
+        CesVal: 0, // Need clarity
+        StCesVal: 0, // Need clarity
+        Discount: 0,
+        OthChrg: 0,
+        RndOffAmt: (Math.ceil(Number(invoiceData?.rateDetails?.taxableAmount)) - Number(invoiceData?.rateDetails?.taxableAmount)).toFixed(2),
+        TotInvVal: Number(invoiceData?.rateDetails?.totalAmount),
+        TotInvValFc: 0, // Need clarity
+      },
+    };
+  }
+
+  generateIRN() {
+    this.getAuthToken(this.generateIRNData(this.invoiceData))
   }
 
   // API Call
@@ -1138,9 +1252,7 @@ export class InvoiceGenerationComponent
         this.lineItemFormConfigList[0].serviceTypeConfig.options =
           this.serviceTypeData;
       } else {
-        const lineItems = JSON.parse(this.invoiceData?.invoiceItems).filter(
-          (row: any) => row.isDeleted == 0
-        );
+        const lineItems = JSON.parse(this.invoiceData?.invoiceItems);
         lineItems.forEach((element) => {
           if (element && element.quantity) {
             this.loadLineItems(element);
@@ -1277,6 +1389,20 @@ export class InvoiceGenerationComponent
         }
       });
   }
+
+  getAuthToken(payload) {
+    this.invoiceGenerationService.generateIRN(payload).subscribe(
+      (res: any) => {
+        console.log(res);
+        
+      }
+    )
+  }
+
+  // Generate IRN Data
+
+
+
   // search(event) {
   //   // this.groupedData
   //   let query = event.query;

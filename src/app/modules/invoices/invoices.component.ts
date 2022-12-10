@@ -20,6 +20,7 @@ import jsPDF from "jspdf";
 import * as _ from "lodash";
 import { convertAmountToWords } from "src/app/shared/utils/convert-amount-to-words";
 import { InvoicePDF } from "src/app/shared/invoice-template/view-invoice-template";
+import * as moment from "moment";
 
 @Component({
   selector: "invoices",
@@ -71,7 +72,7 @@ export class InvoicesComponent implements OnInit {
   region: string = "";
   selectedStepData: any;
   invoiceData: any;
-  invoiceDrawerType: string = '';
+  invoiceDrawerType: string = "";
 
   constructor(
     private invoiceService: InvoiceService,
@@ -157,8 +158,8 @@ export class InvoicesComponent implements OnInit {
     console.log(event);
     this.selectedStepData = event;
     // this.openDrawer("invoice-generation", event);
-    this.invoiceDrawerType = 'view'
-    this.getInvoiceById(event.id)
+    this.invoiceDrawerType = "view";
+    this.getInvoiceById(event.id);
   }
 
   // Filter Function
@@ -189,7 +190,7 @@ export class InvoicesComponent implements OnInit {
   }
 
   onAddNewInvoiceClick() {
-    this.invoiceDrawerType = 'add'
+    this.invoiceDrawerType = "add";
     this.openDrawer("invoice-generation");
   }
 
@@ -202,10 +203,10 @@ export class InvoicesComponent implements OnInit {
   actionClicked(event) {
     this.invoiceData = {};
     if (event.event == "edit") {
-      this.invoiceDrawerType = 'edit'
-      this.getInvoiceById(event.data.id)
+      this.invoiceDrawerType = "edit";
+      this.getInvoiceById(event.data.id);
     } else {
-      this.getInvoiceById(event.data.id, 'download')
+      this.getInvoiceById(event.data.id, "download");
     }
   }
 
@@ -218,7 +219,13 @@ export class InvoicesComponent implements OnInit {
         this.drawerControllerService.toggleDrawer(true);
         this.drawerControllerService.showCloseButton(false);
         this.drawerControllerService.setEscClose(false);
-        this.drawerControllerService.setTitle(this.invoiceDrawerType == 'view' ? `View Invoice` : this.invoiceDrawerType == 'edit' ? `Edit Invoice` : `Create New Invoice`);
+        this.drawerControllerService.setTitle(
+          this.invoiceDrawerType == "view"
+            ? `View Invoice`
+            : this.invoiceDrawerType == "edit"
+            ? `Edit Invoice`
+            : `Create New Invoice`
+        );
         this.drawerControllerService.changeDrawerSize("extra-large");
         break;
       default:
@@ -227,7 +234,7 @@ export class InvoicesComponent implements OnInit {
   }
 
   clearDrawerData() {
-    this.invoiceData = {}
+    this.invoiceData = {};
     this.pageComponentVisibility.showInvoiceGeneration = false;
     this.drawerControllerService.toggleDrawer(false);
     this.drawerControllerService.setEscClose(false);
@@ -246,7 +253,7 @@ export class InvoicesComponent implements OnInit {
     switch (event) {
       case "done":
         this.clearDrawerData();
-        this.getInvoices('all',true);
+        this.getInvoices("all", true);
         break;
 
       default:
@@ -260,7 +267,7 @@ export class InvoicesComponent implements OnInit {
   getInvoiceData(invoiceData) {
     this.invoiceFinalData.companyDetails = invoiceData?.companyDetails;
     this.invoiceFinalData.shipmentDetails.dispatchDocNo =
-    invoiceData?.shipmentDetails?.dispatchDocNo;
+      invoiceData?.shipmentDetails?.dispatchDocNo;
     this.invoiceFinalData.shipmentDetails.awbNo =
       invoiceData?.shipmentDetails?.awbNo;
     this.invoiceFinalData.shipmentDetails.flightNo =
@@ -269,8 +276,23 @@ export class InvoicesComponent implements OnInit {
       invoiceData?.shipmentDetails?.departureDate;
     this.invoiceFinalData.shipmentDetails.packageQty =
       invoiceData?.shipmentDetails?.packageQty;
-    this.invoiceFinalData.rateDetails.invoiceItems =
-      JSON.parse(invoiceData?.invoiceItems)
+    this.invoiceFinalData.rateDetails.invoiceItems = JSON.parse(
+      invoiceData?.invoiceItems
+    ).map((row: any) => {
+      const data = {
+        serviceTypeId: row.serviceTypeId,
+        serviceName: row.serviceName,
+        hsnCode: row.hsnCode,
+        packageQty: invoiceData?.shipmentDetails?.packageQty,
+        chargeableWt: invoiceData?.shipmentDetails?.chargeableWt,
+        quantity: row.quantity,
+        unitId: row.unitId,
+        unit: row.unit,
+        rate: row.rate,
+      };
+      return data;
+    });
+
     this.invoiceFinalData.rateDetails.amount = invoiceData?.rateDetails?.amount;
     this.invoiceFinalData.rateDetails.igstRate = Number(
       invoiceData?.rateDetails?.igstRate
@@ -286,7 +308,7 @@ export class InvoicesComponent implements OnInit {
       invoiceData?.rateDetails?.totalAmount;
     this.invoiceFinalData.rateDetails.amountInWords =
       invoiceData?.rateDetails?.amountInWords;
-    const groupedData = _(JSON.parse(invoiceData?.invoiceItems))
+    const groupedData = _(this.invoiceFinalData?.rateDetails?.invoiceItems)
       .groupBy("hsnCode")
       .value();
 
@@ -307,8 +329,7 @@ export class InvoicesComponent implements OnInit {
     }
 
     hsnCodeDataList?.map((row) => {
-      const igstRateValue =
-        Number(invoiceData?.rateDetails?.igstRate) / 100;
+      const igstRateValue = Number(invoiceData?.rateDetails?.igstRate) / 100;
       row["taxableAmount"] =
         Math.round(Number(row?.amount) * Number(igstRateValue) * 100) / 100;
       return { ...row };
@@ -332,7 +353,10 @@ export class InvoicesComponent implements OnInit {
 
     this.invoiceFinalData.hsnListTaxableTotalAmount =
       hsnListTaxableTotalAmount.toFixed(2);
-
+    // const rupeesInWord = convertAmountToWords(
+    //   this.invoiceFinalData?.hsnListTaxableTotalAmount?.toString().split(".")[0])
+    //   const paiseInWords = convertAmountToWords(
+    //     this.invoiceFinalData?.hsnListTaxableTotalAmount?.toString().split(".")[1])
     let hsnTotalValueInWords = `${convertAmountToWords(
       this.invoiceFinalData?.hsnListTaxableTotalAmount?.toString().split(".")[0]
     )} and ${convertAmountToWords(
@@ -341,8 +365,9 @@ export class InvoicesComponent implements OnInit {
     this.invoiceFinalData.hsnTotalValueInWords = hsnTotalValueInWords;
     console.log(this.invoiceFinalData);
 
-    new InvoicePDF({ invoiceData: this.invoiceFinalData })
-      .downloadPdf(`${invoiceData?.invoiceNo}`)
+    new InvoicePDF({ invoiceData: this.invoiceFinalData }).downloadPdf(
+      `${invoiceData?.invoiceNo}`
+    );
   }
 
   // API Calls
@@ -353,8 +378,10 @@ export class InvoicesComponent implements OnInit {
     };
     this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
       if (res.data) {
-        this.rowData = res.data.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
-        
+        this.rowData = res.data.sort((a, b) =>
+          b.createdAt > a.createdAt ? 1 : -1
+        );
+
         // TEMP
         // this.invoiceData = res.data[0];
         if (!isFilterChanged) {
@@ -371,7 +398,7 @@ export class InvoicesComponent implements OnInit {
             value: res.data.filter(
               (row: any) =>
                 row.isActive == 1 &&
-                (!row.isCompleted || (row.isCompleted == (0 || null)) ) &&
+                (!row.isCompleted || row.isCompleted == (0 || null)) &&
                 row.isDeleted == 0
             ).length,
           };
@@ -401,56 +428,70 @@ export class InvoicesComponent implements OnInit {
         } else {
           switch (event) {
             case "all":
-              this.rowData = res.data.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+              this.rowData = res.data.sort((a, b) =>
+                b.createdAt > a.createdAt ? 1 : -1
+              );
               break;
 
             case "draft":
-              this.rowData = res.data.filter(
-                (row: any) =>
-                  row.isActive == 1 &&
-                  (row.isCompleted == 0 || null) &&
-                  row.isDeleted == 0
-              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+              this.rowData = res.data
+                .filter(
+                  (row: any) =>
+                    row.isActive == 1 &&
+                    (row.isCompleted == 0 || null) &&
+                    row.isDeleted == 0
+                )
+                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
               break;
 
             case "not_approved":
-              this.rowData = res.data.filter(
-                (row: any) =>
-                  row.isActive == 1 &&
-                  (row.isApproved == 0 || null) &&
-                  row.isDeleted == 0
-              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+              this.rowData = res.data
+                .filter(
+                  (row: any) =>
+                    row.isActive == 1 &&
+                    (row.isApproved == 0 || null) &&
+                    row.isDeleted == 0
+                )
+                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
               break;
 
             case "not_downloaded":
-              this.rowData = res.data.filter(
-                (row: any) =>
-                  row.isActive == 1 &&
-                  (row.isDownloaded == 0 || null) &&
-                  row.isDeleted == 0
-              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+              this.rowData = res.data
+                .filter(
+                  (row: any) =>
+                    row.isActive == 1 &&
+                    (row.isDownloaded == 0 || null) &&
+                    row.isDeleted == 0
+                )
+                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
               break;
 
             case "irn_generated":
-              this.rowData = res.data.filter(
-                (row: any) =>
-                  row.isActive == 1 &&
-                  row.isIRNGenerated == 1 &&
-                  row.isDeleted == 0
-              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+              this.rowData = res.data
+                .filter(
+                  (row: any) =>
+                    row.isActive == 1 &&
+                    row.isIRNGenerated == 1 &&
+                    row.isDeleted == 0
+                )
+                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
               break;
 
             case "completed":
-              this.rowData = res.data.filter(
-                (row: any) =>
-                  row.isActive == 1 &&
-                  row.isCompleted == 1 &&
-                  row.isDeleted == 0
-              ).sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+              this.rowData = res.data
+                .filter(
+                  (row: any) =>
+                    row.isActive == 1 &&
+                    row.isCompleted == 1 &&
+                    row.isDeleted == 0
+                )
+                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
               break;
 
             default:
-              this.rowData = res.data.sort((a, b) => b.createdAt > a.createdAt ? 1 : -1);
+              this.rowData = res.data.sort((a, b) =>
+                b.createdAt > a.createdAt ? 1 : -1
+              );
               break;
           }
         }
@@ -460,18 +501,16 @@ export class InvoicesComponent implements OnInit {
 
   // GET INOVICE BY ID
   getInvoiceById(id, type?: string) {
-    this.invoiceService.getInvoiceById(id).subscribe(
-      (res: any) => {
-        if (res?.data) {
-          this.invoiceData = res?.data
-          if (type == 'download') {
-            this.getInvoiceData(this.invoiceData)
-          } else {
-            this.openDrawer("invoice-generation",res?.data);
-          }
+    this.invoiceService.getInvoiceById(id).subscribe((res: any) => {
+      if (res?.data) {
+        this.invoiceData = res?.data;
+        if (type == "download") {
+          this.getInvoiceData(this.invoiceData);
+        } else {
+          this.openDrawer("invoice-generation", res?.data);
         }
       }
-    )
+    });
   }
 
   // Dashboard API

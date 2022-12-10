@@ -104,4 +104,9 @@ export class InvoiceGenerationService {
   getAllUnitData() {
     return this.http.get(`${this.liveUrl}/units`);
   }
+
+  // Auth Token For IRN
+  generateIRN(payload) {
+    return this.http.post(`http://43.204.84.29:8087/generateIRN`,payload);
+  }
 }

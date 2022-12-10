@@ -233,7 +233,6 @@
           <div class="col-12">
             <!-- {{lineItemForm.get("lineItemList").value | json}} -->
             <h3>Rate Setup</h3>
-            {{lineItemForm.get("lineItemList").value | json}}
           </div>
           <form [formGroup]="lineItemForm">
             <ng-container
@@ -548,6 +547,15 @@
       (onClick)="actionEvent('previous')"
       >Previous</vsa-button
     >
+    <vsa-button
+    *ngIf="currentStepIndex < 3"
+    [type]="'button'"
+    [role]="'primary'"
+    size="small"
+    (onClick)="generateIRN()"
+    [disabled]="setNextButtonDisabled"
+    >Generate IRN</vsa-button
+  >
     <vsa-button
       *ngIf="currentStepIndex < 3"
       [type]="'button'"

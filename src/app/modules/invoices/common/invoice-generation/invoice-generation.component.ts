@@ -1130,9 +1130,9 @@ export class InvoiceGenerationComponent
     return data;
   }
 
-  generateIRN() {
+  onGenerateIRNClick() {
     // console.log(this.generateIRNData(this.getInvoiceData()));
-    this.getAuthToken(this.generateIRNData(this.getInvoiceData()));
+    this.generateIRN(this.generateIRNData(this.getInvoiceData()));
   }
 
   // API Call
@@ -1431,7 +1431,7 @@ export class InvoiceGenerationComponent
       });
   }
 
-  getAuthToken(payload) {
+  generateIRN(payload) {
     this.invoiceGenerationService.generateIRN(payload).subscribe((res: any) => {
       console.log(res);
       if (res?.success) {

@@ -97,7 +97,7 @@ export class InvoicesConfigs {
                 tooltip: "Edit Invoice",
                 title: "Edit Invoice",
                 type: "edit",
-                // disabled: row.showSteps,
+                disabled: row.isCompleted == 0,
               },
               {
                 icon: "download-button-2",
@@ -106,6 +106,14 @@ export class InvoicesConfigs {
                 title: "Download Invoice",
                 type: "edit",
                 // disabled: row.showSteps,
+              },
+              {
+                icon: "data-file-bars",
+                action: "generate-irn",
+                tooltip: "Generate IRN",
+                title: "Generate IRN",
+                type: "edit",
+                disabled: row.isCompleted == 1 && row.isIRNGenerated == 0 ,
               },
             ],
           };

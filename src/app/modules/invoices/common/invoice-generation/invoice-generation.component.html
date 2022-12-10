@@ -1,6 +1,7 @@
 <div class="drawer-body">
   <div class="invoice-generation">
-    <ng-container *ngIf="invoiceDrawerType != 'view'; else viewMode">
+    
+    <ng-container *ngIf="invoiceDrawerType !== ('view' || 'generate-irn'); else viewMode">
       <pmr-stepper
         #stepper
         [(stepIndex)]="currentStepIndex"
@@ -494,11 +495,11 @@
       </ng-template>
     </ng-container>
     <ng-template #viewMode>
-      <div class="row mt-4 mb-4">
+      <div class="row ">
         <!-- Title -->
-        <div class="col-12 prev-header">
+        <!-- <div class="col-12 prev-header">
           <h3>Preview</h3>
-        </div>
+        </div> -->
 
         <div
           class="invoice-template"
@@ -538,6 +539,15 @@
       >Close</vsa-button
     >
   </div>
+  <vsa-button
+    *ngIf="invoiceData?.isCompleted == 1 && invoiceData?.isIrnGenerated == 0 && invoiceDrawerType == 'view' "
+    [type]="'button'"
+    [role]="'primary'"
+    size="small"
+    (onClick)="generateIRN()"
+    [disabled]="setNextButtonDisabled"
+    >Generate IRN</vsa-button
+  >
   <div class="right" *ngIf="invoiceDrawerType != 'view'">
     <vsa-button
       *ngIf="currentStepIndex != 0"
@@ -547,15 +557,7 @@
       (onClick)="actionEvent('previous')"
       >Previous</vsa-button
     >
-    <vsa-button
-    *ngIf="currentStepIndex < 3"
-    [type]="'button'"
-    [role]="'primary'"
-    size="small"
-    (onClick)="generateIRN()"
-    [disabled]="setNextButtonDisabled"
-    >Generate IRN</vsa-button
-  >
+    
     <vsa-button
       *ngIf="currentStepIndex < 3"
       [type]="'button'"

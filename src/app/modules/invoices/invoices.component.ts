@@ -205,6 +205,9 @@ export class InvoicesComponent implements OnInit {
     if (event.event == "edit") {
       this.invoiceDrawerType = "edit";
       this.getInvoiceById(event.data.id);
+    } else if (event.event == "generate-irn") {
+      this.invoiceDrawerType = "view";
+      this.getInvoiceById(event.data.id);
     } else {
       this.getInvoiceById(event.data.id, "download");
     }

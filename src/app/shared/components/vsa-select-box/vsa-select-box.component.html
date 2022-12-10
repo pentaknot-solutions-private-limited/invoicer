@@ -23,7 +23,6 @@
     <mat-select
       *ngIf="!config?.isLazyLoaded"
       #ref
-      [formControl]="fControl"
       name="config?.fieldKey"
       [multiple]="config?.isMultiple"
       [placeholder]="config?.attributes?.placeholder"

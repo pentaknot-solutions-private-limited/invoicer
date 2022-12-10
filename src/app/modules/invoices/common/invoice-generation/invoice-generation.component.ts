@@ -488,7 +488,9 @@ export class InvoiceGenerationComponent
       this.bankDetailsModel = this.invoiceData.bankDetails;
       if (this.invoiceDrawerType == "view") {
         this.lineItems = JSON.parse(this.invoiceData?.invoiceItems);
-        this.generatePDF();
+        setTimeout(() => {
+          this.generatePDF();
+        }, 500);
       }
     }
   }
@@ -580,7 +582,9 @@ export class InvoiceGenerationComponent
       this.getServiceTypeData(true, lineItem?.serviceTypeId);
 
     setTimeout(() => {
-      console.log(this.lineItemFormConfigList[formIndex].serviceTypeConfig.options);
+      console.log(
+        this.lineItemFormConfigList[formIndex].serviceTypeConfig.options
+      );
       this.lineItemListForm.push(this.createLineItemForm(lineItem));
       this.lineItems.push(lineItem);
     }, 500);
@@ -846,7 +850,9 @@ export class InvoiceGenerationComponent
     this.invoiceFinalData.shipmentDetails.packageQty =
       this.shipmentDetailsModel?.packageQty;
     this.invoiceFinalData.rateDetails.invoiceItems =
-      this.invoiceDrawerType != 'view' ? this.lineItemForm.get("lineItemList").value : this.lineItems;
+      this.invoiceDrawerType != "view"
+        ? this.lineItemForm.get("lineItemList").value
+        : this.lineItems;
     this.invoiceFinalData.rateDetails.amount = this.rateDetailsModel?.amount;
     this.invoiceFinalData.rateDetails.igstRate = Number(
       this.rateDetailsModel?.igstRate.toString().split("%")[0]
@@ -868,7 +874,11 @@ export class InvoiceGenerationComponent
       this.rateDetailsModel?.totalAmount;
     this.invoiceFinalData.rateDetails.amountInWords =
       this.rateDetailsModel?.amountInWords;
-    const groupedData = _(this.invoiceDrawerType != 'view' ? this.lineItemForm.get("lineItemList").value : this.lineItems)
+    const groupedData = _(
+      this.invoiceDrawerType != "view"
+        ? this.lineItemForm.get("lineItemList").value
+        : this.lineItems
+    )
       .groupBy("hsnCode")
       .value();
 
@@ -992,6 +1002,9 @@ export class InvoiceGenerationComponent
   }
 
   generateIRNData(invoiceData: any) {
+    const lineItems = invoiceData?.rateDetails?.invoiceItems
+      ? invoiceData?.rateDetails?.invoiceItems
+      : this.lineItems;
     const data = {
       Version: "1.1",
       TranDtls: {
@@ -1008,83 +1021,92 @@ export class InvoiceGenerationComponent
       },
 
       SellerDtls: {
-        Gstin: invoiceData?.organization?.gstin,
-        LglNm: invoiceData?.organization?.name,
-        TrdNm: invoiceData?.organization?.name,
-        Addr1: invoiceData?.organization?.address,
+        Gstin: invoiceData?.companyDetails?.organization?.gstin,
+        LglNm: invoiceData?.companyDetails?.organization?.name,
+        TrdNm: invoiceData?.companyDetails?.organization?.name,
+        Addr1: invoiceData?.companyDetails?.organization?.address,
         Addr2: "",
-        Loc: invoiceData?.organization?.stateName,
-        Pin: invoiceData?.organization?.pincode,
-        Stcd: invoiceData?.organization?.stateTinCode,
-        Ph: invoiceData?.organization?.phoneNo,
-        Em: invoiceData?.organization?.emailId,
+        Loc: invoiceData?.companyDetails?.organization?.stateName,
+        Pin: Number(invoiceData?.companyDetails?.organization?.pincode),
+        Stcd: invoiceData?.companyDetails?.organization?.stateTinCode.toString(),
+        Ph: invoiceData?.companyDetails?.organization?.phoneNo,
+        Em: invoiceData?.companyDetails?.organization?.emailId,
       },
 
       BuyerDtls: {
-        Gstin: invoiceData?.customer?.gstin,
-        LglNm: invoiceData?.customer?.customerName,
+        Gstin: invoiceData?.companyDetails?.customer?.gstin,
+        LglNm: invoiceData?.companyDetails?.customer?.customerName,
 
-        TrdNm: invoiceData?.customer?.customerName,
-        Pos: invoiceData?.customer?.stateTinCode,
-        Addr1: invoiceData?.customer?.address,
-        Addr2: invoiceData?.customer?.address2,
-        Loc: invoiceData?.customer?.stateName,
-        Pin: invoiceData?.customer?.pincode,
-        Stcd: invoiceData?.customer?.stateTinCode,
-        Ph: invoiceData?.customer?.phoneNo,
-        Em: invoiceData?.customer?.emailId
+        TrdNm: invoiceData?.companyDetails?.customer?.customerName,
+        Pos: invoiceData?.companyDetails?.customer?.stateTinCode.toString(),
+        Addr1: invoiceData?.companyDetails?.customer?.address,
+        Addr2: invoiceData?.companyDetails?.customer?.address2,
+        Loc: invoiceData?.companyDetails?.customer?.stateName,
+        Pin: Number(invoiceData?.companyDetails?.customer?.pincode),
+        Stcd: invoiceData?.companyDetails?.customer?.stateTinCode.toString(),
+        Ph: invoiceData?.companyDetails?.customer?.phoneNo,
+        Em: invoiceData?.companyDetails?.customer?.emailId,
       },
 
       DispDtls: {
-        Nm: invoiceData?.organization?.name,
-        Addr1: invoiceData?.organization?.address,
+        Nm: invoiceData?.companyDetails?.organization?.name,
+        Addr1: invoiceData?.companyDetails?.organization?.address,
         Addr2: "",
-        Loc: invoiceData?.organization?.stateName,
-        Pin: invoiceData?.organization?.pincode,
-        Stcd: invoiceData?.organization?.stateTinCode,
+        Loc: invoiceData?.companyDetails?.organization?.stateName,
+        Pin: Number(invoiceData?.companyDetails?.organization?.pincode),
+        Stcd: invoiceData?.companyDetails?.organization?.stateTinCode.toString(),
       },
-      ItemList: invoiceData?.rateDetails?.invoiceItems[0].map((row: any, index: number) => {
-        const igstRateValue =
-        Number(invoiceData?.rateDetails?.igstRate) / 100;
-        const igstAmt = ((Number(row?.quantity) * Number(row?.rate)) * Number(igstRateValue) * 100) / 100;
-        const totItemVal = (Number(row?.quantity) * Number(row?.rate)) + Number(igstAmt)
-        return {
-          SlNo: index+1,
-          PrdDesc: row?.serviceName,
-          IsServc: "N",
-          HsnCd: row?.hsnCode,
-          Barcde: "000", // Need Clarity
-          Qty: row?.quantity,
-          FreeQty: 0, // Need Clarity
-          Unit: row?.unit,
-          UnitPrice: row?.rate,
-          TotAmt: Number(row?.quantity) * Number(row?.rate),
-          Discount: 0,
-          PreTaxVal: Number(row?.quantity) * Number(row?.rate),
-          AssAmt: Number(row?.quantity) * Number(row?.rate),
-          GstRt: invoiceData?.rateDetails?.igstRate,
-          IgstAmt: igstAmt,
-          CgstAmt: 0,
-          SgstAmt: 0,
-          CesRt: 0, // Need Clarity
-          CesAmt: 0, // Need Clarity
-          CesNonAdvlAmt: 0, // Need Clarity
-          StateCesRt: 0, // Need Clarity
-          StateCesAmt: 0, // Need Clarity
-          StateCesNonAdvlAmt: 0, // Need Clarity
-          OthChrg: 0,
-          TotItemVal: totItemVal,
-          OrdLineRef: "0",
-          OrgCntry: "IN",
-          PrdSlNo: "0",
-          AttribDtls: [
-            {
-              Nm: row?.serviceName,
-              Val: totItemVal,
-            },
-          ],
+      // this.lineItems
+      ItemList: invoiceData?.rateDetails?.invoiceItems?.map(
+        (row: any, index: number) => {
+          const igstRateValue =
+            Number(invoiceData?.rateDetails?.igstRate) / 100;
+          const igstAmt =
+            (Number(row?.quantity) *
+              Number(row?.rate) *
+              Number(igstRateValue) *
+              100) /
+            100;
+          const totItemVal =
+            Number(row?.quantity) * Number(row?.rate) + Number(igstAmt);
+          return {
+            SlNo: (index + 1).toString(),
+            PrdDesc: row?.serviceName,
+            IsServc: "N",
+            HsnCd: (row?.hsnCode).toString(),
+            Barcde: "000", // Need Clarity
+            Qty: row?.quantity,
+            FreeQty: 0, // Need Clarity
+            Unit: row?.unit,
+            UnitPrice: row?.rate,
+            TotAmt: Number(row?.quantity) * Number(row?.rate),
+            Discount: 0,
+            PreTaxVal: Number(row?.quantity) * Number(row?.rate),
+            AssAmt: Number(row?.quantity) * Number(row?.rate),
+            GstRt: invoiceData?.rateDetails?.igstRate,
+            IgstAmt: igstAmt,
+            CgstAmt: 0,
+            SgstAmt: 0,
+            CesRt: 0, // Need Clarity
+            CesAmt: 0, // Need Clarity
+            CesNonAdvlAmt: 0, // Need Clarity
+            StateCesRt: 0, // Need Clarity
+            StateCesAmt: 0, // Need Clarity
+            StateCesNonAdvlAmt: 0, // Need Clarity
+            OthChrg: 0,
+            TotItemVal: Number(totItemVal.toFixed(2)),
+            OrdLineRef: "0",
+            OrgCntry: "IN",
+            PrdSlNo: "0",
+            AttribDtls: [
+              {
+                Nm: row?.serviceName,
+                Val: totItemVal.toFixed(2),
+              },
+            ],
+          };
         }
-      }),
+      ),
 
       ValDtls: {
         AssVal: Number(invoiceData?.rateDetails?.amount),
@@ -1095,15 +1117,22 @@ export class InvoiceGenerationComponent
         StCesVal: 0, // Need clarity
         Discount: 0,
         OthChrg: 0,
-        RndOffAmt: (Math.ceil(Number(invoiceData?.rateDetails?.taxableAmount)) - Number(invoiceData?.rateDetails?.taxableAmount)).toFixed(2),
+        RndOffAmt: Number(
+          (
+            Math.ceil(Number(invoiceData?.rateDetails?.taxableAmount)) -
+            Number(invoiceData?.rateDetails?.taxableAmount)
+          ).toFixed(2)
+        ),
         TotInvVal: Number(invoiceData?.rateDetails?.totalAmount),
         TotInvValFc: 0, // Need clarity
       },
     };
+    return data;
   }
 
   generateIRN() {
-    this.getAuthToken(this.generateIRNData(this.invoiceData))
+    // console.log(this.generateIRNData(this.getInvoiceData()));
+    this.getAuthToken(this.generateIRNData(this.getInvoiceData()));
   }
 
   // API Call
@@ -1116,7 +1145,10 @@ export class InvoiceGenerationComponent
           res[0]?.emailId;
       }
       // Set First Value
-      if (this.companyDetailConfig.organizationConfig.options?.length > 0) {
+      if (
+        this.companyDetailConfig.organizationConfig.options?.length > 0 &&
+        this.invoiceDrawerType == "add"
+      ) {
         this.companyDetailsModel.organizationId =
           this.companyDetailConfig.organizationConfig.options[0]!.id;
         this.companyDetailsModel.companyCode = res[0]?.companyCode;
@@ -1147,7 +1179,10 @@ export class InvoiceGenerationComponent
         this.invoiceFinalData.companyDetails.organization.stateTinCode =
           res[0]?.stateTinCode;
         // Set First Value
-        if (this.companyDetailConfig.branchSelectorConfig.options?.length > 0) {
+        if (
+          this.companyDetailConfig.branchSelectorConfig.options?.length > 0 &&
+          this.invoiceDrawerType == "add"
+        ) {
           this.companyDetailsModel.organizationBranchId =
             this.companyDetailConfig.branchSelectorConfig.options[0]!.id;
           this.companyDetailsModel.cityCode = res[0].cityCode; //cityCode
@@ -1167,7 +1202,10 @@ export class InvoiceGenerationComponent
         }
       );
       // Set First Value
-      if (this.companyDetailConfig.customerSelectorConfig.options?.length > 0) {
+      if (
+        this.companyDetailConfig.customerSelectorConfig.options?.length > 0 &&
+        this.invoiceDrawerType == "add"
+      ) {
         this.companyDetailsModel.customerId =
           this.companyDetailConfig.customerSelectorConfig.options[0]!.id;
       }
@@ -1193,7 +1231,8 @@ export class InvoiceGenerationComponent
         // Set First Value
         if (
           this.companyDetailConfig.customerBranchSelectorConfig.options
-            ?.length > 0
+            ?.length > 0 &&
+          this.invoiceDrawerType == "add"
         ) {
           this.companyDetailsModel.customerBranchId =
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]!.id;
@@ -1252,12 +1291,14 @@ export class InvoiceGenerationComponent
         this.lineItemFormConfigList[0].serviceTypeConfig.options =
           this.serviceTypeData;
       } else {
-        const lineItems = JSON.parse(this.invoiceData?.invoiceItems);
-        lineItems.forEach((element) => {
-          if (element && element.quantity) {
-            this.loadLineItems(element);
-          }
-        });
+        if (this.invoiceDrawerType != "view") {
+          const lineItems = JSON.parse(this.invoiceData?.invoiceItems);
+          lineItems.forEach((element) => {
+            if (element && element.quantity) {
+              this.loadLineItems(element);
+            }
+          });
+        }
       }
 
       // this.rateDetailsConfig.serviceTypeConfig.options = res;
@@ -1391,17 +1432,21 @@ export class InvoiceGenerationComponent
   }
 
   getAuthToken(payload) {
-    this.invoiceGenerationService.generateIRN(payload).subscribe(
-      (res: any) => {
-        console.log(res);
-        
+    this.invoiceGenerationService.generateIRN(payload).subscribe((res: any) => {
+      console.log(res);
+      if (res?.success) {
+        this.invoiceData.irn = res?.data?.outcome?.Irn;
+        this.invoiceData.ackDate = res?.data?.outcome?.AckDt;
+        this.invoiceData.ackNo = res?.data?.outcome?.AckNo;
+        this.invoiceData.qrCode =
+          "data:image/png;base64," + res?.data?.outcome?.QrImage;
+        this.invoiceData.isIRNGenerated = 1;
+        this.addUpdateInvoice(this.invoiceData);
       }
-    )
+    });
   }
 
   // Generate IRN Data
-
-
 
   // search(event) {
   //   // this.groupedData

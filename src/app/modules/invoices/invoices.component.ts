@@ -17,6 +17,9 @@ import { DashboardService } from "src/app/shared/_http/dashboard.service";
 import { InvoiceService } from "src/app/shared/_http/invoice.service";
 import { SearchInvoiceModel } from "./invoices.model";
 import jsPDF from "jspdf";
+import * as _ from "lodash";
+import { convertAmountToWords } from "src/app/shared/utils/convert-amount-to-words";
+import { InvoicePDF } from "src/app/shared/invoice-template/view-invoice-template";
 
 @Component({
   selector: "invoices",
@@ -59,6 +62,7 @@ export class InvoicesComponent implements OnInit {
   pageComponentVisibility = {
     showInvoiceGeneration: false,
   };
+  invoiceFinalData: any = {};
 
   policesModel: PolicesModel = new PolicesModel();
   searchInvoiceModel: SearchInvoiceModel = new SearchInvoiceModel();
@@ -73,7 +77,63 @@ export class InvoicesComponent implements OnInit {
     private invoiceService: InvoiceService,
     private dashboardService: DashboardService,
     private drawerControllerService: DrawerPanelService
-  ) {}
+  ) {
+    this.invoiceFinalData = {
+      companyDetails: {
+        organization: {
+          name: "",
+          address: "",
+          gstin: "",
+          stateName: "",
+          stateTinCode: "",
+          emailId: "",
+        },
+        customer: {
+          name: "",
+          address: "",
+          gstin: "",
+          stateName: "",
+          stateTinCode: "",
+        },
+      },
+      shipmentDetails: {
+        dispatchDocNo: "",
+        awbNo: "",
+        flightNo: "",
+        departureDate: null,
+        portCode: "",
+        packageQty: 0,
+      },
+      rateDetails: {
+        invoiceItems: [],
+        amount: 0,
+        igstRate: 0,
+        taxableAmount: 0,
+        totalAmount: 0,
+        amountInWords: "",
+      },
+      bankDetails: {
+        id: 1,
+        organizationId: 1,
+        name: "AXIS BANK LTD",
+        branchName: "Mahim",
+        ifscCode: "UTIB0001243",
+        accountNumber: "920020018286808",
+        swiftCode: "UTIB0001243",
+      },
+      hsnCodeItems: [],
+      hsnListTaxableTotalValue: 0,
+      hsnListTaxableTotalAmount: 0,
+      hsnTotalValueInWords: "",
+      invoiceNo: "",
+      invoiceDate: "",
+      invoiceDueDate: "",
+      ackDate: "",
+      ackNo: null,
+      qrCode: "",
+      irn: "",
+    };
+  }
 
   ngOnInit(): void {
     this.getAllPeriodFilterData();
@@ -145,42 +205,7 @@ export class InvoicesComponent implements OnInit {
       this.invoiceDrawerType = 'edit'
       this.getInvoiceById(event.data.id)
     } else {
-      this.invoiceData = event.data;
-      if (this.invoiceData) {
-        setTimeout(() => {
-          var pdfTable = document.getElementById("pdfTable");
-          pdfTable.style.display = "block";
-          const isExist = document.getElementsByTagName("div")[0];
-          if (isExist) {
-            const doc = new jsPDF("p", "pt", "a4");
-            doc.setFont("Helvetica");
-            //pdf.html(doc).then(() => pdf.save('fileName.pdf'));
-
-            doc.html(this.pdfTable.nativeElement, {
-              callback: (doc) => {
-                doc.deletePage(13);
-                doc.deletePage(12);
-                doc.deletePage(11);
-                doc.deletePage(10);
-                doc.deletePage(9);
-                doc.deletePage(8);
-                doc.deletePage(7);
-                doc.deletePage(6);
-                doc.deletePage(5);
-                doc.deletePage(4);
-                doc.deletePage(3);
-                doc.deletePage(2);
-
-                const filename =
-                  this.invoiceData.invoiceNo +
-                  "_invoice.pdf";
-                doc.save(filename);
-                pdfTable.style.display = "none";
-              },
-            });
-          }
-        }, 500);
-      }
+      this.getInvoiceById(event.data.id, 'download')
     }
   }
 
@@ -231,6 +256,95 @@ export class InvoicesComponent implements OnInit {
     this.clearDrawerData();
   }
 
+  // Get invoice Data
+  getInvoiceData(invoiceData) {
+    this.invoiceFinalData.companyDetails = invoiceData?.companyDetails;
+    this.invoiceFinalData.shipmentDetails.dispatchDocNo =
+    invoiceData?.shipmentDetails?.dispatchDocNo;
+    this.invoiceFinalData.shipmentDetails.awbNo =
+      invoiceData?.shipmentDetails?.awbNo;
+    this.invoiceFinalData.shipmentDetails.flightNo =
+      invoiceData?.shipmentDetails?.flightNo;
+    this.invoiceFinalData.shipmentDetails.departureDate =
+      invoiceData?.shipmentDetails?.departureDate;
+    this.invoiceFinalData.shipmentDetails.packageQty =
+      invoiceData?.shipmentDetails?.packageQty;
+    this.invoiceFinalData.rateDetails.invoiceItems =
+      JSON.parse(invoiceData?.invoiceItems)
+    this.invoiceFinalData.rateDetails.amount = invoiceData?.rateDetails?.amount;
+    this.invoiceFinalData.rateDetails.igstRate = Number(
+      invoiceData?.rateDetails?.igstRate
+    );
+    this.invoiceFinalData.invoiceDate = invoiceData?.invoiceDate;
+    this.invoiceFinalData.irn = invoiceData?.irn;
+    this.invoiceFinalData.ackDate = invoiceData?.ackDate;
+    this.invoiceFinalData.ackNo = invoiceData?.ackNo;
+    this.invoiceFinalData.invoiceNo = invoiceData?.invoiceNo;
+    this.invoiceFinalData.rateDetails.taxableAmount =
+      invoiceData?.rateDetails?.taxableAmount;
+    this.invoiceFinalData.rateDetails.totalAmount =
+      invoiceData?.rateDetails?.totalAmount;
+    this.invoiceFinalData.rateDetails.amountInWords =
+      invoiceData?.rateDetails?.amountInWords;
+    const groupedData = _(JSON.parse(invoiceData?.invoiceItems))
+      .groupBy("hsnCode")
+      .value();
+
+    var hsnCodeDataList = [];
+    for (let key in groupedData) {
+      let amount = 0;
+      groupedData[key]?.forEach((element) => {
+        amount += Number(element?.quantity) * Number(element?.rate);
+        return amount;
+      });
+      let value = amount;
+
+      const hsnData = {
+        hsnCode: key,
+        amount: value,
+      };
+      hsnCodeDataList?.push(hsnData);
+    }
+
+    hsnCodeDataList?.map((row) => {
+      const igstRateValue =
+        Number(invoiceData?.rateDetails?.igstRate) / 100;
+      row["taxableAmount"] =
+        Math.round(Number(row?.amount) * Number(igstRateValue) * 100) / 100;
+      return { ...row };
+    });
+
+    var hsnListTaxableTotalValue = 0;
+    hsnCodeDataList?.forEach((element) => {
+      hsnListTaxableTotalValue += Number(element?.amount);
+      return hsnListTaxableTotalValue;
+    });
+
+    var hsnListTaxableTotalAmount = 0;
+    hsnCodeDataList?.forEach((element) => {
+      hsnListTaxableTotalAmount += Number(element?.taxableAmount);
+      return hsnListTaxableTotalAmount;
+    });
+
+    this.invoiceFinalData.hsnCodeItems = hsnCodeDataList;
+    this.invoiceFinalData.hsnListTaxableTotalValue =
+      hsnListTaxableTotalValue.toFixed(2);
+
+    this.invoiceFinalData.hsnListTaxableTotalAmount =
+      hsnListTaxableTotalAmount.toFixed(2);
+
+    let hsnTotalValueInWords = `${convertAmountToWords(
+      this.invoiceFinalData?.hsnListTaxableTotalAmount?.toString().split(".")[0]
+    )} and ${convertAmountToWords(
+      this.invoiceFinalData.hsnListTaxableTotalAmount?.toString().split(".")[1]
+    )} Paise Only.`;
+    this.invoiceFinalData.hsnTotalValueInWords = hsnTotalValueInWords;
+    console.log(this.invoiceFinalData);
+
+    new InvoicePDF({ invoiceData: this.invoiceFinalData })
+      .downloadPdf(`${invoiceData?.invoiceNo}`)
+  }
+
   // API Calls
   getInvoices(event?: string, isFilterChanged?: boolean) {
     const searchFilter = {
@@ -262,30 +376,6 @@ export class InvoicesComponent implements OnInit {
             ).length,
           };
           this.statistics.push(draft);
-
-          // const notApproved = {
-          //   label: "Not Approved",
-          //   type: "not_approved",
-          //   value: res.data.filter(
-          //     (row: any) =>
-          //       row.isActive == 1 &&
-          //       (row.isApproved == 0 || null) &&
-          //       row.isDeleted == 0
-          //   ).length,
-          // };
-          // this.statistics.push(notApproved);
-
-          // const notDownloaded = {
-          //   label: "Not Downloaded",
-          //   type: "not_downloaded",
-          //   value: res.data.filter(
-          //     (row: any) =>
-          //       row.isActive == 1 &&
-          //       (row.isDownloaded == 0 || null) &&
-          //       row.isDeleted == 0
-          //   ).length,
-          // };
-          // this.statistics.push(notDownloaded);
 
           const IRNGenerated = {
             label: "IRN Generated",
@@ -369,12 +459,16 @@ export class InvoicesComponent implements OnInit {
   }
 
   // GET INOVICE BY ID
-  getInvoiceById(id) {
+  getInvoiceById(id, type?: string) {
     this.invoiceService.getInvoiceById(id).subscribe(
       (res: any) => {
         if (res?.data) {
           this.invoiceData = res?.data
-          this.openDrawer("invoice-generation",res?.data);
+          if (type == 'download') {
+            this.getInvoiceData(this.invoiceData)
+          } else {
+            this.openDrawer("invoice-generation",res?.data);
+          }
         }
       }
     )

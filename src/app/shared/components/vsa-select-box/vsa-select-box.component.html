@@ -27,6 +27,7 @@
       name="config?.fieldKey"
       [multiple]="config?.isMultiple"
       [placeholder]="config?.attributes?.placeholder"
+      [compareWith]="compareObjects"
       disableOptionCentering
       panelClass="dropdownPosition {{
         config?.attributes?.rowSize == 'double' ? 'doubleRow' : ''
@@ -57,12 +58,12 @@
           "
         ></ng-container>
       </mat-select-trigger> -->
-      <!-- <select-check-all
+      <select-check-all
         *ngIf="config?.isMultiple"
         [model]="fControl"
         (modelChanges)="modelChanged($event)"
         [values]="config?.options"
-      ></select-check-all> -->
+      ></select-check-all>
       <mat-option
         style="height: 3em"
         [disabled]="true"

@@ -362,16 +362,16 @@ export class InvoiceGenerationComponent
     return lineItem.get(controlName) as FormControl;
   }
 
-  createLineItemForm() {
+  createLineItemForm(lineItem?: any) {
     return this.fb.group({
-      serviceTypeId: [""],
-      serviceName: [""],
-      hsnCode: [""],
+      serviceTypeId: [lineItem?.serviceTypeId ? lineItem?.serviceTypeId : ""],
+      serviceName: [lineItem?.serviceName ? lineItem?.serviceName : ""],
+      hsnCode: [lineItem?.hsnCode ? lineItem?.hsnCode : ""],
       packageQty: new FormControl(""),
       chargeableWt: new FormControl(""),
       quantity: [""],
-      unitId: [""],
-      unit: [""],
+      unitId: [lineItem?.unitId ? lineItem?.unitId : ""],
+      unit: [lineItem?.unit ? lineItem?.unit : ""],
       rate: [""],
     });
 
@@ -485,9 +485,11 @@ export class InvoiceGenerationComponent
 
       // Bank Details
       this.bankDetailsModel = this.invoiceData.bankDetails;
-      if (this.invoiceDrawerType == 'view') {
-        this.lineItems = JSON.parse(this.invoiceData?.invoiceItems)
-        this.generatePDF()
+      if (this.invoiceDrawerType == "view") {
+        this.lineItems = JSON.parse(this.invoiceData?.invoiceItems).filter(
+          (row: any) => row.isDeleted == 0
+        );
+        this.generatePDF();
       }
     }
   }
@@ -568,28 +570,33 @@ export class InvoiceGenerationComponent
       "";
   }
 
-  loadLineItems(lineItems) {
-    console.log(this.serviceTypeData);
+  loadLineItems(lineItem) {
+    console.log(lineItem);
 
     this.lineItemListForm = this.lineItemForm.get("lineItemList") as FormArray;
     const formIndex =
       this.lineItemFormConfigList.push(_.cloneDeep(this.lineItemFormConfig)) -
       1;
     this.lineItemFormConfigList[formIndex].serviceTypeConfig.options =
-      this.getServiceTypeData(true, lineItems?.serviceId);
+      this.getServiceTypeData(true, lineItem?.serviceTypeId);
 
-    this.lineItemListForm.push(this.createLineItemForm());
-    this.lineItems.push(lineItems);
-    this.lineItemForm.get("lineItemList")["controls"][formIndex].patchValue({
-      serviceTypeId: lineItems.serviceId,
-      hsnCode: lineItems.serviceId,
-      serviceName: lineItems.serviceName,
-      unitId: lineItems.unitId,
-      unit: lineItems.unit,
-    });
+    setTimeout(() => {
+      console.log(this.lineItemFormConfigList[formIndex].serviceTypeConfig.options);
+      this.lineItemListForm.push(this.createLineItemForm(lineItem));
+      this.lineItems.push(lineItem);
+    }, 500);
+    // this.lineItemForm.get("lineItemList")["controls"][formIndex].patchValue({
+    //   serviceTypeId: lineItems.serviceTypeId,
+    //   hsnCode: lineItems.hsnCode,
+    //   serviceName: lineItems.serviceName,
+    // });
+    // this.lineItemForm.get("lineItemList")["controls"][formIndex].patchValue({
+    //   unitId: lineItems.unitId,
+    //   unit: lineItems.unit,
+    // });
     this.lineItemFormConfigList[
       formIndex
-    ].serviceTypeConfig.attributes.hint = `HSN Code: ${lineItems?.hsnCode}`;
+    ].serviceTypeConfig.attributes.hint = `HSN Code: ${lineItem?.hsnCode}`;
   }
 
   onDeleteLineItemClick(i) {
@@ -696,13 +703,17 @@ export class InvoiceGenerationComponent
         break;
       case "save":
         data = this.generatePostData();
-        data.isCompleted = 1;
+        data.isCompleted = this.invoiceData?.isCompleted
+          ? this.invoiceData?.isCompleted
+          : 1;
         console.log(data);
         this.addUpdateInvoice(data);
         break;
       case "draft":
         data = this.generatePostData();
-        data.isCompleted = 0;
+        data.isCompleted = this.invoiceData?.isCompleted
+          ? this.invoiceData?.isCompleted
+          : 0;
         this.addUpdateInvoice(data);
         break;
 
@@ -738,9 +749,11 @@ export class InvoiceGenerationComponent
 
         break;
       case "serviceType":
+        console.log(event);
         this.lineItemFormConfigList[
           i
         ].serviceTypeConfig.attributes.hint = `HSN Code: ${event.selectedObj.hsnCode}`;
+
         this.lineItemForm.get("lineItemList")["controls"][i].patchValue({
           serviceTypeId: event.value,
           hsnCode: event.selectedObj.hsnCode,
@@ -834,23 +847,29 @@ export class InvoiceGenerationComponent
     this.invoiceFinalData.shipmentDetails.packageQty =
       this.shipmentDetailsModel?.packageQty;
     this.invoiceFinalData.rateDetails.invoiceItems =
-      this.lineItems.filter((row: any) => row.rate) ||
-      this.lineItemForm?.get("lineItemList")?.value;
+      this.lineItemForm.get("lineItemList").value;
     this.invoiceFinalData.rateDetails.amount = this.rateDetailsModel?.amount;
     this.invoiceFinalData.rateDetails.igstRate = Number(
       this.rateDetailsModel?.igstRate.toString().split("%")[0]
     );
     this.invoiceFinalData.invoiceDate = this.basicDetailsModel.invoiceDate;
+    this.invoiceFinalData.invoiceNo = this.basicDetailsModel.invoiceNo;
+    this.invoiceFinalData.irn = this.invoiceData?.irn
+      ? this.invoiceData?.irn
+      : "-";
+    this.invoiceFinalData.ackDate = this.invoiceData?.ackDate
+      ? this.invoiceData?.ackDate
+      : "-";
+    this.invoiceFinalData.ackNo = this.invoiceData?.ackNo
+      ? this.invoiceData?.ackNo
+      : "-";
     this.invoiceFinalData.rateDetails.taxableAmount =
       this.rateDetailsModel?.taxableAmount;
     this.invoiceFinalData.rateDetails.totalAmount =
       this.rateDetailsModel?.totalAmount;
     this.invoiceFinalData.rateDetails.amountInWords =
       this.rateDetailsModel?.amountInWords;
-    const groupedData = _(
-      this.lineItems.filter((row: any) => row.rate) ||
-        this.lineItemForm?.get("lineItemList")?.value
-    )
+    const groupedData = _(this.lineItemForm.get("lineItemList").value)
       .groupBy("hsnCode")
       .value();
 
@@ -910,6 +929,7 @@ export class InvoiceGenerationComponent
 
   generatePostData() {
     return {
+      id: this.invoiceData?.id ? this.invoiceData?.id : null,
       companyDetails: {
         organizationId: this.companyDetailsModel?.organizationId,
         organizationBranchId: this.companyDetailsModel?.organizationBranchId,
@@ -933,13 +953,13 @@ export class InvoiceGenerationComponent
         cargoTypeId: this.shipmentDetailsModel?.cargoTypeId,
       },
       rateDetails: {
-        invoiceItems: this.invoiceData?.invoiceItems
-          ? JSON.parse(this.invoiceData?.invoiceItems)
-          : this.lineItems,
+        invoiceItems: this.lineItemForm.get("lineItemList").value,
         amount: Number(this.rateDetailsModel?.amount),
         cgstRate: 0,
         sgstRate: 0,
-        igstRate: Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]),
+        igstRate: Number(
+          this.rateDetailsModel?.igstRate.toString().split("%")[0]
+        ),
         taxableAmount: Number(this.rateDetailsModel?.taxableAmount),
         totalAmount: Number(this.rateDetailsModel?.totalAmount),
         amountInWords: this.rateDetailsModel?.amountInWords,
@@ -956,6 +976,19 @@ export class InvoiceGenerationComponent
       invoiceNo: this.invoiceData?.invoiceNo ? this.invoiceData?.invoiceNo : "",
       invoiceDate: this.basicDetailsModel?.invoiceDate,
       invoiceDueDate: this.basicDetailsModel?.invoiceDueDate,
+      isApproved: this.invoiceData?.isApproved
+        ? this.invoiceData?.isApproved
+        : 0,
+      isDownloaded: this.invoiceData?.isDownloaded
+        ? this.invoiceData?.isDownloaded
+        : 0,
+      isIrnGenerated: this.invoiceData?.isIrnGenerated
+        ? this.invoiceData?.isIrnGenerated
+        : 0,
+      irn: this.invoiceData?.irn ? this.invoiceData?.irn : null,
+      ackNo: this.invoiceData?.ackNo ? this.invoiceData?.ackNo : null,
+      qrCode: this.invoiceData?.qrCode ? this.invoiceData?.qrCode : null,
+      ackDate: this.invoiceData?.ackDate ? this.invoiceData?.ackDate : null,
     };
   }
 
@@ -1096,7 +1129,7 @@ export class InvoiceGenerationComponent
   getAllServiceType() {
     this.invoiceGenerationService.getAllServiceType().subscribe((res: any) => {
       this.serviceTypeData = res.map((row: any) => {
-        row["serviceId"] = row.id;
+        row["serviceTypeId"] = row.id;
         return {
           ...row,
         };
@@ -1105,7 +1138,9 @@ export class InvoiceGenerationComponent
         this.lineItemFormConfigList[0].serviceTypeConfig.options =
           this.serviceTypeData;
       } else {
-        const lineItems = JSON.parse(this.invoiceData?.invoiceItems);
+        const lineItems = JSON.parse(this.invoiceData?.invoiceItems).filter(
+          (row: any) => row.isDeleted == 0
+        );
         lineItems.forEach((element) => {
           if (element && element.quantity) {
             this.loadLineItems(element);

@@ -559,7 +559,7 @@ export class InvoicesConfigs {
       title: "Service Type",
     },
     dataKey: "name",
-    returnKey: "serviceId",
+    returnKey: "serviceTypeId",
     options: [],
     disableBoolKey: 'disabled',
     isMultiple: false

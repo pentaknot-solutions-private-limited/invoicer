@@ -88,7 +88,7 @@ export class InvoiceGenerationService {
   addUpdateInvoice(data: any): Observable<any> {
     if (data.id) {
       // Update query
-      return this.http.put(`${this.liveUrl}/invoices`, data);
+      return this.http.put(`${this.liveUrl}/invoices/${data.id}`, data);
     } else {
       // Add Query
       return this.http.post(`${this.liveUrl}/invoices`, data);

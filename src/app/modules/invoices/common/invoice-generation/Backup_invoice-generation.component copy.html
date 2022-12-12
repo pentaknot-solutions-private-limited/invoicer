@@ -1289,29 +1289,31 @@
       >Previous</vsa-button
     >
     <vsa-button
-      *ngIf="currentStepIndex < 5"
+      *ngIf="currentStepIndex < 3"
       [type]="'button'"
       [role]="'primary'"
       size="small"
       (onClick)="actionEvent('next')"
       [disabled]="setNextButtonDisabled"
-      >Next</vsa-button
+      >{{currentStepIndex}} Next</vsa-button
     >
     <vsa-button
-      *ngIf="currentStepIndex == 5"
+      *ngIf="currentStepIndex == 3"
       [type]="'button'"
       [role]="'secondary'"
       size="small"
       (onClick)="actionEvent('draft')"
-      >Save as Draft</vsa-button
+      [disabled]="setNextButtonDisabled"
+      >{{currentStepIndex}} Save as Draft</vsa-button
     >
     <vsa-button
-      *ngIf="currentStepIndex == 5"
+      *ngIf="currentStepIndex == 3"
       [type]="'button'"
       [role]="'primary'"
       size="small"
       (onClick)="actionEvent('save')"
-      >Save</vsa-button
+      [disabled]="setNextButtonDisabled"
+      >{{currentStepIndex}} Save</vsa-button
     >
   </div>
 </div>

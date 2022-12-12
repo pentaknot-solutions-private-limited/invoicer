@@ -544,6 +544,23 @@ export class InvoiceGenerationComponent
       (!this.lineItems[0].quantity || !this.lineItems[0].rate)
     ) {
       return true;
+    } else if(
+      this.currentStepIndex == 3 &&
+      (!this.lineItems[0].quantity || !this.lineItems[0].rate || !this.shipmentDetailsModel.shipperId ||
+        !this.shipmentDetailsModel.consigneeId ||
+        !this.shipmentDetailsModel.awbNo ||
+        !this.shipmentDetailsModel.flightNo ||
+        !this.shipmentDetailsModel.departureDate ||
+        !this.shipmentDetailsModel.loadingPortId ||
+        !this.shipmentDetailsModel.destinationPortId ||
+        !this.shipmentDetailsModel.dispatchDocNo ||
+        !this.shipmentDetailsModel.packageQty ||
+        !this.shipmentDetailsModel.grossWt ||
+        !this.shipmentDetailsModel.chargeableWt ||
+        !this.basicDetailsModel.invoiceDate ||
+        !this.basicDetailsModel.invoiceDueDate)
+    ) {
+      return true;
     } else {
       return false;
     }

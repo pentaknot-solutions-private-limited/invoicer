@@ -574,7 +574,8 @@
         [role]="'secondary'"
         size="small"
         (onClick)="actionEvent('draft')"
-        >Save as Draft</vsa-button
+        [disabled]="setNextButtonDisabled"
+        >{{currentStepIndex}} Save as Draft</vsa-button
       >
     </ng-container>
 
@@ -584,7 +585,8 @@
       [role]="'primary'"
       size="small"
       (onClick)="actionEvent('save')"
-      >Save</vsa-button
+      [disabled]="setNextButtonDisabled"
+      >{{currentStepIndex}} Save</vsa-button
     >
   </div>
 </div>

@@ -229,7 +229,7 @@ export class InvoicesComponent implements OnInit {
             ? `Edit Invoice`
             : `Create New Invoice`
         );
-        this.drawerControllerService.changeDrawerSize("extra-large");
+        this.drawerControllerService.changeDrawerSize(this.invoiceDrawerType == "view" ? "medium" : "extra-large");
         break;
       default:
         break;

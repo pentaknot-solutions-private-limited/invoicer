@@ -95,7 +95,7 @@
           customColor="{{ params.color }}"
           [enableTooltip]="params?.actions.tooltip ? true : false"
           tooltipContent="{{ params?.actions.tooltip }}"
-          [disabled]="params?.actions.disabled || hideAction"
+          [disabled]="params?.actions?.disabled || hideAction"
         ></vsa-icon>
       </div>
       <div class="">
@@ -103,15 +103,15 @@
           <vsa-icon
             *ngIf="item.icon && !item.actions"
             icon="{{ item.icon }}"
-            size="small"
+            [size]="item?.size ? item?.size : 'small'"
             state="hover"
             customColor="{{ item.color }}"
             [enableTooltip]="item.tooltip ? true : false"
             tooltipContent="{{ item.tooltip }}"
             (onClick)="onBtnClick(item.action, params.row)"
-            [disabled]="item.disabled || hideAction"
+            [disabled]="item?.disabled || hideAction"
           ></vsa-icon>
-          <vsa-icon
+          <!-- <vsa-icon
             *ngIf="item.icon && item.actions"
             icon="{{ item.icon }}"
             size="small"
@@ -119,8 +119,8 @@
             [enableTooltip]="item.tooltip ? true : false"
             tooltipContent="{{ item.tooltip }}"
             customColor="{{ params.actions[0].color }}"
-            [disabled]="item.disabled || hideAction"
-          ></vsa-icon>
+            [disabled]="item?.disabled || hideAction"
+          ></vsa-icon> -->
           <span *ngIf="params.actions.length > 1">&nbsp;&nbsp;&nbsp;</span>
         </ng-container>
       </div>

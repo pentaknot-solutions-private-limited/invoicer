@@ -109,4 +109,8 @@ export class InvoiceGenerationService {
   generateIRN(payload) {
     return this.http.post(`http://43.204.84.29:8087/generateIRN`,payload);
   }
+
+  generateAuthToken(payload) {
+    return this.http.get(`http://43.204.84.29:8087/getToken`,payload);// 
+  }
 }

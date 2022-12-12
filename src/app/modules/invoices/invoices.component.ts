@@ -304,6 +304,11 @@ export class InvoicesComponent implements OnInit {
     this.invoiceFinalData.irn = invoiceData?.irn;
     this.invoiceFinalData.ackDate = invoiceData?.ackDate;
     this.invoiceFinalData.ackNo = invoiceData?.ackNo;
+    this.invoiceFinalData.qrCode = invoiceData?.qrCode
+      ? invoiceData?.qrCode
+      : "-";
+    this.invoiceFinalData.shipmentDetails.portCode =
+      invoiceData?.shipmentDetails?.portCode;
     this.invoiceFinalData.invoiceNo = invoiceData?.invoiceNo;
     this.invoiceFinalData.rateDetails.taxableAmount =
       invoiceData?.rateDetails?.taxableAmount;
@@ -413,7 +418,7 @@ export class InvoicesComponent implements OnInit {
             value: res.data.filter(
               (row: any) =>
                 row.isActive == 1 &&
-                row.isIRNGenerated == 1 &&
+                row.isIrnGenerated == 1 &&
                 row.isDeleted == 0
             ).length,
           };
@@ -434,6 +439,7 @@ export class InvoicesComponent implements OnInit {
               this.rowData = res.data.sort((a, b) =>
                 b.createdAt > a.createdAt ? 1 : -1
               );
+              this.statistics[0].value = res?.data?.length;
               break;
 
             case "draft":
@@ -445,6 +451,12 @@ export class InvoicesComponent implements OnInit {
                     row.isDeleted == 0
                 )
                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+              this.statistics[1].value = res.data.filter(
+                (row: any) =>
+                  row.isActive == 1 &&
+                  (row.isCompleted == 0 || null) &&
+                  row.isDeleted == 0
+              ).length;
               break;
 
             case "not_approved":
@@ -474,10 +486,16 @@ export class InvoicesComponent implements OnInit {
                 .filter(
                   (row: any) =>
                     row.isActive == 1 &&
-                    row.isIRNGenerated == 1 &&
+                    row.isIrnGenerated == 1 &&
                     row.isDeleted == 0
                 )
                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+              this.statistics[2].value = res.data.filter(
+                (row: any) =>
+                  row.isActive == 1 &&
+                  row.isIrnGenerated == 1 &&
+                  row.isDeleted == 0
+              ).length;
               break;
 
             case "completed":
@@ -497,6 +515,29 @@ export class InvoicesComponent implements OnInit {
               );
               break;
           }
+
+          this.statistics[0].value = res?.data?.length;
+
+          this.statistics[1].value = res?.data?.filter(
+            (row: any) =>
+              row.isActive == 1 &&
+              (row.isCompleted == 0 || null) &&
+              row.isDeleted == 0
+          )?.length;
+
+          this.statistics[2].value = res?.data?.filter(
+            (row: any) =>
+              row.isActive == 1 &&
+              row.isIrnGenerated == 1 &&
+              row.isDeleted == 0
+          )?.length;
+
+          this.statistics[3].value = res?.data?.filter(
+            (row: any) =>
+              row.isActive == 1 &&
+              row.isCompleted == 1 &&
+              row.isDeleted == 0
+          )?.length;
         }
       }
     });

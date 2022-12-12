@@ -283,9 +283,9 @@ export class InvoiceGenerationComponent
     private filterService: FilterService,
     private fb: FormBuilder
   ) {
-    this.getAllPorts();
     this.getAllOrganization();
     this.getAllCustomer();
+    this.getAllPorts();
     this.getMyAccountDetails();
     this.getAllCargoTypes();
     this.getAllAirlines();
@@ -730,13 +730,39 @@ export class InvoiceGenerationComponent
     switch (type) {
       case "org":
         this.getAllBranchByOrgId();
-        this.companyDetailsModel.companyCode = event.selectedObj.companyCode;
+        this.companyDetailsModel.companyCode = event?.selectedObj?.companyCode;
+        this.invoiceFinalData.companyDetails.organization.name =
+          event?.selectedObj?.name;
+        this.invoiceFinalData.companyDetails.organization.emailId =
+          event?.selectedObj?.emailId;
+
         break;
       case "orgBranch":
         this.companyDetailsModel.cityCode = event.selectedObj.cityCode;
+        this.invoiceFinalData.companyDetails.organization.address =
+          event?.selectedObj?.address;
+        this.invoiceFinalData.companyDetails.organization.gstin =
+          event?.selectedObj?.gstin;
+        this.invoiceFinalData.companyDetails.organization.stateName =
+          event?.selectedObj?.stateName;
+        this.invoiceFinalData.companyDetails.organization.stateTinCode =
+          event?.selectedObj?.stateTinCode;
         break;
       case "customer":
         this.getAllBranchByCustomerId();
+        this.invoiceFinalData.companyDetails.customer.name =
+          event?.selectedObj?.name;
+        break;
+      case "customerBranch":
+        this.getAllBranchByCustomerId();
+        this.invoiceFinalData.companyDetails.customer.address =
+          event?.selectedObj?.address + ", " + event?.selectedObj?.address2;
+        this.invoiceFinalData.companyDetails.customer.gstin =
+          event?.selectedObj?.gstin;
+        this.invoiceFinalData.companyDetails.customer.stateName =
+          event?.selectedObj?.stateName;
+        this.invoiceFinalData.companyDetails.customer.stateTinCode =
+          event?.selectedObj?.stateTinCode;
         break;
       case "country":
         this.consignmentDetailConfig.destinationPort.options =
@@ -868,6 +894,9 @@ export class InvoiceGenerationComponent
     this.invoiceFinalData.ackNo = this.invoiceData?.ackNo
       ? this.invoiceData?.ackNo
       : "-";
+    this.invoiceFinalData.qrCode = this.invoiceData?.qrCode
+      ? this.invoiceData?.qrCode
+      : "";
     this.invoiceFinalData.rateDetails.taxableAmount =
       this.rateDetailsModel?.taxableAmount;
     this.invoiceFinalData.rateDetails.totalAmount =
@@ -962,7 +991,8 @@ export class InvoiceGenerationComponent
         cargoTypeId: this.shipmentDetailsModel?.cargoTypeId,
       },
       rateDetails: {
-        invoiceItems: this.lineItemForm.get("lineItemList").value,
+        invoiceItems:
+          this.lineItemForm.get("lineItemList").value || this.lineItems,
         amount: Number(this.rateDetailsModel?.amount),
         cgstRate: 0,
         sgstRate: 0,
@@ -993,6 +1023,9 @@ export class InvoiceGenerationComponent
         : 0,
       isIrnGenerated: this.invoiceData?.isIrnGenerated
         ? this.invoiceData?.isIrnGenerated
+        : 0,
+      isCompleted: this.invoiceData?.isCompleted
+        ? this.invoiceData?.isCompleted
         : 0,
       irn: this.invoiceData?.irn ? this.invoiceData?.irn : null,
       ackNo: this.invoiceData?.ackNo ? this.invoiceData?.ackNo : null,
@@ -1025,7 +1058,7 @@ export class InvoiceGenerationComponent
         LglNm: invoiceData?.companyDetails?.organization?.name,
         TrdNm: invoiceData?.companyDetails?.organization?.name,
         Addr1: invoiceData?.companyDetails?.organization?.address,
-        Addr2: "",
+        Addr2: null,
         Loc: invoiceData?.companyDetails?.organization?.stateName,
         Pin: Number(invoiceData?.companyDetails?.organization?.pincode),
         Stcd: invoiceData?.companyDetails?.organization?.stateTinCode.toString(),
@@ -1042,7 +1075,9 @@ export class InvoiceGenerationComponent
         Addr1: invoiceData?.companyDetails?.customer?.address,
         Addr2: invoiceData?.companyDetails?.customer?.address2,
         Loc: invoiceData?.companyDetails?.customer?.stateName,
-        Pin: Number(invoiceData?.companyDetails?.customer?.pincode),
+        Pin: invoiceData?.companyDetails?.customer?.pincode
+          ? Number(invoiceData?.companyDetails?.customer?.pincode)
+          : null,
         Stcd: invoiceData?.companyDetails?.customer?.stateTinCode.toString(),
         Ph: invoiceData?.companyDetails?.customer?.phoneNo,
         Em: invoiceData?.companyDetails?.customer?.emailId,
@@ -1072,19 +1107,19 @@ export class InvoiceGenerationComponent
           return {
             SlNo: (index + 1).toString(),
             PrdDesc: row?.serviceName,
-            IsServc: "N",
+            IsServc: "Y",
             HsnCd: (row?.hsnCode).toString(),
             Barcde: "000", // Need Clarity
             Qty: row?.quantity,
             FreeQty: 0, // Need Clarity
-            Unit: row?.unit,
+            Unit: (row?.unit).toUpperCase(),
             UnitPrice: row?.rate,
             TotAmt: Number(row?.quantity) * Number(row?.rate),
             Discount: 0,
             PreTaxVal: Number(row?.quantity) * Number(row?.rate),
             AssAmt: Number(row?.quantity) * Number(row?.rate),
             GstRt: invoiceData?.rateDetails?.igstRate,
-            IgstAmt: igstAmt,
+            IgstAmt: Number(igstAmt.toFixed(2)),
             CgstAmt: 0,
             SgstAmt: 0,
             CesRt: 0, // Need Clarity
@@ -1142,6 +1177,7 @@ export class InvoiceGenerationComponent
         this.invoiceFinalData.companyDetails.organization.name = res[0]?.name;
         this.invoiceFinalData.companyDetails.organization.emailId =
           res[0]?.emailId;
+        this.companyDetailsModel.companyCode = res[0]?.companyCode;
       }
       // Set First Value
       if (
@@ -1150,8 +1186,6 @@ export class InvoiceGenerationComponent
       ) {
         this.companyDetailsModel.organizationId =
           this.companyDetailConfig.organizationConfig.options[0]!.id;
-        this.companyDetailsModel.companyCode = res[0]?.companyCode;
-        console.log(this.companyDetailsModel.companyCode);
       }
     });
   }
@@ -1177,6 +1211,8 @@ export class InvoiceGenerationComponent
           res[0]?.stateName;
         this.invoiceFinalData.companyDetails.organization.stateTinCode =
           res[0]?.stateTinCode;
+        this.companyDetailsModel.cityCode = res[0]?.cityCode; //cityCode
+
         // Set First Value
         if (
           this.companyDetailConfig.branchSelectorConfig.options?.length > 0 &&
@@ -1184,8 +1220,6 @@ export class InvoiceGenerationComponent
         ) {
           this.companyDetailsModel.organizationBranchId =
             this.companyDetailConfig.branchSelectorConfig.options[0]!.id;
-          this.companyDetailsModel.cityCode = res[0].cityCode; //cityCode
-          console.log(this.companyDetailsModel.cityCode);
         }
       });
   }
@@ -1439,135 +1473,25 @@ export class InvoiceGenerationComponent
         this.invoiceData.ackNo = res?.data?.outcome?.AckNo;
         this.invoiceData.qrCode =
           "data:image/png;base64," + res?.data?.outcome?.QrImage;
-        this.invoiceData.isIRNGenerated = 1;
-        this.addUpdateInvoice(this.invoiceData);
+        this.invoiceData.bankDetails = {
+          id: 1,
+          organizationId: 1,
+          name: "AXIS BANK LTD",
+          branchName: "Mahim",
+          ifscCode: "UTIB0001243",
+          accountNumber: "920020018286808",
+          swiftCode: "UTIB0001243",
+        };
+        this.invoiceData.companyDetails.organization.id =
+          this.companyDetailsModel.organizationId;
+        this.invoiceData.companyDetails.customer.customerId =
+          this.companyDetailsModel.customerId;
+        this.invoiceData.isIrnGenerated = 1;
+        let data = this.generatePostData();
+        data.rateDetails.invoiceItems = this.lineItems;
+        this.addUpdateInvoice(data);
+        this.onBtnClick.emit("done");
       }
     });
   }
-
-  // Generate IRN Data
-
-  // search(event) {
-  //   // this.groupedData
-  //   let query = event.query;
-  //   let filteredGroups = [];
-
-  //   for (let optgroup of this.groupedData) {
-  //     let filteredSubOptions = this.filterService.filter(
-  //       optgroup.items,
-  //       ["label"],
-  //       query,
-  //       "contains"
-  //     );
-  //     if (filteredSubOptions && filteredSubOptions.length) {
-  //       filteredGroups.push({
-  //         label: optgroup.label,
-  //         value: optgroup.value,
-  //         items: filteredSubOptions
-  //       });
-  //     }
-  //   }
-
-  //   this.filteredData = filteredGroups;
-  // }
-
-  // filterCountry(event) {
-  //   let filtered: any[] = [];
-  //   let query = event.query;
-  //   for (let i = 0; i < Country.getAllCountries().length; i++) {
-  //     let country = Country.getAllCountries()[i];
-  //     if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-  //       filtered.push(country);
-  //     }
-  //   }
-
-  //   this.countryPlaceOfRecieptData = filtered.map((row: any) => {
-  //     return row.name
-  //   });
-  // }
-
-  // filterState(event) {
-  //   let filtered: any[] = [];
-  //   let query = event.query;
-  //   const countryData = Country.getAllCountries().find((item: any) => item.name == this.selectedPlaceOfRecieptCountry)
-  //   const stateData = State.getAllStates().filter((item: any) => item.countryCode == countryData.isoCode)
-  //   for (let i = 0; i < stateData.length; i++) {
-  //     let state = stateData[i];
-  //     if (state.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-  //       filtered.push(state);
-  //     }
-  //   }
-
-  //   this.statePlaceOfRecieptData = filtered.map((row: any) => {
-  //     return row.name
-  //   });
-  // }
-
-  // filterCities(event) {
-  //   let filtered: any[] = [];
-  //   let query = event.query;
-  //   const countryData = Country.getAllCountries().find((item: any) => item.name == this.selectedPlaceOfRecieptCountry)
-  //   const stateData = State.getAllStates().find((item: any) => item.name == this.selectedPlaceOfRecieptState)
-  //   const cityData = City.getAllCities().filter((item: any) => item.countryCode == countryData.isoCode && item.stateCode == stateData.isoCode)
-  //   for (let i = 0; i < cityData.length; i++) {
-  //     let city = cityData[i];
-  //     if (city.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-  //       filtered.push(city);
-  //     }
-  //   }
-
-  //   this.citiesPlaceOfRecieptData = filtered.map((row: any) => {
-  //     return row.name
-  //   });
-  // }
-
-  // filterDeliveryCountry(event) {
-  //   let filtered: any[] = [];
-  //   let query = event.query;
-  //   for (let i = 0; i < Country.getAllCountries().length; i++) {
-  //     let country = Country.getAllCountries()[i];
-  //     if (country.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-  //       filtered.push(country);
-  //     }
-  //   }
-
-  //   this.countryPlaceOfRecieptData = filtered.map((row: any) => {
-  //     return row.name
-  //   });
-  // }
-
-  // filterDeliveryState(event) {
-  //   let filtered: any[] = [];
-  //   let query = event.query;
-  //   const countryData = Country.getAllCountries().find((item: any) => item.name == this.selectedPlaceOfDeliveryCountry)
-  //   const stateData = State.getAllStates().filter((item: any) => item.countryCode == countryData.isoCode)
-  //   for (let i = 0; i < stateData.length; i++) {
-  //     let state = stateData[i];
-  //     if (state.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-  //       filtered.push(state);
-  //     }
-  //   }
-
-  //   this.statePlaceOfRecieptData = filtered.map((row: any) => {
-  //     return row.name
-  //   });
-  // }
-
-  // filterDeliveryCities(event) {
-  //   let filtered: any[] = [];
-  //   let query = event.query;
-  //   const countryData = Country.getAllCountries().find((item: any) => item.name == this.selectedPlaceOfDeliveryCountry)
-  //   const stateData = State.getAllStates().find((item: any) => item.name == this.selectedPlaceOfDeliveryState)
-  //   const cityData = City.getAllCities().filter((item: any) => item.countryCode == countryData.isoCode && item.stateCode == stateData.isoCode)
-  //   for (let i = 0; i < cityData.length; i++) {
-  //     let city = cityData[i];
-  //     if (city.name.toLowerCase().indexOf(query.toLowerCase()) == 0) {
-  //       filtered.push(city);
-  //     }
-  //   }
-
-  //   this.citiesPlaceOfRecieptData = filtered.map((row: any) => {
-  //     return row.name
-  //   });
-  // }
 }

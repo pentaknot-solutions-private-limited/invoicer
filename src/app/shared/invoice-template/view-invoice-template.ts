@@ -102,6 +102,8 @@ export class InvoicePDF {
     }
 
     private createOrgStrip(invoiceData: any) {
+        console.log(invoiceData);
+        
         const template = {
             columns: [
                 {

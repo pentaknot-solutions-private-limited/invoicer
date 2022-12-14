@@ -269,6 +269,7 @@ export class InvoicesComponent implements OnInit {
   // Get invoice Data
   getInvoiceData(invoiceData) {
     this.invoiceFinalData.companyDetails = invoiceData?.companyDetails;
+    this.invoiceFinalData.shipmentDetails = invoiceData?.shipmentDetails;
     this.invoiceFinalData.shipmentDetails.dispatchDocNo =
       invoiceData?.shipmentDetails?.dispatchDocNo;
     this.invoiceFinalData.shipmentDetails.awbNo =

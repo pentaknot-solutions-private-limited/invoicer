@@ -19,7 +19,7 @@ import { SearchInvoiceModel } from "./invoices.model";
 import jsPDF from "jspdf";
 import * as _ from "lodash";
 import { convertAmountToWords } from "src/app/shared/utils/convert-amount-to-words";
-import { InvoicePDF } from "src/app/shared/invoice-template/view-invoice-template";
+import { InvoicePDF } from "src/app/shared/invoice-template/new-view-invoice-template";
 import * as moment from "moment";
 
 @Component({
@@ -279,6 +279,10 @@ export class InvoicesComponent implements OnInit {
       invoiceData?.shipmentDetails?.departureDate;
     this.invoiceFinalData.shipmentDetails.packageQty =
       invoiceData?.shipmentDetails?.packageQty;
+    this.invoiceFinalData.shipmentDetails.chargeableWt =
+      invoiceData?.shipmentDetails?.chargeableWt;
+      this.invoiceFinalData.shipmentDetails.grossWt =
+      invoiceData?.shipmentDetails?.grossWt;
     this.invoiceFinalData.rateDetails.invoiceItems = JSON.parse(
       invoiceData?.invoiceItems
     ).map((row: any) => {
@@ -413,12 +417,13 @@ export class InvoicesComponent implements OnInit {
           this.statistics.push(draft);
 
           const IRNGenerated = {
-            label: "IRN Generated",
+            label: "IRN Not Generated",
             type: "irn_generated",
             value: res.data.filter(
               (row: any) =>
                 row.isActive == 1 &&
-                row.isIrnGenerated == 1 &&
+                row.isIrnGenerated == 0 &&
+                row.isCompleted == 1 &&
                 row.isDeleted == 0
             ).length,
           };
@@ -486,14 +491,14 @@ export class InvoicesComponent implements OnInit {
                 .filter(
                   (row: any) =>
                     row.isActive == 1 &&
-                    row.isIrnGenerated == 1 &&
+                    row.isIrnGenerated == 0 &&
                     row.isDeleted == 0
                 )
                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
               this.statistics[2].value = res.data.filter(
                 (row: any) =>
                   row.isActive == 1 &&
-                  row.isIrnGenerated == 1 &&
+                  row.isIrnGenerated == 0 &&
                   row.isDeleted == 0
               ).length;
               break;
@@ -528,7 +533,7 @@ export class InvoicesComponent implements OnInit {
           this.statistics[2].value = res?.data?.filter(
             (row: any) =>
               row.isActive == 1 &&
-              row.isIrnGenerated == 1 &&
+              row.isIrnGenerated == 0 &&
               row.isDeleted == 0
           )?.length;
 

@@ -8,7 +8,9 @@ export class CompanyDetails {
 }
 export class ShipmentDetails {
   shipperId: string;
+  shipperName?: string;
   consigneeId: string;
+  consigneeName?: string;
   awbNo: string;
   hawbNo: string; // Not required
   sbNo: string; // Not required
@@ -22,11 +24,14 @@ export class ShipmentDetails {
   departureDate: Date;
   flightNo: string;
   cargoTypeId: string;
+  cargoTypeName?: string;
   airlineId: string; // Not required
   shipperRef!: string; // Not required
   incoTerms!: string; // Not required
   loadingPortId: string;
+  loadingPortName?: string;
   destinationPortId: string;
+  destinationPortName?: string;
   dispatchDocNo: string;
 }
 

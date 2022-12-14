@@ -45,7 +45,7 @@ import { FilterService } from "primeng/api";
 import { AutoComplete } from "primeng/autocomplete";
 import * as _ from "lodash";
 import { minLengthArray } from "src/app/shared/utils/custom-validators";
-import { InvoicePDF } from "src/app/shared/invoice-template/view-invoice-template";
+import { InvoicePDF } from "src/app/shared/invoice-template/new-view-invoice-template";
 import { PdfViewerComponent } from "ng2-pdf-viewer";
 import * as moment from "moment";
 
@@ -434,8 +434,12 @@ export class InvoiceGenerationComponent
       // Shipment Details
       this.shipmentDetailsModel.shipperId =
         this.invoiceData?.shipmentDetails?.shipperId;
+      this.invoiceFinalData.shipmentDetails.shipperName =
+        this.invoiceData?.shipmentDetails?.shipperName;
       this.shipmentDetailsModel.consigneeId =
         this.invoiceData?.shipmentDetails?.consigneeId;
+      this.invoiceFinalData.shipmentDetails.consigneeName =
+        this.invoiceData?.shipmentDetails?.consigneeName;
       this.shipmentDetailsModel.awbNo =
         this.invoiceData?.shipmentDetails?.awbNo;
       this.shipmentDetailsModel.flightNo =
@@ -444,8 +448,12 @@ export class InvoiceGenerationComponent
         this.invoiceData?.shipmentDetails?.departureDate;
       this.shipmentDetailsModel.loadingPortId =
         this.invoiceData?.shipmentDetails?.loadingPortId;
+      this.invoiceFinalData.shipmentDetails.loadingPortName =
+        this.invoiceData?.shipmentDetails?.loadingPortName;
       this.shipmentDetailsModel.destinationPortId =
         this.invoiceData?.shipmentDetails?.destinationPortId;
+      this.invoiceFinalData.shipmentDetails.destinationPortName =
+        this.invoiceData?.shipmentDetails?.destinationPortName;
       this.locationModel.countryId =
         this.invoiceData?.shipmentDetails?.portCountryId;
       this.invoiceFinalData.shipmentDetails.portCode =
@@ -461,6 +469,8 @@ export class InvoiceGenerationComponent
         this.invoiceData?.shipmentDetails?.chargeableWt;
       this.shipmentDetailsModel.cargoTypeId =
         this.invoiceData?.shipmentDetails?.cargoTypeId;
+      this.invoiceFinalData.shipmentDetails.cargoTypeName =
+        this.invoiceData?.shipmentDetails?.cargoTypeName;
 
       // Basic Details
       this.basicDetailsModel.invoiceDate = this.invoiceData?.invoiceDate;
@@ -544,9 +554,11 @@ export class InvoiceGenerationComponent
       (!this.lineItems[0].quantity || !this.lineItems[0].rate)
     ) {
       return true;
-    } else if(
+    } else if (
       this.currentStepIndex == 3 &&
-      (!this.lineItems[0].quantity || !this.lineItems[0].rate || !this.shipmentDetailsModel.shipperId ||
+      (!this.lineItems[0].quantity ||
+        !this.lineItems[0].rate ||
+        !this.shipmentDetailsModel.shipperId ||
         !this.shipmentDetailsModel.consigneeId ||
         !this.shipmentDetailsModel.awbNo ||
         !this.shipmentDetailsModel.flightNo ||
@@ -773,7 +785,9 @@ export class InvoiceGenerationComponent
       case "customerBranch":
         this.getAllBranchByCustomerId();
         this.invoiceFinalData.companyDetails.customer.address =
-          event?.selectedObj?.address + ", " + event?.selectedObj?.address2;
+          event?.selectedObj?.address;
+        this.invoiceFinalData.companyDetails.customer.address2 =
+        event?.selectedObj?.address2;
         this.invoiceFinalData.companyDetails.customer.gstin =
           event?.selectedObj?.gstin;
         this.invoiceFinalData.companyDetails.customer.stateName =
@@ -792,7 +806,13 @@ export class InvoiceGenerationComponent
       case "destinationPort":
         this.invoiceFinalData.shipmentDetails.portCode =
           event?.selectedObj?.portCode;
+        this.invoiceFinalData.shipmentDetails.destinationPortName =
+          event?.selectedObj?.name;
 
+        break;
+      case "loadingPort":
+        this.invoiceFinalData.shipmentDetails.loadingPortName =
+          event?.selectedObj?.name;
         break;
       case "serviceType":
         console.log(event);
@@ -812,6 +832,18 @@ export class InvoiceGenerationComponent
           unitId: event.value,
           unit: event.selectedObj.unit,
         });
+        break;
+      case "shipper":
+        this.invoiceFinalData.shipmentDetails.shipperName =
+          event?.selectedObj?.name;
+        break;
+      case "consignee":
+        this.invoiceFinalData.shipmentDetails.consigneeName =
+          event?.selectedObj?.name;
+        break;
+      case "cargoType":
+        this.invoiceFinalData.shipmentDetails.cargoTypeName =
+          event?.selectedObj?.name;
         break;
       default:
         break;
@@ -892,6 +924,10 @@ export class InvoiceGenerationComponent
       this.shipmentDetailsModel?.departureDate;
     this.invoiceFinalData.shipmentDetails.packageQty =
       this.shipmentDetailsModel?.packageQty;
+    this.invoiceFinalData.shipmentDetails.chargeableWt =
+      this.shipmentDetailsModel?.chargeableWt;
+    this.invoiceFinalData.shipmentDetails.grossWt =
+      this.shipmentDetailsModel?.grossWt;
     this.invoiceFinalData.rateDetails.invoiceItems =
       this.invoiceDrawerType != "view"
         ? this.lineItemForm.get("lineItemList").value
@@ -901,6 +937,8 @@ export class InvoiceGenerationComponent
       this.rateDetailsModel?.igstRate.toString().split("%")[0]
     );
     this.invoiceFinalData.invoiceDate = this.basicDetailsModel.invoiceDate;
+    this.invoiceFinalData.invoiceDueDate =
+      this.basicDetailsModel.invoiceDueDate;
     this.invoiceFinalData.invoiceNo = this.basicDetailsModel.invoiceNo;
     this.invoiceFinalData.irn = this.invoiceData?.irn
       ? this.invoiceData?.irn
@@ -1067,7 +1105,7 @@ export class InvoiceGenerationComponent
       DocDtls: {
         No: invoiceData?.invoiceNo,
         Typ: "INV", // Need clarity
-        Dt: moment(invoiceData?.invoiceDate).format("DD/DD/YYYY"),
+        Dt: moment(invoiceData?.invoiceDate).format("DD/MM/YYYY"),
       },
 
       SellerDtls: {
@@ -1288,7 +1326,9 @@ export class InvoiceGenerationComponent
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]!.id;
         }
         this.invoiceFinalData.companyDetails.customer.address =
-          res[0]?.address + ", " + res[0]?.address2;
+          res[0]?.address;
+        this.invoiceFinalData.companyDetails.customer.address2 =
+          res[0]?.address2;
         this.invoiceFinalData.companyDetails.customer.gstin = res[0]?.gstin;
         this.invoiceFinalData.companyDetails.customer.stateName =
           res[0]?.stateName;
@@ -1312,6 +1352,8 @@ export class InvoiceGenerationComponent
       if (this.shipmentDetailConfig.cargoTypeConfig.options?.length > 0) {
         this.shipmentDetailsModel.cargoTypeId =
           this.shipmentDetailConfig.cargoTypeConfig.options[0]!.id;
+          this.invoiceFinalData.shipmentDetails.cargoTypeName =
+          this.shipmentDetailConfig.cargoTypeConfig.options[0]!.name;
       }
     });
   }

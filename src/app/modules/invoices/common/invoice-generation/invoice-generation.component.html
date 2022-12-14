@@ -81,7 +81,7 @@
             <vsa-select
               [config]="consignmentDetailConfig?.shipper"
               [dataModel]="shipmentDetailsModel"
-              (onSelectionChange)="selectionChanged('', $event)"
+              (onSelectionChange)="selectionChanged('shipper', $event)"
             >
             </vsa-select>
           </div>
@@ -90,7 +90,7 @@
             <vsa-select
               [config]="consignmentDetailConfig?.consignee"
               [dataModel]="shipmentDetailsModel"
-              (onSelectionChange)="selectionChanged('', $event)"
+              (onSelectionChange)="selectionChanged('consignee', $event)"
             >
             </vsa-select>
           </div>
@@ -123,7 +123,7 @@
             <vsa-select
               [config]="consignmentDetailConfig?.loadingPort"
               [dataModel]="shipmentDetailsModel"
-              (onSelectionChange)="selectionChanged('', $event)"
+              (onSelectionChange)="selectionChanged('loadingPort', $event)"
             >
             </vsa-select>
           </div>
@@ -187,8 +187,7 @@
               [config]="shipmentDetailConfig?.cargoTypeConfig"
               [dataModel]="shipmentDetailsModel"
               (onSelectionChange)="
-                selectionChanged('cargoType', $event);
-                cargoType = $event.source.triggerValue
+                selectionChanged('cargoType', $event)
               "
             >
             </vsa-select>
@@ -575,7 +574,7 @@
         size="small"
         (onClick)="actionEvent('draft')"
         [disabled]="setNextButtonDisabled"
-        >{{currentStepIndex}} Save as Draft</vsa-button
+        >Save as Draft</vsa-button
       >
     </ng-container>
 
@@ -586,7 +585,7 @@
       size="small"
       (onClick)="actionEvent('save')"
       [disabled]="setNextButtonDisabled"
-      >{{currentStepIndex}} Save</vsa-button
+      >Save</vsa-button
     >
   </div>
 </div>

@@ -82,6 +82,32 @@ export class InvoicesConfigs {
         },
       },
       {
+        field: "status",
+        headerName: "Status",
+        colType: "multi",
+        rendererParams: (value, row, col) => {
+          if (row.isIrnGenerated == 1) {
+            return {
+              fontSize: "12px",
+              color: "green",
+              fontWeight: 500,
+              class: "completed",
+            };
+          } else {
+            return {
+              fontSize: "12px",
+              color: "primary",
+              fontWeight: 500,
+            };
+          }
+        },
+        valueFormatter: (value, row, col) => {
+          return row.isIrnGenerated == 1
+            ? 'Completed'
+            : "Pending";
+        },
+      },
+      {
         headerName: "Action",
         colType: "actions",
         align: "center",
@@ -97,7 +123,7 @@ export class InvoicesConfigs {
                 tooltip: "Edit Invoice",
                 title: "Edit Invoice",
                 type: "edit",
-                disabled: row.isCompleted == 1 ? true : false,
+                disabled: row.isIrnGenerated == 1 ? true : false,
               },
               {
                 icon: "download-button-2",

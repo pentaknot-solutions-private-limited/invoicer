@@ -11,6 +11,7 @@ export class InvoicesConfigs {
     attributes: {
       placeholder: "Search Invoice No",
       title: "Invoice No",
+      maxlength: 16
     },
   };
   billToCustomerInput: ITextConfig = {
@@ -204,9 +205,8 @@ export class InvoicesConfigs {
     attributes: {
       title: "Invoice No.",
       showBorder: true,
-      readonly: true,
-      disable: true,
-      hint: "Note: If no Invoice No. is entered it will be generated automatically.",
+      maxlength: 16,
+      // hint: "Note: If no Invoice No. is entered it will be generated automatically.",
     },
   };
 
@@ -239,7 +239,7 @@ export class InvoicesConfigs {
   dispatchDocNoInput: ITextConfig = {
     fieldKey: "dispatchDocNo",
     attributes: {
-      title: "Disptach Doc No",
+      title: "CD No",
       showBorder: true,
     },
   };

@@ -387,8 +387,6 @@ export class InvoiceGenerationComponent
     // Temp
     this.consignmentDetailsModel.placeOfDeliveryId = 1;
     this.consignmentDetailsModel.placeOfRecieptId = 1;
-    // Invoice No.
-    this.basicDetailsModel.invoiceNo = "-";
   }
 
   ngOnInit(): void {
@@ -475,8 +473,7 @@ export class InvoiceGenerationComponent
       // Basic Details
       this.basicDetailsModel.invoiceDate = this.invoiceData?.invoiceDate;
       this.basicDetailsModel.invoiceDueDate = this.invoiceData?.invoiceDueDate;
-      this.basicDetailsModel.invoiceNo =
-        this.invoiceData?.isCompleted == 1 ? this.invoiceData?.invoiceNo : "-";
+      this.basicDetailsModel.invoiceNo = this.invoiceData?.invoiceNo;
 
       // Rate Details
       this.rateDetailsModel.amount = Number(
@@ -535,7 +532,6 @@ export class InvoiceGenerationComponent
     if (
       this.currentStepIndex == 1 &&
       (!this.shipmentDetailsModel.shipperId ||
-        !this.shipmentDetailsModel.consigneeId ||
         !this.shipmentDetailsModel.awbNo ||
         !this.shipmentDetailsModel.flightNo ||
         !this.shipmentDetailsModel.departureDate ||
@@ -545,8 +541,8 @@ export class InvoiceGenerationComponent
         !this.shipmentDetailsModel.packageQty ||
         !this.shipmentDetailsModel.grossWt ||
         !this.shipmentDetailsModel.chargeableWt ||
-        !this.basicDetailsModel.invoiceDate ||
-        !this.basicDetailsModel.invoiceDueDate)
+        !this.basicDetailsModel.invoiceDate || 
+        !this.basicDetailsModel.invoiceNo)
     ) {
       return true;
     } else if (
@@ -559,7 +555,6 @@ export class InvoiceGenerationComponent
       (!this.lineItems[0].quantity ||
         !this.lineItems[0].rate ||
         !this.shipmentDetailsModel.shipperId ||
-        !this.shipmentDetailsModel.consigneeId ||
         !this.shipmentDetailsModel.awbNo ||
         !this.shipmentDetailsModel.flightNo ||
         !this.shipmentDetailsModel.departureDate ||
@@ -569,8 +564,8 @@ export class InvoiceGenerationComponent
         !this.shipmentDetailsModel.packageQty ||
         !this.shipmentDetailsModel.grossWt ||
         !this.shipmentDetailsModel.chargeableWt ||
-        !this.basicDetailsModel.invoiceDate ||
-        !this.basicDetailsModel.invoiceDueDate)
+        !this.basicDetailsModel.invoiceDate || 
+        !this.basicDetailsModel.invoiceNo)
     ) {
       return true;
     } else {
@@ -1549,7 +1544,7 @@ export class InvoiceGenerationComponent
         let data = this.generatePostData();
         data.rateDetails.invoiceItems = this.lineItems;
         this.addUpdateInvoice(data);
-        this.onBtnClick.emit("done");
+        // this.onBtnClick.emit("done");
       }
     });
   }

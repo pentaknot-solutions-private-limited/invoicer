@@ -65,7 +65,8 @@
           config?.attributes?.disableNativeAutoComplete ? 'off' : 'on'
         "
         [matAutocomplete]="auto"
-        [max]="config?.max"
+        [max]="config?.attributes?.max"
+        [maxlength]="config?.attributes?.maxlength"
         [(ngModel)]="dataModel[config?.fieldKey]"
         (input)="onChange()"
         (change)="onChange()"
@@ -101,6 +102,7 @@
           config?.attributes?.isMandatory && !config?.attributes?.readonly
         "
         [disabled]="config?.attributes?.disable"
+        [maxlength]="config?.attributes?.maxlength"
         [autocomplete]="
           config?.attributes?.disableNativeAutoComplete ? 'off' : 'on'
         "

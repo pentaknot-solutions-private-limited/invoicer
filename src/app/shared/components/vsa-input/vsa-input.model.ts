@@ -7,6 +7,7 @@ export interface ITextAttribute {
     label?: string;
     type?: string;
     max?: number;
+    maxlength?: number;
     placeholder?: string;
     matlabel?: string;
     disable?: boolean;

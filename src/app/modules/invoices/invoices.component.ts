@@ -255,7 +255,6 @@ export class InvoicesComponent implements OnInit {
   drawerAction(event) {
     switch (event) {
       case "done":
-        this.clearDrawerData();
         this.getInvoices("all", true);
         break;
 
@@ -306,12 +305,12 @@ export class InvoicesComponent implements OnInit {
       invoiceData?.rateDetails?.igstRate
     );
     this.invoiceFinalData.invoiceDate = invoiceData?.invoiceDate;
-    this.invoiceFinalData.irn = invoiceData?.irn;
+    this.invoiceFinalData.irn = invoiceData?.irn ? invoiceData?.irn : '';
     this.invoiceFinalData.ackDate = invoiceData?.ackDate;
     this.invoiceFinalData.ackNo = invoiceData?.ackNo;
     this.invoiceFinalData.qrCode = invoiceData?.qrCode
       ? invoiceData?.qrCode
-      : "-";
+      : "";
     this.invoiceFinalData.shipmentDetails.portCode =
       invoiceData?.shipmentDetails?.portCode;
     this.invoiceFinalData.invoiceNo = invoiceData?.invoiceNo;
@@ -435,7 +434,7 @@ export class InvoicesComponent implements OnInit {
             type: "completed",
             value: res.data.filter(
               (row: any) =>
-                row.isActive == 1 && row.isCompleted == 1 && row.isDeleted == 0
+                row.isActive == 1 && row.isCompleted == 1 && row.isDeleted == 0 && row.isIrnGenerated == 1
             ).length,
           };
           this.statistics.push(completed);
@@ -510,7 +509,7 @@ export class InvoicesComponent implements OnInit {
                   (row: any) =>
                     row.isActive == 1 &&
                     row.isCompleted == 1 &&
-                    row.isDeleted == 0
+                    row.isDeleted == 0 && row.isIrnGenerated == 1
                 )
                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
               break;
@@ -542,10 +541,11 @@ export class InvoicesComponent implements OnInit {
             (row: any) =>
               row.isActive == 1 &&
               row.isCompleted == 1 &&
-              row.isDeleted == 0
+              row.isDeleted == 0  && row.isIrnGenerated == 1
           )?.length;
         }
       }
+      this.clearDrawerData();
     });
   }
 

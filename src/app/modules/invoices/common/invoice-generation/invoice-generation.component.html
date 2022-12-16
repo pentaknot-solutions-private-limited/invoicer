@@ -566,7 +566,7 @@
       [disabled]="setNextButtonDisabled"
       >Next</vsa-button
     >
-    <ng-container *ngIf="!invoiceData || invoiceData?.isCompleted == 0">
+    <ng-container *ngIf="showDraftButton()">
       <vsa-button
         *ngIf="currentStepIndex == 3"
         [type]="'button'"

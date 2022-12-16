@@ -733,7 +733,6 @@ export class InvoiceGenerationComponent
         data.isCompleted = this.invoiceData?.isCompleted
           ? this.invoiceData?.isCompleted
           : 1;
-        console.log(data);
         this.addUpdateInvoice(data);
         break;
       case "draft":
@@ -906,9 +905,10 @@ export class InvoiceGenerationComponent
   }
 
   getInvoiceData() {
-    if (this.invoiceData) {
-      this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails;
-    }
+    // if (this.invoiceData) {
+    //   this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails;
+    // }
+    this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails ? this.invoiceData?.companyDetails : this.invoiceFinalData.companyDetails;
     this.invoiceFinalData.shipmentDetails.dispatchDocNo =
       this.shipmentDetailsModel?.dispatchDocNo;
     this.invoiceFinalData.shipmentDetails.awbNo =
@@ -1062,7 +1062,7 @@ export class InvoiceGenerationComponent
         accountNumber: this.bankDetailsModel?.accountNumber,
         swiftCode: this.bankDetailsModel?.swiftCode,
       },
-      invoiceNo: this.invoiceData?.invoiceNo ? this.invoiceData?.invoiceNo : "",
+      invoiceNo: this.basicDetailsModel?.invoiceNo,
       invoiceDate: this.basicDetailsModel?.invoiceDate,
       invoiceDueDate: this.basicDetailsModel?.invoiceDueDate,
       isApproved: this.invoiceData?.isApproved
@@ -1082,6 +1082,14 @@ export class InvoiceGenerationComponent
       qrCode: this.invoiceData?.qrCode ? this.invoiceData?.qrCode : null,
       ackDate: this.invoiceData?.ackDate ? this.invoiceData?.ackDate : null,
     };
+  }
+
+  showDraftButton() {
+    if (this.invoiceData) {
+      return this.invoiceData?.isCompleted == 1 ? false : true
+    } else {
+      return true
+    }
   }
 
   generateIRNData(invoiceData: any) {
@@ -1545,6 +1553,9 @@ export class InvoiceGenerationComponent
         data.rateDetails.invoiceItems = this.lineItems;
         this.addUpdateInvoice(data);
         // this.onBtnClick.emit("done");
+      } else {
+        this.toasty.error(res?.error?.message);
+        this.onBtnClick.emit("done");
       }
     });
   }

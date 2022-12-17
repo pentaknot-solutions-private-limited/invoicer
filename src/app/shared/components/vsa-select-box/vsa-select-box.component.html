@@ -3,7 +3,7 @@
   [ngClass]="config?.attributes?.class ? config?.attributes?.class : 'col-xs-12'"
 >
   <p class="title" *ngIf="config?.attributes?.title">
-    {{ config?.attributes?.title }}
+    {{ config?.attributes?.title }}&nbsp;<span *ngIf="config?.attributes?.isMandatory" class="red text-danger">*</span>
   </p>
   <mat-form-field
     [ngClass]="{

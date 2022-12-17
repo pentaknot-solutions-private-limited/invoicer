@@ -7,7 +7,7 @@
       title2: !config?.attributes?.showBorder
     }"
   >
-    {{ config?.attributes?.title }}
+    {{ config?.attributes?.title }}&nbsp;<span *ngIf="config?.attributes?.isMandatory" class="red text-danger">*</span>
   </p>
   <!-- <ng-container *ngIf="config?.attributes?.errorMessage">
     <span class="error-custom"

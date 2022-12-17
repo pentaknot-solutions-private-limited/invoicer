@@ -206,6 +206,7 @@ export class InvoicesConfigs {
       title: "Invoice No.",
       showBorder: true,
       maxlength: 16,
+      isMandatory: true
       // hint: "Note: If no Invoice No. is entered it will be generated automatically.",
     },
   };
@@ -216,6 +217,7 @@ export class InvoicesConfigs {
       title: "Invoice Date",
       type: "datepicker",
       showBorder: true,
+      isMandatory: true
     },
   };
 
@@ -234,6 +236,7 @@ export class InvoicesConfigs {
     attributes: {
       title: "AWB No",
       showBorder: true,
+      isMandatory: true
     },
   };
   dispatchDocNoInput: ITextConfig = {
@@ -241,6 +244,7 @@ export class InvoicesConfigs {
     attributes: {
       title: "CD No",
       showBorder: true,
+      isMandatory: true
     },
   };
   sbNoInput: ITextConfig = {
@@ -256,6 +260,7 @@ export class InvoicesConfigs {
       title: "Pcs (Qty)",
       type: "number",
       showBorder: true,
+      isMandatory: true
     },
   };
   chargeableWtInput: ITextConfig = {
@@ -264,6 +269,7 @@ export class InvoicesConfigs {
       title: "Chargeable Wt.",
       showBorder: true,
       type: "number",
+      isMandatory: true
       // Unit dropdown required
     },
   };
@@ -273,6 +279,7 @@ export class InvoicesConfigs {
       title: "Gross Weight in KGs",
       showBorder: true,
       type: "number",
+      isMandatory: true
       // Unit dropdown required
     },
   };
@@ -302,6 +309,7 @@ export class InvoicesConfigs {
       title: "Departure Date",
       type: "datepicker",
       showBorder: true,
+      isMandatory: true
       // Validation Needed
     },
   };
@@ -320,6 +328,7 @@ export class InvoicesConfigs {
       title: "Departure Date",
       type: "datepicker",
       showBorder: true,
+      isMandatory: true
       // Validation Needed
     },
   };
@@ -328,6 +337,7 @@ export class InvoicesConfigs {
     attributes: {
       title: "Flight No",
       showBorder: true,
+      isMandatory: true
     },
   };
   cargoTypeSelectorConfig: ISelectConfig = {
@@ -335,6 +345,7 @@ export class InvoicesConfigs {
     attributes: {
       class: "header-item",
       title: "Cargo Type",
+      isMandatory: true
     },
     dataKey: "name",
     returnKey: "cargoTypeId",
@@ -374,6 +385,7 @@ export class InvoicesConfigs {
       type: 'select-search',
       class: "header-item",
       title: "Shipper",
+      isMandatory: true
     },
     dataKey: "name",
     returnKey: "shipperId",
@@ -391,7 +403,7 @@ export class InvoicesConfigs {
     attributes: {
       type: 'select-search',
       class: "header-item",
-      title: "Consignee",
+      title: "Consignee"
     },
     dataKey: "name",
     returnKey: "consigneeId",
@@ -520,6 +532,7 @@ export class InvoicesConfigs {
     attributes: {
       class: "header-item",
       title: "Loading Port",
+      isMandatory: true
     },
     dataKey: "name",
     returnKey: "loadingPortId",
@@ -555,6 +568,7 @@ export class InvoicesConfigs {
       type: 'select-search',
       class: "header-item",
       title: "Destination Port",
+      isMandatory: true
     },
     dataKey: "name",
     returnKey: "id",
@@ -573,6 +587,7 @@ export class InvoicesConfigs {
       type: 'select-search',
       class: "header-item",
       title: "Destination Port Country",
+      isMandatory: true
     },
     dataKey: "name",
     returnKey: "countryId",
@@ -592,6 +607,7 @@ export class InvoicesConfigs {
     attributes: {
       class: "header-item",
       title: "Service Type",
+      isMandatory: true
     },
     dataKey: "name",
     returnKey: "serviceTypeId",
@@ -647,6 +663,7 @@ export class InvoicesConfigs {
       title: "Quantity",
       type: "number",
       showBorder: true,
+      isMandatory: true
     },
   };
   rateInput: ITextConfig = {
@@ -655,6 +672,7 @@ export class InvoicesConfigs {
       title: "Rate",
       type: "number",
       showBorder: true,
+      isMandatory: true
     },
   };
   amountInput: ITextConfig = {

@@ -107,6 +107,7 @@
             <vsa-input
               [config]="shipmentDetailConfig?.flightNo"
               [dataModel]="shipmentDetailsModel"
+              (onBlur)="onFlightNoEntered($event)"
             >
             </vsa-input>
           </div>
@@ -563,7 +564,7 @@
       [role]="'primary'"
       size="small"
       (onClick)="actionEvent('next')"
-      [disabled]="setNextButtonDisabled"
+      [disabled]="setNextButtonDisabled || disabled"
       >Next</vsa-button
     >
     <ng-container *ngIf="showDraftButton()">

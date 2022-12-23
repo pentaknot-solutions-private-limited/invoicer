@@ -36,6 +36,7 @@ import {
 import { Subscription } from 'rxjs';
 import { SelectMode } from './date-time.class';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import * as moment from 'moment';
 
 export const OWL_DATETIME_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
@@ -82,6 +83,9 @@ export class OwlDateTimeInputDirective<T>
     set owlDateTime(value: OwlDateTimeComponent<T>) {
         this.registerDateTimePicker(value);
     }
+
+    // Moment Formatter
+    @Input() formatter: string
 
     /**
      * A function to filter date time
@@ -556,10 +560,7 @@ export class OwlDateTimeInputDirective<T>
                 this.elmRef.nativeElement,
                 'value',
                 this._value
-                    ? this.dateTimeAdapter.format(
-                          this._value,
-                          this.dtPicker.formatString
-                      )
+                    ? moment(this._value).format(this.formatter ? this.formatter : "DD/MM/YYYY" )
                     : ''
             );
         } else if (this.isInRangeMode) {

@@ -21,7 +21,7 @@ export class ShipmentDetails {
   volume: number; // Not required
   date1: Date; // Not required
   date2: Date; // Not required
-  departureDate: Date;
+  departureDate: Date | any;
   flightNo: string;
   cargoTypeId: string;
   cargoTypeName?: string;

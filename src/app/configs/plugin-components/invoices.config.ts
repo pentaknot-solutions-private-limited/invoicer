@@ -243,8 +243,7 @@ export class InvoicesConfigs {
     fieldKey: "dispatchDocNo",
     attributes: {
       title: "CD No",
-      showBorder: true,
-      isMandatory: true
+      showBorder: true
     },
   };
   sbNoInput: ITextConfig = {
@@ -385,7 +384,6 @@ export class InvoicesConfigs {
       type: 'select-search',
       class: "header-item",
       title: "Shipper",
-      isMandatory: true
     },
     dataKey: "name",
     returnKey: "shipperId",

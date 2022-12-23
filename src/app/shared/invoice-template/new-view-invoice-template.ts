@@ -518,7 +518,7 @@ export class InvoicePDF {
                             {
                               stack: [
                                 {
-                                  text: ``,
+                                  text: `${invoiceData?.shipmentDetails?.placeOfSupply}`,
                                   fontSize: 10,
                                   alignment: `right`,
                                 },
@@ -965,7 +965,7 @@ export class InvoicePDF {
                         {
                           text: [
                             { text: `Airline : `, bold: true },
-                            ``,
+                            `${invoiceData?.shipmentDetails?.airlines}`,
                           ],
                           fontSize: 10,
                           alignment: `left`,
@@ -1004,7 +1004,7 @@ export class InvoicePDF {
                 {
                   text: [
                     { text: `Shipper : `, bold: true },
-                    `${invoiceData?.shipmentDetails?.shipperName}`,
+                    `${invoiceData?.shipmentDetails?.shipperName ? invoiceData?.shipmentDetails?.shipperName: ''}`,
                   ],
                   fontSize: 10,
                   alignment: `left`,
@@ -1012,7 +1012,7 @@ export class InvoicePDF {
                 {
                   text: [
                     { text: `Consignee : `, bold: true },
-                    `${invoiceData?.shipmentDetails?.consigneeName}`,
+                    `${invoiceData?.shipmentDetails?.consigneeName ? invoiceData?.shipmentDetails?.consigneeName : ''}`,
                   ],
                   fontSize: 10,
                   alignment: `left`,

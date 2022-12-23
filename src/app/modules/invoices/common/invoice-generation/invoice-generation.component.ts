@@ -228,7 +228,7 @@ export class InvoiceGenerationComponent
   currentStepIndex: number = 0;
   rowData: any[] = [];
   filteredData: any[] = [];
-  disabled: boolean = true;
+  disabled: boolean = false;
   editMode: boolean = false;
   disableNext: boolean = false;
   disablePlaceOfRecieptState: boolean = true;
@@ -276,6 +276,8 @@ export class InvoiceGenerationComponent
   portData: any;
   srcdata: any;
   showPDFTemplate: boolean = false;
+  airlineCode: any;
+  airlineData: any;
 
   constructor(
     private invoiceGenerationService: InvoiceGenerationService,
@@ -442,6 +444,10 @@ export class InvoiceGenerationComponent
         this.invoiceData?.shipmentDetails?.awbNo;
       this.shipmentDetailsModel.flightNo =
         this.invoiceData?.shipmentDetails?.flightNo;
+      this.airlineCode = this.invoiceData?.shipmentDetails?.flightNo.slice(
+        0,
+        2
+      );
       this.shipmentDetailsModel.departureDate =
         this.invoiceData?.shipmentDetails?.departureDate;
       this.shipmentDetailsModel.loadingPortId =
@@ -528,20 +534,54 @@ export class InvoiceGenerationComponent
     // console.log(this.stepper);
   }
 
+  onFlightNoEntered(event) {
+    if (event.length >= 2) {
+      this.airlineCode = event.slice(0, 2);
+      this.shipmentDetailConfig.flightNo.attributes.errorMessage =
+        "Invalid airline number.";
+      const portData = this.airlineData?.find(
+        (item: any) => item?.airlineCode == this.airlineCode
+      );
+      console.log(portData);
+
+      if (portData) {
+        this.shipmentDetailConfig.flightNo.attributes.errorMessage =
+          "";
+          this.disabled = false
+      } else {
+        this.shipmentDetailConfig.flightNo.attributes.errorMessage = "Invalid airline number.";
+        this.disabled = true
+      }
+    }
+  }
+
+  // onDateSelected(type,event) {
+  //   switch (type) {
+  //     case 'departureDate':
+  //       this.shipmentDetailsModel.departureDate = moment(event).format("DD/MM/YYYY")
+  //       console.log(this.shipmentDetailsModel.departureDate);
+
+  //       break;
+
+  //     default:
+  //       break;
+  //   }
+  // }
+
   get setNextButtonDisabled() {
     if (
       this.currentStepIndex == 1 &&
-      (!this.shipmentDetailsModel.shipperId ||
-        !this.shipmentDetailsModel.awbNo ||
+      // !this.shipmentDetailsModel.shipperId ||
+      (!this.shipmentDetailsModel.awbNo ||
         !this.shipmentDetailsModel.flightNo ||
         !this.shipmentDetailsModel.departureDate ||
         !this.shipmentDetailsModel.loadingPortId ||
         !this.shipmentDetailsModel.destinationPortId ||
-        !this.shipmentDetailsModel.dispatchDocNo ||
+        // !this.shipmentDetailsModel.dispatchDocNo ||
         !this.shipmentDetailsModel.packageQty ||
         !this.shipmentDetailsModel.grossWt ||
         !this.shipmentDetailsModel.chargeableWt ||
-        !this.basicDetailsModel.invoiceDate || 
+        !this.basicDetailsModel.invoiceDate ||
         !this.basicDetailsModel.invoiceNo)
     ) {
       return true;
@@ -554,17 +594,17 @@ export class InvoiceGenerationComponent
       this.currentStepIndex == 3 &&
       (!this.lineItems[0].quantity ||
         !this.lineItems[0].rate ||
-        !this.shipmentDetailsModel.shipperId ||
+        // !this.shipmentDetailsModel.shipperId ||
         !this.shipmentDetailsModel.awbNo ||
         !this.shipmentDetailsModel.flightNo ||
         !this.shipmentDetailsModel.departureDate ||
         !this.shipmentDetailsModel.loadingPortId ||
         !this.shipmentDetailsModel.destinationPortId ||
-        !this.shipmentDetailsModel.dispatchDocNo ||
+        // !this.shipmentDetailsModel.dispatchDocNo ||
         !this.shipmentDetailsModel.packageQty ||
         !this.shipmentDetailsModel.grossWt ||
         !this.shipmentDetailsModel.chargeableWt ||
-        !this.basicDetailsModel.invoiceDate || 
+        !this.basicDetailsModel.invoiceDate ||
         !this.basicDetailsModel.invoiceNo)
     ) {
       return true;
@@ -781,7 +821,7 @@ export class InvoiceGenerationComponent
         this.invoiceFinalData.companyDetails.customer.address =
           event?.selectedObj?.address;
         this.invoiceFinalData.companyDetails.customer.address2 =
-        event?.selectedObj?.address2;
+          event?.selectedObj?.address2;
         this.invoiceFinalData.companyDetails.customer.gstin =
           event?.selectedObj?.gstin;
         this.invoiceFinalData.companyDetails.customer.stateName =
@@ -802,7 +842,8 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.portCode;
         this.invoiceFinalData.shipmentDetails.destinationPortName =
           event?.selectedObj?.name;
-
+        this.invoiceFinalData.shipmentDetails.placeOfSupply =
+          event?.selectedObj?.placeOfSupply;
         break;
       case "loadingPort":
         this.invoiceFinalData.shipmentDetails.loadingPortName =
@@ -908,13 +949,19 @@ export class InvoiceGenerationComponent
     // if (this.invoiceData) {
     //   this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails;
     // }
-    this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails ? this.invoiceData?.companyDetails : this.invoiceFinalData.companyDetails;
+    const airlineData = this.airlineData.find(
+      (item: any) => item.airlineCode == this.airlineCode
+    );
+    this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails
+      ? this.invoiceData?.companyDetails
+      : this.invoiceFinalData.companyDetails;
     this.invoiceFinalData.shipmentDetails.dispatchDocNo =
       this.shipmentDetailsModel?.dispatchDocNo;
     this.invoiceFinalData.shipmentDetails.awbNo =
       this.shipmentDetailsModel?.awbNo;
     this.invoiceFinalData.shipmentDetails.flightNo =
       this.shipmentDetailsModel?.flightNo;
+    this.invoiceFinalData.shipmentDetails.airlines = airlineData?.name;
     this.invoiceFinalData.shipmentDetails.departureDate =
       this.shipmentDetailsModel?.departureDate;
     this.invoiceFinalData.shipmentDetails.packageQty =
@@ -1086,9 +1133,9 @@ export class InvoiceGenerationComponent
 
   showDraftButton() {
     if (this.invoiceData) {
-      return this.invoiceData?.isCompleted == 1 ? false : true
+      return this.invoiceData?.isCompleted == 1 ? false : true;
     } else {
-      return true
+      return true;
     }
   }
 
@@ -1328,8 +1375,7 @@ export class InvoiceGenerationComponent
           this.companyDetailsModel.customerBranchId =
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]!.id;
         }
-        this.invoiceFinalData.companyDetails.customer.address =
-          res[0]?.address;
+        this.invoiceFinalData.companyDetails.customer.address = res[0]?.address;
         this.invoiceFinalData.companyDetails.customer.address2 =
           res[0]?.address2;
         this.invoiceFinalData.companyDetails.customer.gstin = res[0]?.gstin;
@@ -1355,7 +1401,7 @@ export class InvoiceGenerationComponent
       if (this.shipmentDetailConfig.cargoTypeConfig.options?.length > 0) {
         this.shipmentDetailsModel.cargoTypeId =
           this.shipmentDetailConfig.cargoTypeConfig.options[0]!.id;
-          this.invoiceFinalData.shipmentDetails.cargoTypeName =
+        this.invoiceFinalData.shipmentDetails.cargoTypeName =
           this.shipmentDetailConfig.cargoTypeConfig.options[0]!.name;
       }
     });
@@ -1364,11 +1410,8 @@ export class InvoiceGenerationComponent
   // Airline Details
   getAllAirlines() {
     this.invoiceGenerationService.getAllAirlines().subscribe((res: any) => {
-      this.shipmentDetailConfig.airlineConfig.options = res.data;
-      // Set First Value
-      if (this.shipmentDetailConfig.airlineConfig.options?.length > 0) {
-        this.shipmentDetailsModel.airlineId =
-          this.shipmentDetailConfig.airlineConfig.options[0]!.id;
+      if (res.data) {
+        this.airlineData = res.data;
       }
     });
   }
@@ -1491,6 +1534,15 @@ export class InvoiceGenerationComponent
                     this.invoiceData?.shipmentDetails?.portCountryId
               );
           }
+          const portData = this.portData?.find(
+            (item: any) =>
+              item?.portCode == this.invoiceData?.shipmentDetails?.portCode
+          );
+          console.log(portData, this.invoiceData?.shipmentDetails?.portCode);
+
+          this.invoiceFinalData.shipmentDetails.placeOfSupply = portData
+            ? portData?.placeOfSupply
+            : "";
         }
         this.consignmentDetailConfig.dischargePort.options = res.data;
       }

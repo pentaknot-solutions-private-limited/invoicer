@@ -15,12 +15,13 @@ import {
   Validators,
 } from "@angular/forms";
 import { MatAutocompleteSelectedEvent } from "@angular/material/autocomplete";
+import { DateTimeAdapter } from "ng-pick-datetime";
 import { ITextConfig } from "./vsa-input.model";
 
 @Component({
   selector: "vsa-input",
   templateUrl: "./vsa-input.component.html",
-  styleUrls: ["./vsa-input.component.scss"],
+  styleUrls: ["./vsa-input.component.scss"]
 })
 export class VSAInputComponent
   implements ControlValueAccessor, OnChanges, AfterViewInit

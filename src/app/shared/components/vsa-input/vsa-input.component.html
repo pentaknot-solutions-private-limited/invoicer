@@ -9,7 +9,7 @@
   >
     {{ config?.attributes?.title }}&nbsp;<span *ngIf="config?.attributes?.isMandatory" class="red text-danger">*</span>
   </p>
-  <!-- <ng-container *ngIf="config?.attributes?.errorMessage">
+  <ng-container *ngIf="config?.attributes?.errorMessage">
     <span class="error-custom"
       ><vsa-icon
       icon="delete-circle"
@@ -18,7 +18,7 @@
     ></vsa-icon>
     &nbsp;&nbsp;{{ config?.attributes?.errorMessage }}</span
     >
-  </ng-container> -->
+  </ng-container>
   <mat-form-field
     [ngClass]="{
       readonly: config?.attributes?.readonly,
@@ -134,6 +134,7 @@
         [selectMode]="config?.pickerConfig?.selectMode || 'single'"
         [owlDateTimeTrigger]="date_component"
         [owlDateTime]="date_component"
+        [formatter]="config?.attributes?.formatter"
       />
     </ng-container>
     <mat-error *ngIf="showError && !config?.attributes?.readonly">

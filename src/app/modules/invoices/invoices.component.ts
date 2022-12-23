@@ -21,6 +21,7 @@ import * as _ from "lodash";
 import { convertAmountToWords } from "src/app/shared/utils/convert-amount-to-words";
 import { InvoicePDF } from "src/app/shared/invoice-template/new-view-invoice-template";
 import * as moment from "moment";
+import { InvoiceGenerationService } from "src/app/shared/_http/invoice-generation.service";
 
 @Component({
   selector: "invoices",
@@ -73,11 +74,14 @@ export class InvoicesComponent implements OnInit {
   selectedStepData: any;
   invoiceData: any;
   invoiceDrawerType: string = "";
+  airlineData: any;
+  portData: any;
 
   constructor(
     private invoiceService: InvoiceService,
     private dashboardService: DashboardService,
-    private drawerControllerService: DrawerPanelService
+    private drawerControllerService: DrawerPanelService,
+    private invoiceGenerationService: InvoiceGenerationService,
   ) {
     this.invoiceFinalData = {
       companyDetails: {
@@ -137,6 +141,8 @@ export class InvoicesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getAllPorts()
+    this.getAllAirlines()
     this.getAllPeriodFilterData();
     this.getInvoices();
     // Simulation
@@ -267,6 +273,8 @@ export class InvoicesComponent implements OnInit {
 
   // Get invoice Data
   getInvoiceData(invoiceData) {
+    const airlineData = this.airlineData?.find((item: any) => item.airlineCode == invoiceData?.shipmentDetails?.flightNo?.slice(0, 2))
+    const portData = this.portData?.find((item: any) => item.portCode == invoiceData?.shipmentDetails?.portCode)
     this.invoiceFinalData.companyDetails = invoiceData?.companyDetails;
     this.invoiceFinalData.shipmentDetails = invoiceData?.shipmentDetails;
     this.invoiceFinalData.shipmentDetails.dispatchDocNo =
@@ -275,6 +283,8 @@ export class InvoicesComponent implements OnInit {
       invoiceData?.shipmentDetails?.awbNo;
     this.invoiceFinalData.shipmentDetails.flightNo =
       invoiceData?.shipmentDetails?.flightNo;
+    this.invoiceFinalData.shipmentDetails.airlines =
+    airlineData?.name;
     this.invoiceFinalData.shipmentDetails.departureDate =
       invoiceData?.shipmentDetails?.departureDate;
     this.invoiceFinalData.shipmentDetails.packageQty =
@@ -313,6 +323,8 @@ export class InvoicesComponent implements OnInit {
       : "";
     this.invoiceFinalData.shipmentDetails.portCode =
       invoiceData?.shipmentDetails?.portCode;
+    this.invoiceFinalData.shipmentDetails.placeOfSupply =
+      portData ? portData?.placeOfSupply : "";
     this.invoiceFinalData.invoiceNo = invoiceData?.invoiceNo;
     this.invoiceFinalData.rateDetails.taxableAmount =
       invoiceData?.rateDetails?.taxableAmount;
@@ -559,6 +571,23 @@ export class InvoicesComponent implements OnInit {
         } else {
           this.openDrawer("invoice-generation", res?.data);
         }
+      }
+    });
+  }
+
+  getAllAirlines() {
+    this.invoiceGenerationService.getAllAirlines().subscribe((res: any) => {
+      if (res.data) {
+        this.airlineData = res.data;
+      }
+      
+    });
+  }
+
+  getAllPorts() {
+    this.invoiceGenerationService.getAllPorts().subscribe((res: any) => {
+      if (res.data) {
+        this.portData = res.data;
       }
     });
   }

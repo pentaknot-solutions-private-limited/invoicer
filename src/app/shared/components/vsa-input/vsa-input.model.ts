@@ -30,6 +30,7 @@ export interface ITextAttribute {
     class?: string;
     hint?: string;
     disableNativeAutoComplete?: boolean;
+    formatter?: string;
     // Auto Complete Recipient Selector
     prefixText?: string;
     autoCompleteOptions?: any[];

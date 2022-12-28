@@ -528,58 +528,58 @@ export class InvoicePDF {
                           ],
                           columnGap: 2,
                         },
-                        {
-                          columns: [
-                            {
-                              stack: [
-                                {
-                                  text: `Shipment No. :`,
-                                  fontSize: 10,
-                                  alignment: `right`,
-                                  bold: true,
-                                },
-                              ],
-                              width: "50%",
-                            },
-                            {
-                              stack: [
-                                {
-                                  text: ``,
-                                  fontSize: 10,
-                                  alignment: `right`,
-                                },
-                              ],
-                              width: "50%",
-                            },
-                          ],
-                          columnGap: 2,
-                        },
-                        {
-                          columns: [
-                            {
-                              stack: [
-                                {
-                                  text: `Shipment Type :`,
-                                  fontSize: 10,
-                                  alignment: `right`,
-                                  bold: true,
-                                },
-                              ],
-                              width: "50%",
-                            },
-                            {
-                              stack: [
-                                {
-                                  text: ``,
-                                  fontSize: 10,
-                                  alignment: `right`,
-                                },
-                              ],
-                              width: "50%",
-                            },
-                          ],
-                          columnGap: 2,
-                        },
+                        // {
+                        //   columns: [
+                        //     {
+                        //       stack: [
+                        //         {
+                        //           text: `Shipment No. :`,
+                        //           fontSize: 10,
+                        //           alignment: `right`,
+                        //           bold: true,
+                        //         },
+                        //       ],
+                        //       width: "50%",
+                        //     },
+                        //     {
+                        //       stack: [
+                        //         {
+                        //           text: ``,
+                        //           fontSize: 10,
+                        //           alignment: `right`,
+                        //         },
+                        //       ],
+                        //       width: "50%",
+                        //     },
+                        //   ],
+                        //   columnGap: 2,
+                        // },
+                        // {
+                        //   columns: [
+                        //     {
+                        //       stack: [
+                        //         {
+                        //           text: `Shipment Type :`,
+                        //           fontSize: 10,
+                        //           alignment: `right`,
+                        //           bold: true,
+                        //         },
+                        //       ],
+                        //       width: "50%",
+                        //     },
+                        //     {
+                        //       stack: [
+                        //         {
+                        //           text: ``,
+                        //           fontSize: 10,
+                        //           alignment: `right`,
+                        //         },
+                        //       ],
+                        //       width: "50%",
+                        //     },
+                        //   ],
+                        //   columnGap: 2,
+                        // },
                       ],
                       width: "100%",
                     },
@@ -733,11 +733,11 @@ export class InvoicePDF {
 
     const table = {
       table: {
-        widths: [15, 50, 27, 15, 35, 25, 40, 20, 15, 50, 50, 30, "*", 40],
+        widths: [15, 80, 27, 20, 45, 25, 40, 50, 50, 30, "*", 40],
         body: [
           [
             {
-              colSpan: 8,
+              colSpan: 7,
               stack: [
                 {
                   columns: [
@@ -782,41 +782,35 @@ export class InvoicePDF {
                       width: "60%",
                     },
                     {
-                      stack: [
-                        {
-                          text: [{ text: `Date : `, bold: true }, ``],
-                          fontSize: 10,
-                          alignment: `left`,
-                        },
-                      ],
+                      stack: [{}],
                       width: "40%",
                     },
                   ],
                 },
-                {
-                  columns: [
-                    {
-                      stack: [
-                        {
-                          text: [{ text: `SB No. : `, bold: true }, ``],
-                          fontSize: 10,
-                          alignment: `left`,
-                        },
-                      ],
-                      width: "60%",
-                    },
-                    {
-                      stack: [
-                        {
-                          text: [{ text: `Date : `, bold: true }, ``],
-                          fontSize: 10,
-                          alignment: `left`,
-                        },
-                      ],
-                      width: "40%",
-                    },
-                  ],
-                },
+                // {
+                //   columns: [
+                //     {
+                //       stack: [
+                //         {
+                //           text: [{ text: `SB No. : `, bold: true }, ``],
+                //           fontSize: 10,
+                //           alignment: `left`,
+                //         },
+                //       ],
+                //       width: "60%",
+                //     },
+                //     {
+                //       stack: [
+                //         {
+                //           text: [{ text: `Date : `, bold: true }, ``],
+                //           fontSize: 10,
+                //           alignment: `left`,
+                //         },
+                //       ],
+                //       width: "40%",
+                //     },
+                //   ],
+                // },
                 {
                   columns: [
                     {
@@ -987,51 +981,50 @@ export class InvoicePDF {
             {},
             {},
             {},
-            {},
             {
-              colSpan: 6,
+              colSpan: 5,
               stack: [
-                {
-                  text: [{ text: `Shipper Ref. : `, bold: true }, ``],
-                  fontSize: 10,
-                  alignment: `left`,
-                },
-                {
-                  text: [{ text: `IncoTerms : `, bold: true }, ``],
-                  fontSize: 10,
-                  alignment: `left`,
-                },
-                {
-                  text: [
-                    { text: `Shipper : `, bold: true },
-                    `${invoiceData?.shipmentDetails?.shipperName ? invoiceData?.shipmentDetails?.shipperName: ''}`,
-                  ],
-                  fontSize: 10,
-                  alignment: `left`,
-                },
-                {
-                  text: [
-                    { text: `Consignee : `, bold: true },
-                    `${invoiceData?.shipmentDetails?.consigneeName ? invoiceData?.shipmentDetails?.consigneeName : ''}`,
-                  ],
-                  fontSize: 10,
-                  alignment: `left`,
-                },
-                {
-                  text: [{ text: `Place of Receipt : `, bold: true }, ``],
-                  fontSize: 10,
-                  alignment: `left`,
-                },
+                // {
+                //   text: [{ text: `Shipper Ref. : `, bold: true }, ``],
+                //   fontSize: 10,
+                //   alignment: `left`,
+                // },
+                // {
+                //   text: [{ text: `IncoTerms : `, bold: true }, ``],
+                //   fontSize: 10,
+                //   alignment: `left`,
+                // },
+                // {
+                //   text: [
+                //     { text: `Shipper : `, bold: true },
+                //     `${invoiceData?.shipmentDetails?.shipperName ? invoiceData?.shipmentDetails?.shipperName: ''}`,
+                //   ],
+                //   fontSize: 10,
+                //   alignment: `left`,
+                // },
+                // {
+                //   text: [
+                //     { text: `Consignee : `, bold: true },
+                //     `${invoiceData?.shipmentDetails?.consigneeName ? invoiceData?.shipmentDetails?.consigneeName : ''}`,
+                //   ],
+                //   fontSize: 10,
+                //   alignment: `left`,
+                // },
+                // {
+                //   text: [{ text: `Place of Receipt : `, bold: true }, ``],
+                //   fontSize: 10,
+                //   alignment: `left`,
+                // },
                 {
                   text: [{ text: `Loading Port : `, bold: true }, `${invoiceData?.shipmentDetails?.loadingPortName}`],
                   fontSize: 10,
                   alignment: `left`,
                 },
-                {
-                  text: [{ text: `Discharge Port : `, bold: true }, ``],
-                  fontSize: 10,
-                  alignment: `left`,
-                },
+                // {
+                //   text: [{ text: `Discharge Port : `, bold: true }, ``],
+                //   fontSize: 10,
+                //   alignment: `left`,
+                // },
                 {
                   text: [{ text: `Place of Delivery : `, bold: true }, ``],
                   fontSize: 10,
@@ -1047,7 +1040,6 @@ export class InvoicePDF {
                 },
               ],
             },
-            {},
             {},
             {},
             {},
@@ -1103,20 +1095,20 @@ export class InvoicePDF {
               bold: true,
               rowSpan: 2,
             },
-            {
-              text: "Ex. Rate",
-              alignment: `center`,
-              fontSize: 8,
-              bold: true,
-              rowSpan: 2,
-            },
-            {
-              text: "Tax Type",
-              alignment: `center`,
-              fontSize: 8,
-              bold: true,
-              rowSpan: 2,
-            },
+            // {
+            //   text: "Ex. Rate",
+            //   alignment: `center`,
+            //   fontSize: 8,
+            //   bold: true,
+            //   rowSpan: 2,
+            // },
+            // {
+            //   text: "Tax Type",
+            //   alignment: `center`,
+            //   fontSize: 8,
+            //   bold: true,
+            //   rowSpan: 2,
+            // },
             {
               text: "Non GST Exempt Value (INR)",
               alignment: `center`,
@@ -1157,8 +1149,8 @@ export class InvoicePDF {
             {},
             {},
             {},
-            {},
-            {},
+            // {},
+            // {},
             { text: `Rate`, alignment: `center`, fontSize: 8, bold: true },
             { text: `Amount`, alignment: `center`, fontSize: 8, bold: true },
             {},
@@ -1200,8 +1192,8 @@ export class InvoicePDF {
                   ),
                   fontSize: 8,
                 },
-                { text: `1.00`, fontSize: 8 },
-                { text: `T`, fontSize: 8, alignment: `center` },
+                // { text: `1.00`, fontSize: 8 },
+                // { text: `T`, fontSize: 8, alignment: `center` },
                 { text: ``, fontSize: 8 },
                 {
                   text: this.numberFormat(
@@ -1237,16 +1229,16 @@ export class InvoicePDF {
                 {
                   text: `T: Taxable P:Pure Agent E:Exemption R:Reverse Charge N:Non Taxable`,
                   alignment: `left`,
-                  fontSize: 6,
+                  fontSize: 7,
                   bold: true,
-                  colSpan: 6,
+                  colSpan: 5,
                   margin: [0, 1.5, 0, 0],
                 },
                 {},
                 {},
                 {},
                 {},
-                {},
+                // {},
                 {
                   text: `Sub Total`,
                   alignment: `right`,
@@ -1255,15 +1247,14 @@ export class InvoicePDF {
                   colSpan: 2,
                 },
                 {},
-                {
-                  text: ``,
-                  alignment: `center`,
-                  fontSize: 8,
-                  bold: true,
-                  colSpan: 2,
-                },
+                // {
+                //   text: ``,
+                //   alignment: `center`,
+                //   fontSize: 8,
+                //   bold: true,
+                //   colSpan: 2,
+                // },
                 {},
-
                 {
                   text: this.numberFormat(
                     this.calculateTaxableAmount(
@@ -1301,7 +1292,7 @@ export class InvoicePDF {
           .concat([
             [
               {
-                colSpan: 8,
+                colSpan: 7,
                 stack: [
                   {
                     columns: [
@@ -1375,9 +1366,8 @@ export class InvoicePDF {
               {},
               {},
               {},
-              {},
               {
-                colSpan: 6,
+                colSpan: 5,
                 stack: [
                   {
                     columns: [
@@ -1655,13 +1645,12 @@ export class InvoicePDF {
               {},
               {},
               {},
-              {},
             ],
           ] as any)
           .concat([
             [
               {
-                colSpan: 14,
+                colSpan: 12,
                 stack: [
                   {
                     text: [
@@ -1683,14 +1672,12 @@ export class InvoicePDF {
               {},
               {},
               {},
-              {},
-              {},
             ],
           ] as any)
           .concat([
             [
               {
-                colSpan: 14,
+                colSpan: 12,
                 stack: [
                   {
                     text: `Remark : `,
@@ -1710,14 +1697,12 @@ export class InvoicePDF {
               {},
               {},
               {},
-              {},
-              {},
             ],
           ] as any)
           .concat([
             [
               {
-                colSpan: 14,
+                colSpan: 12,
                 stack: [
                   {
                     columns: [
@@ -1787,8 +1772,6 @@ export class InvoicePDF {
                   },
                 ],
               },
-              {},
-              {},
               {},
               {},
               {},

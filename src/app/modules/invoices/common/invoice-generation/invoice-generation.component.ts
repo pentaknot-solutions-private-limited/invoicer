@@ -949,7 +949,7 @@ export class InvoiceGenerationComponent
     // if (this.invoiceData) {
     //   this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails;
     // }
-    const airlineData = this.airlineData.find(
+    const airlineData = this.airlineData?.find(
       (item: any) => item.airlineCode == this.airlineCode
     );
     this.invoiceFinalData.companyDetails = this.invoiceData?.companyDetails

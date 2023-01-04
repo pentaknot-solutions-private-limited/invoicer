@@ -1273,15 +1273,15 @@ export class InvoicePDF {
                             fontSize: 10,
                             alignment: `left`,
                           },
-                          {
-                            text: [
-                              { text: `IRN : `, bold: true },
-                              {text :`${invoiceData?.irn}`, fontSize: 7.5},
-                            //   `${invoiceData?.irn}`,
-                            ],
-                            fontSize: 10,
-                            alignment: `left`,
-                          },
+                          // {
+                          //   text: [
+                          //     { text: `IRN : `, bold: true },
+                          //     {text :`${invoiceData?.irn}`, fontSize: 7.5},
+                          //   //   `${invoiceData?.irn}`,
+                          //   ],
+                          //   fontSize: 10,
+                          //   alignment: `left`,
+                          // },
                         ],
                         width: "100%",
                       },

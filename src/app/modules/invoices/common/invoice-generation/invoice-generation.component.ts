@@ -986,7 +986,7 @@ export class InvoiceGenerationComponent
       ? this.invoiceData?.irn
       : "-";
     this.invoiceFinalData.ackDate = this.invoiceData?.ackDate
-      ? this.invoiceData?.ackDate
+      ? moment(this.invoiceData?.ackDate).format('DD-MMM-YYYY')
       : "-";
     this.invoiceFinalData.ackNo = this.invoiceData?.ackNo
       ? this.invoiceData?.ackNo

@@ -281,6 +281,50 @@ export class InvoicePDF {
           columns: [
             {
               stack: [
+                { text: `IRN`, fontSize: 10 },
+                { text: `Ack No.`, fontSize: 10 },
+                { text: `Ack Date`, fontSize: 10 },
+              ],
+              width: 60,
+            },
+            {
+              stack: [
+                { text: `:`, fontSize: 10 },
+                { text: `:`, fontSize: 10 },
+                { text: `:`, fontSize: 10 },
+              ],
+              width: 12,
+            },
+            {
+              stack: [
+                {
+                  text: `${invoiceData?.irn ? invoiceData?.irn : "-"}`,
+                  bold: true,
+                  fontSize: 10,
+                },
+                {
+                  text: `${invoiceData?.ackNo ? invoiceData?.ackNo : "-"}`,
+                  bold: true,
+                  fontSize: 10,
+                },
+                {
+                  text: `${invoiceData?.ackDate ? invoiceData?.ackDate : "-"}`,
+                  bold: true,
+                  fontSize: 10,
+                },
+                // { text: `${invoiceData?.ackDate ? moment(invoiceData?.ackDate).format('DD-MMM-YYYY') : '-'}`, bold: true, fontSize: 10 },
+              ],
+              width: `*`,
+              alignment: `left`,
+            },
+          ],
+          columnGap: 10,
+          margin: [10, 10, 10, 6],
+        },
+        {
+          columns: [
+            {
+              stack: [
                 { text: `Recipient :`, fontSize: 10, bold: true },
                 {
                   text: `${
@@ -592,112 +636,7 @@ export class InvoicePDF {
           ],
           margin: [10, 10, 10, 6],
         },
-        // {
-        //   columns: [
-        //     {
-        //       stack: [
-        //         { text: `IRN`, fontSize: 10 },
-        //         { text: `Ack No.`, fontSize: 10 },
-        //         { text: `Ack Date`, fontSize: 10 },
-        //       ],
-        //       width: 60,
-        //     },
-        //     {
-        //       stack: [
-        //         { text: `:`, fontSize: 10 },
-        //         { text: `:`, fontSize: 10 },
-        //         { text: `:`, fontSize: 10 },
-        //       ],
-        //       width: 12,
-        //     },
-        //     {
-        //       stack: [
-        //         {
-        //           text: `${invoiceData?.irn ? invoiceData?.irn : "-"}`,
-        //           bold: true,
-        //           fontSize: 10,
-        //         },
-        //         {
-        //           text: `${invoiceData?.ackNo ? invoiceData?.ackNo : "-"}`,
-        //           bold: true,
-        //           fontSize: 10,
-        //         },
-        //         {
-        //           text: `${invoiceData?.ackDate ? invoiceData?.ackDate : "-"}`,
-        //           bold: true,
-        //           fontSize: 10,
-        //         },
-        //         // { text: `${invoiceData?.ackDate ? moment(invoiceData?.ackDate).format('DD-MMM-YY') : '-'}`, bold: true, fontSize: 10 },
-        //         {
-        //           stack: [
-        //             {
-        //               columns: [
-        //                 {
-        //                   stack: [{ text: `Party`, fontSize: 10 }],
-        //                   width: 60,
-        //                 },
-        //                 {
-        //                   stack: [{ text: `:`, fontSize: 10 }],
-        //                   width: 10,
-        //                 },
-        //                 {
-        //                   stack: [
-        //                     {
-        //                       text: `${
-        //                         invoiceData?.companyDetails?.customer?.name ||
-        //                         invoiceData?.companyDetails?.customer
-        //                           ?.customerName
-        //                       }`,
-        //                       fontSize: 10,
-        //                     },
-        //                     {
-        //                       text: `${invoiceData?.companyDetails?.customer?.address}`,
-        //                       fontSize: 10,
-        //                     },
-        //                   ],
-        //                 },
-        //               ],
-        //             },
-        //             {
-        //               columns: [
-        //                 {
-        //                   stack: [
-        //                     { text: `GSTIN/UIN`, fontSize: 10 },
-        //                     { text: `State Name`, fontSize: 10 },
-        //                   ],
-        //                   width: 60,
-        //                 },
-        //                 {
-        //                   stack: [
-        //                     { text: `:`, fontSize: 10 },
-        //                     { text: `:`, fontSize: 10 },
-        //                   ],
-        //                   width: 10,
-        //                 },
-        //                 {
-        //                   stack: [
-        //                     {
-        //                       text: `${invoiceData?.companyDetails?.customer?.gstin}`,
-        //                       fontSize: 10,
-        //                     },
-        //                     {
-        //                       text: `${invoiceData?.companyDetails?.customer?.stateName}, Code: ${invoiceData?.companyDetails?.customer?.stateTinCode}`,
-        //                       fontSize: 10,
-        //                     },
-        //                   ],
-        //                 },
-        //               ],
-        //             },
-        //           ],
-        //         },
-        //       ],
-        //       width: `*`,
-        //       alignment: `left`,
-        //     },
-        //   ],
-        //   columnGap: 10,
-        //   margin: [10, 10, 10, 6],
-        // },
+       
       ],
       width: `75%`,
     };

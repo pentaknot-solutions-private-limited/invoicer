@@ -565,11 +565,14 @@ export class InvoicesComponent implements OnInit {
   getInvoiceById(id, type?: string) {
     this.invoiceService.getInvoiceById(id).subscribe((res: any) => {
       if (res?.data) {
+        console.log(res?.data);
         this.invoiceData = res?.data;
         if (type == "download") {
+          console.log("working download");
           this.getInvoiceData(this.invoiceData);
         } else {
-          this.openDrawer("invoice-generation", res?.data);
+          console.log("working not download");
+          this.openDrawer("invoice-generation");
         }
       }
     });

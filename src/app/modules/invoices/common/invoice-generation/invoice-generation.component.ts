@@ -545,12 +545,12 @@ export class InvoiceGenerationComponent
       console.log(portData);
 
       if (portData) {
-        this.shipmentDetailConfig.flightNo.attributes.errorMessage =
-          "";
-          this.disabled = false
+        this.shipmentDetailConfig.flightNo.attributes.errorMessage = "";
+        this.disabled = false;
       } else {
-        this.shipmentDetailConfig.flightNo.attributes.errorMessage = "Invalid airline number.";
-        this.disabled = true
+        this.shipmentDetailConfig.flightNo.attributes.errorMessage =
+          "Invalid airline number.";
+        this.disabled = true;
       }
     }
   }
@@ -986,7 +986,7 @@ export class InvoiceGenerationComponent
       ? this.invoiceData?.irn
       : "-";
     this.invoiceFinalData.ackDate = this.invoiceData?.ackDate
-      ? moment(this.invoiceData?.ackDate).format('DD-MMM-YYYY')
+      ? moment(this.invoiceData?.ackDate).format("DD-MMM-YYYY")
       : "-";
     this.invoiceFinalData.ackNo = this.invoiceData?.ackNo
       ? this.invoiceData?.ackNo
@@ -1057,8 +1057,6 @@ export class InvoiceGenerationComponent
       this.invoiceFinalData.hsnListTaxableTotalAmount?.toString().split(".")[1]
     )} Paise Only.`;
     this.invoiceFinalData.hsnTotalValueInWords = hsnTotalValueInWords;
-    console.log(this.invoiceFinalData);
-
     return this.invoiceFinalData;
   }
 
@@ -1346,8 +1344,8 @@ export class InvoiceGenerationComponent
       ) {
         this.companyDetailsModel.customerId =
           this.companyDetailConfig.customerSelectorConfig.options[0]!.id;
+          this.invoiceFinalData.companyDetails.customer.name = res[0]?.name;
       }
-      this.invoiceFinalData.companyDetails.customer.name = res[0]?.name;
     });
   }
   getAllBranchByCustomerId() {
@@ -1374,15 +1372,16 @@ export class InvoiceGenerationComponent
         ) {
           this.companyDetailsModel.customerBranchId =
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]!.id;
+          this.invoiceFinalData.companyDetails.customer.address =
+            res[0]?.address;
+          this.invoiceFinalData.companyDetails.customer.address2 =
+            res[0]?.address2;
+          this.invoiceFinalData.companyDetails.customer.gstin = res[0]?.gstin;
+          this.invoiceFinalData.companyDetails.customer.stateName =
+            res[0]?.stateName;
+          this.invoiceFinalData.companyDetails.customer.stateTinCode =
+            res[0]?.stateTinCode;
         }
-        this.invoiceFinalData.companyDetails.customer.address = res[0]?.address;
-        this.invoiceFinalData.companyDetails.customer.address2 =
-          res[0]?.address2;
-        this.invoiceFinalData.companyDetails.customer.gstin = res[0]?.gstin;
-        this.invoiceFinalData.companyDetails.customer.stateName =
-          res[0]?.stateName;
-        this.invoiceFinalData.companyDetails.customer.stateTinCode =
-          res[0]?.stateTinCode;
       });
   }
 

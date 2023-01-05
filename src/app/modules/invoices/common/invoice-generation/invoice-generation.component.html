@@ -1,6 +1,6 @@
 <div class="drawer-body">
   <div class="invoice-generation">
-    
+    {{companyDetailsModel?.customerBranchId}}
     <ng-container *ngIf="invoiceDrawerType !== ('view' || 'generate-irn'); else viewMode">
       <pmr-stepper
         #stepper

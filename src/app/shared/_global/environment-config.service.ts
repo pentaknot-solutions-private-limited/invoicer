@@ -33,7 +33,7 @@ export class AppConfig implements IAppConfig {
         environment.apiURL = config.apiURL;
         env.apiURL = config.apiURL;
 
-        // Socket URL
+        // IRN GENERATION URL
         environment.IRN_GENERATION_API_ENDPOINT = config.IRN_GENERATION_API_ENDPOINT;
         env.IRN_GENERATION_API_ENDPOINT = config.IRN_GENERATION_API_ENDPOINT;
       });

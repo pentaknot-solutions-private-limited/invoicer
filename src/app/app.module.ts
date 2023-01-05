@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +22,7 @@ import { NotificationsComponent } from './core/layouts/NavigationLayout/common/n
 import { SettingsComponent } from './core/layouts/NavigationLayout/common/settings/settings.component';
 import { ProfileComponent } from './core/layouts/NavigationLayout/common/profile/profile.component';
 import { VSAButtonModule } from './shared/components/vsa-button/package.module';
+import { initConfig, AppConfig } from './shared/_global/environment-config.service';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,12 @@ import { VSAButtonModule } from './shared/components/vsa-button/package.module';
     VSAToastyModule.forRoot(),
   ],
   providers: [AuthRouteGuard,
-    LoginRouteGuard],
+    LoginRouteGuard,{
+      provide: APP_INITIALIZER,
+      useFactory: initConfig,
+      deps: [AppConfig],
+      multi: true,
+    },],
   bootstrap: [AppComponent],
   entryComponents: [Toast],
 })

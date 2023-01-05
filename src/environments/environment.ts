@@ -6,6 +6,7 @@ export const environment = {
   production: false,
   // apiUrl: "http://13.64.196.20:8080",
   apiURL: "https://api-ci.pentabridge.com",
+  IRN_GENERATION_API_ENDPOINT: "http://43.204.84.29:8087"
   // apiURL: "http://localhost:8080",
 };
 

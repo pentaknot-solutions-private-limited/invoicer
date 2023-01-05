@@ -7,9 +7,11 @@ import { environment } from "src/environments/environment";
 export class InvoiceGenerationService {
   baseUrl: string = "";
   liveUrl: string = "";
+  irnApi: string = "";
   constructor(private http: HttpClient) {
     this.baseUrl = "../../../assets/data/invoices";
     this.liveUrl = `${environment?.apiURL}/api`;
+    this.irnApi = `${environment?.IRN_GENERATION_API_ENDPOINT}/`;
     // this.liveUrl = "http://13.235.223.244/api";
   }
 
@@ -107,10 +109,10 @@ export class InvoiceGenerationService {
 
   // Auth Token For IRN
   generateIRN(payload) {
-    return this.http.post(`http://43.204.84.29:8087/generateIRN`,payload);
+    return this.http.post(`${this.irnApi}generateIRN`,payload);
   }
 
   generateAuthToken(payload) {
-    return this.http.get(`http://43.204.84.29:8087/getToken`,payload);// 
+    return this.http.get(`${this.irnApi}getToken`,payload);// 
   }
 }

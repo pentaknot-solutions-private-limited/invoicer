@@ -1307,14 +1307,6 @@ export class InvoiceGenerationComponent
               ...row,
             };
           });
-        this.invoiceFinalData.companyDetails.organization.address =
-          res[0]?.address;
-        this.invoiceFinalData.companyDetails.organization.gstin = res[0]?.gstin;
-        this.invoiceFinalData.companyDetails.organization.stateName =
-          res[0]?.stateName;
-        this.invoiceFinalData.companyDetails.organization.stateTinCode =
-          res[0]?.stateTinCode;
-        this.companyDetailsModel.cityCode = res[0]?.cityCode; //cityCode
 
         // Set First Value
         if (
@@ -1323,6 +1315,14 @@ export class InvoiceGenerationComponent
         ) {
           this.companyDetailsModel.organizationBranchId =
             this.companyDetailConfig.branchSelectorConfig.options[0]!.id;
+          this.invoiceFinalData.companyDetails.organization.address =
+            res[0]?.address;
+          this.invoiceFinalData.companyDetails.organization.gstin = res[0]?.gstin;
+          this.invoiceFinalData.companyDetails.organization.stateName =
+            res[0]?.stateName;
+          this.invoiceFinalData.companyDetails.organization.stateTinCode =
+            res[0]?.stateTinCode;
+          this.companyDetailsModel.cityCode = res[0]?.cityCode; //cityCode
         }
       });
   }

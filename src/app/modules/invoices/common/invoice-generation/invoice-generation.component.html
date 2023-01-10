@@ -539,7 +539,7 @@
     >
   </div>
   <vsa-button
-    *ngIf="invoiceData?.isCompleted == 1 && invoiceData?.isIrnGenerated == 0 && invoiceDrawerType == 'view' "
+    *ngIf="(invoiceData?.isCompleted == 1 && invoiceData?.isIrnGenerated == 0 && invoiceDrawerType == 'view') && loggedInUserData?.role_id != 3"
     [type]="'button'"
     [role]="'primary'"
     size="small"

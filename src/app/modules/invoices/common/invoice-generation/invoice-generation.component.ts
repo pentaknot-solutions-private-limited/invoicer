@@ -48,6 +48,7 @@ import { minLengthArray } from "src/app/shared/utils/custom-validators";
 import { InvoicePDF } from "src/app/shared/invoice-template/new-view-invoice-template";
 import { PdfViewerComponent } from "ng2-pdf-viewer";
 import * as moment from "moment";
+import { EncryptedStorage } from "src/app/shared/utils/encrypted-storage";
 
 @Component({
   selector: "invoice-generation",
@@ -278,6 +279,7 @@ export class InvoiceGenerationComponent
   showPDFTemplate: boolean = false;
   airlineCode: any;
   airlineData: any;
+  loggedInUserData: any;
 
   constructor(
     private invoiceGenerationService: InvoiceGenerationService,
@@ -303,6 +305,9 @@ export class InvoiceGenerationComponent
     this.lineItemForm = this.fb.group({
       lineItemList: this.fb.array([], minLengthArray(1)),
     });
+    const data = new EncryptedStorage().findItemFromAllStorage("_vsa-u");
+    // Get all data from local storage
+    this.loggedInUserData = JSON.parse(data);
     this.createLineItemForm();
     this.invoiceFinalData = {
       companyDetails: {

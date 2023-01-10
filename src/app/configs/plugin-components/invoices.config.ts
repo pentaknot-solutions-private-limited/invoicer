@@ -3,6 +3,7 @@ import { IGridConfig } from "src/app/shared/components/vsa-grid/vsa-grid.model";
 import { ITextConfig } from "src/app/shared/components/vsa-input/vsa-input.model";
 import { ISelectConfig } from "src/app/shared/components/vsa-select-box/vsa-select-box.model";
 import { dateFormatter } from "src/app/shared/utils/date-formatter";
+import { EncryptedStorage } from "src/app/shared/utils/encrypted-storage";
 
 export class InvoicesConfigs {
   // Search Box
@@ -114,6 +115,9 @@ export class InvoicesConfigs {
         align: "center",
         sortByFormatter: false,
         rendererParams: (value, row, col) => {
+          const data = new EncryptedStorage().findItemFromAllStorage("_vsa-u");
+          // Get all data from local storage
+          const loggedInUserData = JSON.parse(data);
           return {
             type: "simple",
             row,
@@ -134,7 +138,7 @@ export class InvoicesConfigs {
                 type: "edit",
                 // disabled: row.showSteps,
               },
-              {
+              loggedInUserData?.role_id != 3 ? {
                 icon: "data-file-bars",
                 action: "generate-irn",
                 tooltip: "Generate IRN",
@@ -142,7 +146,7 @@ export class InvoicesConfigs {
                 type: "edit",
                 size: 'small',
                 disabled: row.isCompleted == 1 && row.isIrnGenerated == 1 ? true : false,
-              },
+              } : {},
             ],
           };
         },

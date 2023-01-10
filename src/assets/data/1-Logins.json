@@ -4,39 +4,23 @@
     "role": "Admin",
     "password": "Abc@123",
     "role_id": 1,
-    "firstName": "Aayesha",
+    "firstName": "Ayesha",
     "lastName": "Sheikh"
   },
   {
-    "email": "tech@unified.com",
-    "role": "Techical Head",
-    "password": "Abc@123",
-    "role_id": 1,
-    "firstName": "John",
-    "lastName": "Doe"
-  },
-  {
-    "email": "admin@unified.com",
-    "role": "Admin",
+    "email": "harshsguna@gmail.com",
+    "role": "CA",
     "password": "Abc@123",
     "role_id": 2,
-    "firstName": "John",
-    "lastName": "Doe"
+    "firstName": "Harsh",
+    "lastName": "Guna"
   },
   {
-    "email": "business@unified.com",
-    "role": "Business",
+    "email": "accdel@unifiedlogs.com",
+    "role": "User",
     "password": "Abc@123",
     "role_id": 3,
-    "firstName": "John",
-    "lastName": "Doe"
-  },
-  {
-    "email": "legal@unified.com",
-    "role": "Legal",
-    "password": "Abc@123",
-    "role_id": 4,
-    "firstName": "John",
-    "lastName": "Doe"
+    "firstName": "Anil",
+    "lastName": ""
   }
 ]

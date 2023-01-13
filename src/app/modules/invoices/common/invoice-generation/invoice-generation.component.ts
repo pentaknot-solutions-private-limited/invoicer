@@ -1179,7 +1179,7 @@ export class InvoiceGenerationComponent
         LglNm: invoiceData?.companyDetails?.customer?.customerName,
 
         TrdNm: invoiceData?.companyDetails?.customer?.customerName,
-        Pos: invoiceData?.companyDetails?.customer?.stateTinCode.toString(),
+        Pos: invoiceData?.shipmentDetails?.placeOfSupply?.split(" ")[0].replace(/[[\]]/g,''),
         Addr1: invoiceData?.companyDetails?.customer?.address,
         Addr2: invoiceData?.companyDetails?.customer?.address2,
         Loc: invoiceData?.companyDetails?.customer?.stateName,
@@ -1274,7 +1274,9 @@ export class InvoiceGenerationComponent
   }
 
   onGenerateIRNClick() {
-    this.generateIRN(this.generateIRNData(this.getInvoiceData()));
+    console.log(this.generateIRNData(this.getInvoiceData()));
+    
+    // this.generateIRN(this.generateIRNData(this.getInvoiceData()));
   }
 
   // API Call

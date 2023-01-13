@@ -1274,9 +1274,8 @@ export class InvoiceGenerationComponent
   }
 
   onGenerateIRNClick() {
-    console.log(this.generateIRNData(this.getInvoiceData()));
-    
-    // this.generateIRN(this.generateIRNData(this.getInvoiceData()));
+    // console.log(this.generateIRNData(this.getInvoiceData()));
+    this.generateIRN(this.generateIRNData(this.getInvoiceData()));
   }
 
   // API Call

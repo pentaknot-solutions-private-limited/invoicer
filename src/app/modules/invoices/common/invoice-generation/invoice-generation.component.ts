@@ -1150,7 +1150,7 @@ export class InvoiceGenerationComponent
       Version: "1.1",
       TranDtls: {
         TaxSch: "GST",
-        SupTyp: "B2B",
+        SupTyp: "EXPWP",
         RegRev: "N",
         EcmGstin: null,
         IgstOnIntra: "N",

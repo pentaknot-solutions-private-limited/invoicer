@@ -203,6 +203,13 @@
     </div>
     <div class="row" *ngIf="showGrid">
       <div class="col-12">
+        <grid-search-input
+            #gridSearch
+            class="w-100"
+            [tablesRef]="grid"
+            placeholder="Search Invoice No/Customer/Location..."
+            (onInputChanged)="onInputChanged($event)"
+          ></grid-search-input>
         <div class="grid">
           <vsa-grid
             #grid

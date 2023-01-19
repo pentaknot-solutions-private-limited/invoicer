@@ -15,7 +15,7 @@ export class GridSearchPipe implements PipeTransform {
             value = col.valueFormatter(row[col.field],row, col);
           } else {
             value = row[col.field]
-          }
+          }          
           // Compare Logic First convert to string then lowercase it.
           const found = String(value).toLowerCase().includes(String(filterVal).toLowerCase())
           if(found) {

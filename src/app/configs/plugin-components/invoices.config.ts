@@ -49,6 +49,7 @@ export class InvoicesConfigs {
         field: "invoiceNo",
         headerName: "Invoice No",
         colType: "link",
+        searchByFormatter: true,
         valueFormatter: (value, row, col) => {
           return row.invoiceNo ? row.invoiceNo : "-";
         },
@@ -57,6 +58,7 @@ export class InvoicesConfigs {
         field: "customerName",
         headerName: "Customer",
         colType: "text",
+        searchByFormatter: true,
         valueFormatter: (value, row, col) => {
           // console.log(row);
           return row?.companyDetails?.customer?.customerName
@@ -65,10 +67,23 @@ export class InvoicesConfigs {
         },
       },
       {
+        field: "stateName",
+        headerName: "Location",
+        colType: "text",
+        searchByFormatter: true,
+        valueFormatter: (value, row, col) => {
+          // console.log(row);
+          return row?.companyDetails?.customerBranch?.name
+            ? row?.companyDetails?.customerBranch?.name
+            : "-";
+        },
+      },
+      {
         field: "invoiceDate",
         headerName: "Date",
         // showSelectFilter: true,
         colType: "text",
+        searchByFormatter: true,
         valueFormatter: (value, row, col) => {
           return row.invoiceDate ? dateFormatter(row.invoiceDate) : "-";
         },
@@ -77,6 +92,7 @@ export class InvoicesConfigs {
         field: "amount",
         headerName: "Amount",
         colType: "text",
+        searchByFormatter: true,
         valueFormatter: (value, row, col) => {
           return row.rateDetails.totalAmount
             ? row.rateDetails.totalAmount
@@ -87,6 +103,7 @@ export class InvoicesConfigs {
         field: "status",
         headerName: "Status",
         colType: "multi",
+        searchByFormatter: true,
         rendererParams: (value, row, col) => {
           if (row.isIrnGenerated == 1) {
             return {

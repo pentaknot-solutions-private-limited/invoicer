@@ -16,6 +16,7 @@ import { VSAGridComponent } from "../../vsa-grid.component";
 export class GridSearchInputComponent implements OnInit {
   // Params
   @Input() tablesRef: VSAGridComponent;
+  @Input() placeholder?: string;
   // @Output() tablesRefChange: EventEmitter<VSAGridComponent[]> = new EventEmitter()
   @Output() onInputChanged: EventEmitter<any> = new EventEmitter()
   // Variables
@@ -25,6 +26,8 @@ export class GridSearchInputComponent implements OnInit {
   ngOnInit(): void {}
 
   searchByInputChange() {
+    // console.log(this.searchedData);
+    
     this.onInputChanged.emit(this.searchedData)
     this.tablesRef.searchValue = this.searchedData;
     // this.tablesRef.forEach((table) => {

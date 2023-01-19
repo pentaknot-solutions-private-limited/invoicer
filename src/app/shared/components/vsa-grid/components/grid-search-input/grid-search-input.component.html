@@ -4,7 +4,7 @@
     type="text"
     class="search-data"
     pInputText
-    placeholder="Type here..."
+    [placeholder]="placeholder ? placeholder : 'Type here...'"
     [(ngModel)]="searchedData"
     name="searchData"
     (input)="searchByInputChange()"

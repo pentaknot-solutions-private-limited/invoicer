@@ -62,10 +62,10 @@ export class InvoicePDF {
   private getDocumentDefinition() {
     return {
       content: [
-        this.createHeader(this.bindingData.invoiceData),
         this.createOrgStrip(this.bindingData.invoiceData),
         this.taxInvoiceDetails(this.bindingData.invoiceData),
         this.createInvoiceTable(this.bindingData.invoiceData),
+        this.createFooter(this.bindingData.invoiceData),
         // this.createHSNTable(this.bindingData.invoiceData),
         // this.createRemark(this.bindingData.invoiceData),
         // this.createDeclaration(this.bindingData.invoiceData),
@@ -75,8 +75,15 @@ export class InvoicePDF {
     };
   }
 
-  private createHeader(invoiceData: any) {
-    const template = {};
+  private createFooter(invoiceData: any) {
+    const template = {
+      text: `Registered Address:- Flat No. 02, Gulshan Mahal, behind Axis Bank, L.J. Road, Mahim West,
+      Mumbai, Mumbai Suburban, Maharashtra, 400016`,
+        bold: false,
+        fontSize: 10,
+        alignment: 'center',
+        margin: [0, 5, 0, 5],
+    };
     return template;
   }
 
@@ -106,7 +113,7 @@ export class InvoicePDF {
             {
               text: `${invoiceData?.companyDetails?.organization?.name}`,
               fontSize: 12,
-              color: `#191919`,
+              color: `#25688e`,
               bold: true,
               alignment: `center`,
               margin: [0, 0, 0, 16],
@@ -636,7 +643,6 @@ export class InvoicePDF {
           ],
           margin: [10, 10, 10, 6],
         },
-       
       ],
       width: `75%`,
     };
@@ -696,10 +702,7 @@ export class InvoicePDF {
                     {
                       stack: [
                         {
-                          text: [
-                            { text: `Date : `, bold: true },
-                            ``,
-                          ],
+                          text: [{ text: `Date : `, bold: true }, ``],
                           fontSize: 10,
                           alignment: `left`,
                         },
@@ -955,7 +958,10 @@ export class InvoicePDF {
                 //   alignment: `left`,
                 // },
                 {
-                  text: [{ text: `Loading Port : `, bold: true }, `${invoiceData?.shipmentDetails?.loadingPortName}`],
+                  text: [
+                    { text: `Loading Port : `, bold: true },
+                    `${invoiceData?.shipmentDetails?.loadingPortName}`,
+                  ],
                   fontSize: 10,
                   alignment: `left`,
                 },
@@ -1654,13 +1660,12 @@ export class InvoicePDF {
                             bold: true,
                           },
                           {
-                            text: `* In case of any discrepancy in the invoice, please bring the same to our attention within 7 days of receipt of invoice;
-                                    else the same would be treated as correct.`,
+                            text: `Dear Customer, We would request please check your GST No and address properly and in case of error please escalate to us for corrective action within  hours of the receipt of invoice, we shall not be responsible for any error and no request for change can be entertained if we do not receive the same in 24 hours of the receipt of invoice.`,
                             fontSize: 10,
                             alignment: `left`,
                           },
                           {
-                            text: `* Delay in payment beyond the agreed credit period will attract interest @ 18% p.a.`,
+                            text: `* Interest @24% per annum will be charged if not paid within 2 days from the date of AWB/Bill. All objections/Claims are subject to ${invoiceData?.companyDetails?.organizationBranch?.name} Jurisdiction only.`,
                             fontSize: 10,
                             alignment: `left`,
                           },
@@ -1670,7 +1675,7 @@ export class InvoicePDF {
                             alignment: `left`,
                           },
                           {
-                            text: `* All disputes are subject to Mumbai Jurisdiction.`,
+                            text: `* All disputes are subject to ${invoiceData?.companyDetails?.organizationBranch?.name} Jurisdiction.`,
                             fontSize: 10,
                             alignment: `left`,
                           },
@@ -1679,7 +1684,7 @@ export class InvoicePDF {
                             fontSize: 10,
                             alignment: `left`,
                             bold: true,
-                            margin: [0, 40, 0, 0]
+                            margin: [0, 17, 0, 0],
                           },
                         ],
                         width: "70%",

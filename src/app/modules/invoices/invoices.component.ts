@@ -168,6 +168,12 @@ export class InvoicesComponent implements OnInit {
     this.getInvoiceById(event.id);
   }
 
+  onInputChanged(event?: any) {
+    if (event?.length >= 3) {
+      // this.showResults = true;
+    }
+  }
+
   // Filter Function
   onPeriodSelect(event: any) {
     console.log(event);
@@ -566,7 +572,13 @@ export class InvoicesComponent implements OnInit {
     this.invoiceService.getInvoiceById(id).subscribe((res: any) => {
       if (res?.data) {
         console.log(res?.data);
-        this.invoiceData = res?.data;
+        this.invoiceData = res?.data?.map((row: any) => {
+          return {
+            customerName: row?.companyDetails?.customer?.customerName,
+            stateName: row?.companyDetails?.customerBranch?.name,
+            ...row
+          }
+        });
         if (type == "download") {
           console.log("working download");
           this.getInvoiceData(this.invoiceData);

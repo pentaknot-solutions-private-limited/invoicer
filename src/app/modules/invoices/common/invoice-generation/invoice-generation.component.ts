@@ -318,6 +318,8 @@ export class InvoiceGenerationComponent
           stateName: "",
           stateTinCode: "",
           emailId: "",
+          pancardNo: "",
+          cinNo: ""
         },
         customer: {
           name: "",
@@ -345,12 +347,12 @@ export class InvoiceGenerationComponent
       },
       bankDetails: {
         id: 1,
-        organizationId: 1,
-        name: "AXIS BANK LTD",
-        branchName: "Mahim",
-        ifscCode: "UTIB0001243",
-        accountNumber: "920020018286808",
-        swiftCode: "UTIB0001243",
+        organizationId: 0,
+        name: "",
+        branchName: "",
+        ifscCode: "",
+        accountNumber: "",
+        swiftCode: "",
       },
       hsnCodeItems: [],
       hsnListTaxableTotalValue: 0,
@@ -1150,9 +1152,9 @@ export class InvoiceGenerationComponent
       Version: "1.1",
       TranDtls: {
         TaxSch: "GST",
-        SupTyp: "EXPWP",
+        SupTyp: "B2B",
         RegRev: "N",
-        EcmGstin: null,
+        // EcmGstin: null,
         IgstOnIntra: "N",
       },
       DocDtls: {
@@ -1170,35 +1172,30 @@ export class InvoiceGenerationComponent
         Loc: invoiceData?.companyDetails?.organization?.stateName,
         Pin: Number(invoiceData?.companyDetails?.organization?.pincode),
         Stcd: invoiceData?.companyDetails?.organization?.stateTinCode.toString(),
-        Ph: invoiceData?.companyDetails?.organization?.phoneNo,
+        // Ph: invoiceData?.companyDetails?.organization?.phoneNo,
         Em: invoiceData?.companyDetails?.organization?.emailId,
       },
 
       BuyerDtls: {
-        Gstin: invoiceData?.companyDetails?.customer?.gstin,
+        Gstin: invoiceData?.companyDetails?.customerBranch?.gstin,
         LglNm: invoiceData?.companyDetails?.customer?.customerName,
-
-        TrdNm: invoiceData?.companyDetails?.customer?.customerName,
-        Pos: invoiceData?.shipmentDetails?.placeOfSupply?.split(" ")[0].replace(/[[\]]/g,''),
+        // TrdNm: invoiceData?.companyDetails?.customer?.customerName,
+        Pos: invoiceData?.shipmentDetails?.placeOfSupply != '[96] Foreign Countries' ? Number(invoiceData?.shipmentDetails?.placeOfSupply?.split(" ")[0].replace(/[[\]]/g,'')) : 97,
         Addr1: invoiceData?.companyDetails?.customer?.address,
         Addr2: invoiceData?.companyDetails?.customer?.address2,
         Loc: invoiceData?.companyDetails?.customer?.stateName,
-        Pin: invoiceData?.companyDetails?.customer?.pincode
-          ? Number(invoiceData?.companyDetails?.customer?.pincode)
-          : null,
-        Stcd: invoiceData?.companyDetails?.customer?.stateTinCode.toString(),
-        Ph: invoiceData?.companyDetails?.customer?.phoneNo,
-        Em: invoiceData?.companyDetails?.customer?.emailId,
+        Pin: Number(invoiceData?.companyDetails?.customerBranch?.pincode),
+        Stcd: invoiceData?.companyDetails?.customerBranch?.stateTinCode.toString()
       },
 
-      DispDtls: {
-        Nm: invoiceData?.companyDetails?.organization?.name,
-        Addr1: invoiceData?.companyDetails?.organization?.address,
-        Addr2: "",
-        Loc: invoiceData?.companyDetails?.organization?.stateName,
-        Pin: Number(invoiceData?.companyDetails?.organization?.pincode),
-        Stcd: invoiceData?.companyDetails?.organization?.stateTinCode.toString(),
-      },
+      // DispDtls: {
+      //   Nm: invoiceData?.companyDetails?.organization?.name,
+      //   Addr1: invoiceData?.companyDetails?.organization?.address,
+      //   Addr2: "",
+      //   Loc: invoiceData?.companyDetails?.organization?.stateName,
+      //   Pin: Number(invoiceData?.companyDetails?.organization?.pincode),
+      //   Stcd: invoiceData?.companyDetails?.organization?.stateTinCode.toString(),
+      // },
       // this.lineItems
       ItemList: invoiceData?.rateDetails?.invoiceItems?.map(
         (row: any, index: number) => {
@@ -1286,6 +1283,8 @@ export class InvoiceGenerationComponent
         this.invoiceFinalData.companyDetails.organization.name = res[0]?.name;
         this.invoiceFinalData.companyDetails.organization.emailId =
           res[0]?.emailId;
+        this.invoiceFinalData.companyDetails.organization.pancardNo = res[0]?.panNo
+        this.invoiceFinalData.companyDetails.organization.cinNo = res[0]?.cinNo
         this.companyDetailsModel.companyCode = res[0]?.companyCode;
       }
       // Set First Value
@@ -1480,7 +1479,7 @@ export class InvoiceGenerationComponent
       .getMyAccountDetails()
       .subscribe((res: any) => {
         this.bankDetailsModel = res[0];
-        console.log(this.bankDetailsModel);
+        this.invoiceFinalData.bankDetails = this.bankDetailsModel
       });
   }
 

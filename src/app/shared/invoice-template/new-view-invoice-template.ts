@@ -211,7 +211,7 @@ export class InvoicePDF {
                         {
                           stack: [
                             {
-                              text: `U63013DL2000PTC104488`,
+                              text: `${invoiceData?.companyDetails?.organization?.cinNo ? invoiceData?.companyDetails?.organization?.cinNo : 'U63090MH2020PTC338237'}`,
                               fontSize: 8,
                               alignment: `left`,
                             },
@@ -242,7 +242,7 @@ export class InvoicePDF {
                         {
                           stack: [
                             {
-                              text: `AAFCS1921A`,
+                              text: `${invoiceData?.companyDetails?.organization?.pancardNo ? invoiceData?.companyDetails?.organization?.pancardNo : 'AACCU5773F'}`,
                               fontSize: 8,
                               alignment: `left`,
                             },
@@ -569,7 +569,7 @@ export class InvoicePDF {
                             {
                               stack: [
                                 {
-                                  text: `${invoiceData?.shipmentDetails?.placeOfSupply}`,
+                                  text: `${invoiceData?.shipmentDetails?.placeOfSupply != '[96] Foreign Countries' ? invoiceData?.shipmentDetails?.placeOfSupply : '[97] Foreign Countries'}`,
                                   fontSize: 10,
                                   alignment: `right`,
                                 },
@@ -979,6 +979,14 @@ export class InvoicePDF {
                   text: [
                     { text: `Destination Port : `, bold: true },
                     `${invoiceData?.shipmentDetails?.destinationPortName} (${invoiceData?.shipmentDetails?.portCode})`,
+                  ],
+                  fontSize: 10,
+                  alignment: `left`,
+                },
+                {
+                  text: [
+                    { text: `CD No.: `, bold: true },
+                    `${invoiceData?.shipmentDetails?.dispatchDocNo}`,
                   ],
                   fontSize: 10,
                   alignment: `left`,

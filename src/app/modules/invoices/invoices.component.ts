@@ -572,13 +572,9 @@ export class InvoicesComponent implements OnInit {
     this.invoiceService.getInvoiceById(id).subscribe((res: any) => {
       if (res?.data) {
         console.log(res?.data);
-        this.invoiceData = res?.data?.map((row: any) => {
-          return {
-            customerName: row?.companyDetails?.customer?.customerName,
-            stateName: row?.companyDetails?.customerBranch?.name,
-            ...row
-          }
-        });
+        res.data.customerName = res?.data?.companyDetails?.customer?.customerName 
+        res.data.stateName = res?.data?.companyDetails?.customerBranch?.name 
+        this.invoiceData = res?.data
         if (type == "download") {
           console.log("working download");
           this.getInvoiceData(this.invoiceData);

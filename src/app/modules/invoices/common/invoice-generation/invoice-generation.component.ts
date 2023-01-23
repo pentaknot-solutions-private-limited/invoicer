@@ -1201,12 +1201,18 @@ export class InvoiceGenerationComponent
         (row: any, index: number) => {
           const igstRateValue =
             Number(invoiceData?.rateDetails?.igstRate) / 100;
+          const gstRateValue = 0.09
           const igstAmt =
             (Number(row?.quantity) *
               Number(row?.rate) *
               Number(igstRateValue) *
               100) /
             100;
+          const gstAmt = (Number(row?.quantity) *
+          Number(row?.rate) *
+          Number(gstRateValue) *
+          100) /
+        100;
           const totItemVal =
             Number(row?.quantity) * Number(row?.rate) + Number(igstAmt);
           return {
@@ -1224,8 +1230,11 @@ export class InvoiceGenerationComponent
             PreTaxVal: Number(row?.quantity) * Number(row?.rate),
             AssAmt: Number(row?.quantity) * Number(row?.rate),
             GstRt: invoiceData?.rateDetails?.igstRate,
+            // IgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 0 : Number(igstAmt.toFixed(2)),
             IgstAmt: Number(igstAmt.toFixed(2)),
+            // CgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(gstAmt.toFixed(2)) : 0,
             CgstAmt: 0,
+            // SgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(gstAmt.toFixed(2)) : 0,
             SgstAmt: 0,
             CesRt: 0, // Need Clarity
             CesAmt: 0, // Need Clarity
@@ -1250,8 +1259,11 @@ export class InvoiceGenerationComponent
 
       ValDtls: {
         AssVal: Number(invoiceData?.rateDetails?.amount),
+        // CgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(invoiceData?.rateDetails?.taxableAmount)/2 : 0,
         CgstVal: 0,
+        // SgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(invoiceData?.rateDetails?.taxableAmount)/2 : 0,
         SgstVal: 0,
+        // IgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 0 : Number(invoiceData?.rateDetails?.taxableAmount),
         IgstVal: Number(invoiceData?.rateDetails?.taxableAmount),
         CesVal: 0, // Need clarity
         StCesVal: 0, // Need clarity

@@ -1077,7 +1077,7 @@ export class InvoicePDF {
               rowSpan: 2,
             },
             {
-              text: "IGST",
+              text: `${invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 'CGST + SGST' : 'IGST'}`,
               alignment: `center`,
               fontSize: 8,
               bold: true,

@@ -526,7 +526,7 @@ export class InvoicePDF {
                             {
                               stack: [
                                 {
-                                  text: `Due Date :`,
+                                  text: `Invoice Due Date :`,
                                   fontSize: 10,
                                   alignment: `right`,
                                   bold: true,
@@ -569,7 +569,7 @@ export class InvoicePDF {
                             {
                               stack: [
                                 {
-                                  text: `${invoiceData?.shipmentDetails?.placeOfSupply != '[96] Foreign Countries' ? invoiceData?.shipmentDetails?.placeOfSupply : '[97] Foreign Countries'}`,
+                                  text: `${invoiceData?.shipmentDetails?.placeOfSupply}`,
                                   fontSize: 10,
                                   alignment: `right`,
                                 },

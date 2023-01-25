@@ -1673,7 +1673,7 @@ export class InvoicePDF {
                             alignment: `left`,
                           },
                           {
-                            text: `* Interest @24% per annum will be charged if not paid within 2 days from the date of AWB/Bill. All objections/Claims are subject to ${invoiceData?.companyDetails?.organizationBranch?.name} Jurisdiction only.`,
+                            text: `* Interest @24% per annum will be charged if not paid within 2 days from the date of AWB/Bill.`,
                             fontSize: 10,
                             alignment: `left`,
                           },

@@ -81,7 +81,7 @@ export class InvoicesComponent implements OnInit {
     private invoiceService: InvoiceService,
     private dashboardService: DashboardService,
     private drawerControllerService: DrawerPanelService,
-    private invoiceGenerationService: InvoiceGenerationService,
+    private invoiceGenerationService: InvoiceGenerationService
   ) {
     this.invoiceFinalData = {
       companyDetails: {
@@ -118,13 +118,13 @@ export class InvoicesComponent implements OnInit {
         amountInWords: "",
       },
       bankDetails: {
-        id: 1,
+        id: 0,
         organizationId: 1,
-        name: "AXIS BANK LTD",
-        branchName: "Mahim",
-        ifscCode: "UTIB0001243",
-        accountNumber: "920020018286808",
-        swiftCode: "UTIB0001243",
+        name: "",
+        branchName: "",
+        ifscCode: "",
+        accountNumber: "",
+        swiftCode: "",
       },
       hsnCodeItems: [],
       hsnListTaxableTotalValue: 0,
@@ -141,8 +141,8 @@ export class InvoicesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllPorts()
-    this.getAllAirlines()
+    this.getAllPorts();
+    this.getAllAirlines();
     this.getAllPeriodFilterData();
     this.getInvoices();
     // Simulation
@@ -161,7 +161,7 @@ export class InvoicesComponent implements OnInit {
   }
 
   onLinkClick(event) {
-    console.log(event);
+    // console.log(event);
     this.selectedStepData = event;
     // this.openDrawer("invoice-generation", event);
     this.invoiceDrawerType = "view";
@@ -176,11 +176,11 @@ export class InvoicesComponent implements OnInit {
 
   // Filter Function
   onPeriodSelect(event: any) {
-    console.log(event);
+    // console.log(event);
     this.displayPeriodText = event.name;
     this.periodModel.to = evalMomentExp(event.endDate).format("YYYY-MM-DD");
     this.periodModel.from = evalMomentExp(event.startDate).format("YYYY-MM-DD");
-    console.log(this.periodModel);
+    // console.log(this.periodModel);
 
     this.applyAPICall(event);
   }
@@ -207,7 +207,7 @@ export class InvoicesComponent implements OnInit {
   }
 
   applyAPICall(event) {
-    console.log(event);
+    // console.log(event);
     // this.getAllStatisticsData(event);
     this.getInvoices();
   }
@@ -241,7 +241,9 @@ export class InvoicesComponent implements OnInit {
             ? `Edit Invoice`
             : `Create New Invoice`
         );
-        this.drawerControllerService.changeDrawerSize(this.invoiceDrawerType == "view" ? "medium" : "extra-large");
+        this.drawerControllerService.changeDrawerSize(
+          this.invoiceDrawerType == "view" ? "medium" : "extra-large"
+        );
         break;
       default:
         break;
@@ -279,8 +281,13 @@ export class InvoicesComponent implements OnInit {
 
   // Get invoice Data
   getInvoiceData(invoiceData) {
-    const airlineData = this.airlineData?.find((item: any) => item.airlineCode == invoiceData?.shipmentDetails?.flightNo?.slice(0, 2))
-    const portData = this.portData?.find((item: any) => item.portCode == invoiceData?.shipmentDetails?.portCode)
+    const airlineData = this.airlineData?.find(
+      (item: any) =>
+        item.airlineCode == invoiceData?.shipmentDetails?.flightNo?.slice(0, 2)
+    );
+    const portData = this.portData?.find(
+      (item: any) => item.portCode == invoiceData?.shipmentDetails?.portCode
+    );
     this.invoiceFinalData.companyDetails = invoiceData?.companyDetails;
     this.invoiceFinalData.shipmentDetails = invoiceData?.shipmentDetails;
     this.invoiceFinalData.shipmentDetails.dispatchDocNo =
@@ -289,15 +296,14 @@ export class InvoicesComponent implements OnInit {
       invoiceData?.shipmentDetails?.awbNo;
     this.invoiceFinalData.shipmentDetails.flightNo =
       invoiceData?.shipmentDetails?.flightNo;
-    this.invoiceFinalData.shipmentDetails.airlines =
-    airlineData?.name;
+    this.invoiceFinalData.shipmentDetails.airlines = airlineData?.name;
     this.invoiceFinalData.shipmentDetails.departureDate =
       invoiceData?.shipmentDetails?.departureDate;
     this.invoiceFinalData.shipmentDetails.packageQty =
       invoiceData?.shipmentDetails?.packageQty;
     this.invoiceFinalData.shipmentDetails.chargeableWt =
       invoiceData?.shipmentDetails?.chargeableWt;
-      this.invoiceFinalData.shipmentDetails.grossWt =
+    this.invoiceFinalData.shipmentDetails.grossWt =
       invoiceData?.shipmentDetails?.grossWt;
     this.invoiceFinalData.rateDetails.invoiceItems = JSON.parse(
       invoiceData?.invoiceItems
@@ -321,7 +327,7 @@ export class InvoicesComponent implements OnInit {
       invoiceData?.rateDetails?.igstRate
     );
     this.invoiceFinalData.invoiceDate = invoiceData?.invoiceDate;
-    this.invoiceFinalData.irn = invoiceData?.irn ? invoiceData?.irn : '';
+    this.invoiceFinalData.irn = invoiceData?.irn ? invoiceData?.irn : "";
     this.invoiceFinalData.ackDate = invoiceData?.ackDate;
     this.invoiceFinalData.ackNo = invoiceData?.ackNo;
     this.invoiceFinalData.qrCode = invoiceData?.qrCode
@@ -329,8 +335,9 @@ export class InvoicesComponent implements OnInit {
       : "";
     this.invoiceFinalData.shipmentDetails.portCode =
       invoiceData?.shipmentDetails?.portCode;
-    this.invoiceFinalData.shipmentDetails.placeOfSupply =
-      portData ? portData?.placeOfSupply : "";
+    this.invoiceFinalData.shipmentDetails.placeOfSupply = portData
+      ? portData?.placeOfSupply
+      : "";
     this.invoiceFinalData.invoiceNo = invoiceData?.invoiceNo;
     this.invoiceFinalData.rateDetails.taxableAmount =
       invoiceData?.rateDetails?.taxableAmount;
@@ -393,7 +400,7 @@ export class InvoicesComponent implements OnInit {
       this.invoiceFinalData.hsnListTaxableTotalAmount?.toString().split(".")[1]
     )} Paise Only.`;
     this.invoiceFinalData.hsnTotalValueInWords = hsnTotalValueInWords;
-    console.log(this.invoiceFinalData);
+    // console.log(this.invoiceFinalData);
 
     new InvoicePDF({ invoiceData: this.invoiceFinalData }).downloadPdf(
       `${invoiceData?.invoiceNo}`
@@ -452,7 +459,10 @@ export class InvoicesComponent implements OnInit {
             type: "completed",
             value: res.data.filter(
               (row: any) =>
-                row.isActive == 1 && row.isCompleted == 1 && row.isDeleted == 0 && row.isIrnGenerated == 1
+                row.isActive == 1 &&
+                row.isCompleted == 1 &&
+                row.isDeleted == 0 &&
+                row.isIrnGenerated == 1
             ).length,
           };
           this.statistics.push(completed);
@@ -527,7 +537,8 @@ export class InvoicesComponent implements OnInit {
                   (row: any) =>
                     row.isActive == 1 &&
                     row.isCompleted == 1 &&
-                    row.isDeleted == 0 && row.isIrnGenerated == 1
+                    row.isDeleted == 0 &&
+                    row.isIrnGenerated == 1
                 )
                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
               break;
@@ -550,16 +561,15 @@ export class InvoicesComponent implements OnInit {
 
           this.statistics[2].value = res?.data?.filter(
             (row: any) =>
-              row.isActive == 1 &&
-              row.isIrnGenerated == 0 &&
-              row.isDeleted == 0
+              row.isActive == 1 && row.isIrnGenerated == 0 && row.isDeleted == 0
           )?.length;
 
           this.statistics[3].value = res?.data?.filter(
             (row: any) =>
               row.isActive == 1 &&
               row.isCompleted == 1 &&
-              row.isDeleted == 0  && row.isIrnGenerated == 1
+              row.isDeleted == 0 &&
+              row.isIrnGenerated == 1
           )?.length;
         }
       }
@@ -571,15 +581,25 @@ export class InvoicesComponent implements OnInit {
   getInvoiceById(id, type?: string) {
     this.invoiceService.getInvoiceById(id).subscribe((res: any) => {
       if (res?.data) {
-        console.log(res?.data);
-        res.data.customerName = res?.data?.companyDetails?.customer?.customerName 
-        res.data.stateName = res?.data?.companyDetails?.customerBranch?.name 
-        this.invoiceData = res?.data
+        // console.log(res?.data);
+        res.data.customerName =
+          res?.data?.companyDetails?.customer?.customerName;
+        res.data.stateName = res?.data?.companyDetails?.customerBranch?.name;
+        this.invoiceData = res?.data;
+        this.invoiceFinalData.bankDetails = {
+          id: res?.data?.bankDetails?.bankDetailId,
+          organizationId: 1,
+          name: res?.data?.bankDetails?.bankName,
+          branchName: res?.data?.bankDetails?.bankBranchName,
+          ifscCode: res?.data?.bankDetails?.bankIfscCode,
+          accountNumber: res?.data?.bankDetails?.bankAccountNumber,
+          swiftCode: res?.data?.bankDetails?.bankSwiftCode,
+        };
         if (type == "download") {
-          console.log("working download");
+          // console.log("working download");
           this.getInvoiceData(this.invoiceData);
         } else {
-          console.log("working not download");
+          // console.log("working not download");
           this.openDrawer("invoice-generation");
         }
       }
@@ -591,7 +611,6 @@ export class InvoicesComponent implements OnInit {
       if (res.data) {
         this.airlineData = res.data;
       }
-      
     });
   }
 

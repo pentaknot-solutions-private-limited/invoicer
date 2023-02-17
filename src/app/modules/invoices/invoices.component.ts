@@ -407,6 +407,10 @@ export class InvoicesComponent implements OnInit {
     );
   }
 
+  onRefreshClick() {
+    this.getInvoices("all", true);
+  }
+
   // API Calls
   getInvoices(event?: string, isFilterChanged?: boolean) {
     const searchFilter = {
@@ -415,10 +419,45 @@ export class InvoicesComponent implements OnInit {
     };
     this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
       if (res.data) {
-        this.rowData = res.data.sort((a, b) =>
-          b.createdAt > a.createdAt ? 1 : -1
-        );
+        this.rowData = res.data
+          .map((row: any) => {
+            if (row?.isCompleted == 1 && row?.isIrnGenerated == 1) {
+              const date = moment(row?.ackDate).add(24, "hours").toDate();
+              date.setHours(date.getHours() - 5);
+              date.setMinutes(date.getMinutes() - 30);
+              date.getTime();
+              const countdownDate = date.getTime();
 
+              // Get the current date and time
+              const now = new Date().getTime();
+
+              // Calculate the time remaining
+              const timeRemaining = countdownDate - now;
+
+              // Calculate the hours, minutes, and seconds remaining
+              const hours = Math.floor(
+                (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+              );
+              const minutes = Math.floor(
+                (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+              );
+              const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+              // Display the time remaining
+              if (timeRemaining > 0) {
+                row.countdown = `${hours}hr ${minutes}min`;
+              } else {
+                row.countdown = "Expired!";
+              }
+            } else {
+              row.countdown = "-";
+            }
+            return {
+              ...row
+            };
+          })
+          .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+          
         // TEMP
         // this.invoiceData = res.data[0];
         if (!isFilterChanged) {

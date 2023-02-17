@@ -280,6 +280,7 @@ export class InvoiceGenerationComponent
   airlineCode: any;
   airlineData: any;
   loggedInUserData: any;
+  setCancelDisabled: boolean;
 
   constructor(
     private invoiceGenerationService: InvoiceGenerationService,
@@ -319,7 +320,7 @@ export class InvoiceGenerationComponent
           stateTinCode: "",
           emailId: "",
           pancardNo: "",
-          cinNo: ""
+          cinNo: "",
         },
         customer: {
           name: "",
@@ -419,7 +420,21 @@ export class InvoiceGenerationComponent
     } else {
       // Set Stepper Config
       console.log(this.invoiceData);
+      if (this.invoiceData?.ackDate) {
+        const date = moment(this.invoiceData?.ackDate)
+          .add(24, "hours")
+          .toDate();
+        date.setHours(date.getHours() - 5);
+        date.setMinutes(date.getMinutes() - 30);
+        date.getTime();
+        const countdownDate = date.getTime();
 
+        // Update the countdown every second
+        const countdownTimer = setInterval(
+          () => this.countdownFunction(countdownDate, countdownTimer),
+          1000
+        ); // update every second
+      }
       this.stepperConfig.steps = _.cloneDeep(
         this.stepperConfig.steps.map((row: any) => {
           row["isCompleted"] = true;
@@ -512,6 +527,30 @@ export class InvoiceGenerationComponent
           this.generatePDF();
         }, 500);
       }
+    }
+  }
+
+  countdownFunction(countdownDate, countdownTimer) {
+    const now = new Date().getTime();
+
+    // Calculate the time remaining
+    const timeRemaining = countdownDate - now;
+
+    // Calculate the hours, minutes, and seconds remaining
+    const hours = Math.floor(
+      (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor(
+      (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+    );
+    const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+    // Display the time remaining
+    if (timeRemaining > 0) {
+      this.setCancelDisabled = false;
+    } else {
+      clearInterval(countdownTimer);
+      this.setCancelDisabled = true;
     }
   }
 
@@ -1180,12 +1219,20 @@ export class InvoiceGenerationComponent
         Gstin: invoiceData?.companyDetails?.customerBranch?.gstin,
         LglNm: invoiceData?.companyDetails?.customer?.customerName,
         // TrdNm: invoiceData?.companyDetails?.customer?.customerName,
-        Pos: invoiceData?.shipmentDetails?.placeOfSupply != '[96] Foreign Countries' ? Number(invoiceData?.shipmentDetails?.placeOfSupply?.split(" ")[0].replace(/[[\]]/g,'')) : 97,
+        Pos:
+          invoiceData?.shipmentDetails?.placeOfSupply !=
+          "[96] Foreign Countries"
+            ? Number(
+                invoiceData?.shipmentDetails?.placeOfSupply
+                  ?.split(" ")[0]
+                  .replace(/[[\]]/g, "")
+              )
+            : 97,
         Addr1: invoiceData?.companyDetails?.customer?.address,
         Addr2: invoiceData?.companyDetails?.customer?.address2,
         Loc: invoiceData?.companyDetails?.customer?.stateName,
         Pin: Number(invoiceData?.companyDetails?.customerBranch?.pincode),
-        Stcd: invoiceData?.companyDetails?.customerBranch?.stateTinCode.toString()
+        Stcd: invoiceData?.companyDetails?.customerBranch?.stateTinCode.toString(),
       },
 
       // DispDtls: {
@@ -1201,25 +1248,26 @@ export class InvoiceGenerationComponent
         (row: any, index: number) => {
           const igstRateValue =
             Number(invoiceData?.rateDetails?.igstRate) / 100;
-          const gstRateValue = 0.09
+          const gstRateValue = 0.09;
           const igstAmt =
             (Number(row?.quantity) *
               Number(row?.rate) *
               Number(igstRateValue) *
               100) /
             100;
-          const gstAmt = (Number(row?.quantity) *
-          Number(row?.rate) *
-          Number(gstRateValue) *
-          100) /
-        100;
+          const gstAmt =
+            (Number(row?.quantity) *
+              Number(row?.rate) *
+              Number(gstRateValue) *
+              100) /
+            100;
           const totItemVal =
             Number(row?.quantity) * Number(row?.rate) + Number(igstAmt);
           return {
             SlNo: (index + 1).toString(),
             PrdDesc: row?.serviceName,
             IsServc: "Y",
-            HsnCd: (row?.hsnCode).toString(),
+            HsnCd: (row?.hsnCode)?.toString(),
             Barcde: "000", // Need Clarity
             Qty: row?.quantity,
             FreeQty: 0, // Need Clarity
@@ -1285,6 +1333,59 @@ export class InvoiceGenerationComponent
   onGenerateIRNClick() {
     // console.log(this.generateIRNData(this.getInvoiceData()));
     this.generateIRN(this.generateIRNData(this.getInvoiceData()));
+    // this.generateCountdown(row?.ackDate).then((data) => {
+    //   return data
+    // });
+  }
+
+  onCancelIRNClick() {
+    const payload = {
+      cancelRem: "Wrong entry",
+      cancelReason: "1",
+      irn: this.invoiceData?.irn,
+      gstIn: this.invoiceData?.companyDetails?.organization?.gstin,
+    };
+    this.cancelIRN(payload);
+  }
+
+  generateCountdown(time) {
+    // Set the date and time to countdown from
+
+    const date = moment(time).add(24, "hours").toDate();
+    date.setHours(date.getHours() - 5);
+    date.setMinutes(date.getMinutes() - 30);
+    date.getTime();
+    const countdownDate = date.getTime();
+
+    // Update the countdown every second
+    const countdownTimer = setInterval(function () {
+      // Get the current date and time
+      const now = new Date().getTime();
+
+      // Calculate the time remaining
+      const timeRemaining = countdownDate - now;
+
+      // Calculate the hours, minutes, and seconds remaining
+      const hours = Math.floor(
+        (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      const minutes = Math.floor(
+        (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+      );
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+      // Display the time remaining
+      console.log(timeRemaining);
+
+      if (timeRemaining > 0) {
+        this.setCancelDisabled = false;
+      } else {
+        clearInterval(countdownTimer);
+        this.setCancelDisabled = true;
+      }
+
+      // If the countdown is finished, clear the timer
+    }, 1000); // update every second
   }
 
   // API Call
@@ -1295,8 +1396,9 @@ export class InvoiceGenerationComponent
         this.invoiceFinalData.companyDetails.organization.name = res[0]?.name;
         this.invoiceFinalData.companyDetails.organization.emailId =
           res[0]?.emailId;
-        this.invoiceFinalData.companyDetails.organization.pancardNo = res[0]?.panNo
-        this.invoiceFinalData.companyDetails.organization.cinNo = res[0]?.cinNo
+        this.invoiceFinalData.companyDetails.organization.pancardNo =
+          res[0]?.panNo;
+        this.invoiceFinalData.companyDetails.organization.cinNo = res[0]?.cinNo;
         this.companyDetailsModel.companyCode = res[0]?.companyCode;
       }
       // Set First Value
@@ -1334,7 +1436,8 @@ export class InvoiceGenerationComponent
             this.companyDetailConfig.branchSelectorConfig.options[0]!.id;
           this.invoiceFinalData.companyDetails.organization.address =
             res[0]?.address;
-          this.invoiceFinalData.companyDetails.organization.gstin = res[0]?.gstin;
+          this.invoiceFinalData.companyDetails.organization.gstin =
+            res[0]?.gstin;
           this.invoiceFinalData.companyDetails.organization.stateName =
             res[0]?.stateName;
           this.invoiceFinalData.companyDetails.organization.stateTinCode =
@@ -1361,7 +1464,7 @@ export class InvoiceGenerationComponent
       ) {
         this.companyDetailsModel.customerId =
           this.companyDetailConfig.customerSelectorConfig.options[0]!.id;
-          this.invoiceFinalData.companyDetails.customer.name = res[0]?.name;
+        this.invoiceFinalData.companyDetails.customer.name = res[0]?.name;
       }
     });
   }
@@ -1491,7 +1594,7 @@ export class InvoiceGenerationComponent
       .getMyAccountDetails()
       .subscribe((res: any) => {
         this.bankDetailsModel = res[0];
-        this.invoiceFinalData.bankDetails = this.bankDetailsModel
+        this.invoiceFinalData.bankDetails = this.bankDetailsModel;
       });
   }
 
@@ -1626,5 +1729,25 @@ export class InvoiceGenerationComponent
         this.onBtnClick.emit("done");
       }
     });
+  }
+
+  cancelIRN(payload) {
+    this.invoiceGenerationService.cancelIRN(payload).subscribe((res: any) => {
+      if (res?.success) {
+        this.updateCancelIRNInvoice(this.invoiceData?.id)
+      } else {
+        this.toasty.error(res?.error?.message);
+        this.onBtnClick.emit("done");
+      }
+    });
+  }
+
+  updateCancelIRNInvoice(id) {
+    this.invoiceGenerationService
+      .updateCancelIRNInvoice(id)
+      .subscribe((res: any) => {
+        this.toasty.success(res.message);
+        this.onBtnClick.emit("done");
+      });
   }
 }

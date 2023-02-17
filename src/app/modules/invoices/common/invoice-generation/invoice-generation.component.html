@@ -539,7 +539,7 @@
     >
   </div>
   <vsa-button
-    *ngIf="(invoiceData?.isCompleted == 1 && invoiceData?.isIrnGenerated == 0 && invoiceDrawerType == 'view') && loggedInUserData?.role_id != 3"
+    *ngIf="((invoiceData?.isCompleted == 1 && invoiceData?.isIrnGenerated == 0 && invoiceData?.isCancelled == 0) && invoiceDrawerType == 'view') && loggedInUserData?.role_id != 3"
     [type]="'button'"
     [role]="'primary'"
     size="small"
@@ -547,6 +547,18 @@
     [disabled]="setNextButtonDisabled"
     >Generate IRN</vsa-button
   >
+  <!-- nohup java -jar InvoiceToGst-0.0.1-SNAPSHOT.jar > output_130123.log & -->
+  <vsa-button
+    *ngIf="(invoiceData?.isCompleted == 1 && invoiceData?.isIrnGenerated == 1 && invoiceDrawerType == 'view') && loggedInUserData?.role_id != 3"
+    [type]="'button'"
+    [role]="'primary'"
+    size="small"
+    (onClick)="onCancelIRNClick()"
+    
+    [title]="setCancelDisabled ? 'Expired' : ''"
+    >Cancel IRN</vsa-button
+  >
+  <!-- [disabled]="setCancelDisabled" -->
   <div class="right" *ngIf="invoiceDrawerType != 'view'">
     <vsa-button
       *ngIf="currentStepIndex != 0"

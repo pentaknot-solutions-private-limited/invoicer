@@ -17,6 +17,16 @@
         </h3>
       </div>
       <div class="col-6 text-right days-filter">
+        <vsa-button
+            class="ml-2"
+            [type]="'button'"
+            role="primary"
+            (onClick)="onRefreshClick()"
+            size="small"
+            [icon]="'refresh'"
+            [iconSize]="'medium'"
+            >Refresh
+          </vsa-button>
         <!-- <button class="menu" mat-button [matMenuTriggerFor]="menu">
           <mat-icon>filter_list</mat-icon>&nbsp;&nbsp;<span>{{
             displayPeriodText

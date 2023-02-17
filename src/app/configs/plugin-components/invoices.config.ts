@@ -6,13 +6,15 @@ import { dateFormatter } from "src/app/shared/utils/date-formatter";
 import { EncryptedStorage } from "src/app/shared/utils/encrypted-storage";
 
 export class InvoicesConfigs {
+  countdownticker: any;
+
   // Search Box
   invoiceNoInput: ITextConfig = {
     fieldKey: "invoiceNo",
     attributes: {
       placeholder: "Search Invoice No",
       title: "Invoice No",
-      maxlength: 16
+      maxlength: 16,
     },
   };
   billToCustomerInput: ITextConfig = {
@@ -112,6 +114,13 @@ export class InvoicesConfigs {
               fontWeight: 500,
               class: "completed",
             };
+          } else if (row.isCancelled == 1) {
+            return {
+              fontSize: "12px",
+              color: "red",
+              fontWeight: 500,
+              class: "error",
+            };
           } else {
             return {
               fontSize: "12px",
@@ -121,10 +130,13 @@ export class InvoicesConfigs {
           }
         },
         valueFormatter: (value, row, col) => {
-          return row.isIrnGenerated == 1
-            ? 'Completed'
-            : "Pending";
+          return row.isIrnGenerated == 1 ? "Completed" : row.isCancelled == 1 ? "Cancelled" :  "Pending";
         },
+      },
+      {
+        field: "countdown",
+        headerName: "ETA Left",
+        colType: "text",
       },
       {
         headerName: "Action",
@@ -145,7 +157,7 @@ export class InvoicesConfigs {
                 tooltip: "Edit Invoice",
                 title: "Edit Invoice",
                 type: "edit",
-                disabled: row.isIrnGenerated == 1 ? true : false,
+                disabled: row.isIrnGenerated == 1 || row.isCancelled == 1 ? true : false,
               },
               {
                 icon: "download-button-2",
@@ -155,15 +167,20 @@ export class InvoicesConfigs {
                 type: "edit",
                 // disabled: row.showSteps,
               },
-              loggedInUserData?.role_id != 3 ? {
-                icon: "data-file-bars",
-                action: "generate-irn",
-                tooltip: "Generate IRN",
-                title: "Generate IRN",
-                type: "edit",
-                size: 'small',
-                disabled: row.isCompleted == 1 && row.isIrnGenerated == 1 ? true : false,
-              } : {},
+              loggedInUserData?.role_id != 3
+                ? {
+                    icon: "data-file-bars",
+                    action: "generate-irn",
+                    tooltip: "Generate IRN",
+                    title: "Generate IRN",
+                    type: "edit",
+                    size: "small",
+                    disabled:
+                      (row.isCompleted == 1 && row.isIrnGenerated == 1) || row.isCancelled == 1
+                        ? true
+                        : false,
+                  }
+                : {},
             ],
           };
         },
@@ -182,7 +199,7 @@ export class InvoicesConfigs {
     dataKey: "name",
     returnKey: "id",
     options: [],
-    isMultiple: false
+    isMultiple: false,
   };
   branchSelectorConfig: ISelectConfig = {
     fieldKey: "organizationBranchId",
@@ -194,7 +211,7 @@ export class InvoicesConfigs {
     dataKey: "name",
     returnKey: "organizationBranchId",
     options: [],
-    isMultiple: false
+    isMultiple: false,
   };
   customerSelectorConfig: ISelectConfig = {
     fieldKey: "customerId",
@@ -206,7 +223,7 @@ export class InvoicesConfigs {
     dataKey: "name",
     returnKey: "customerId",
     options: [],
-    isMultiple: false
+    isMultiple: false,
   };
   customerBranchSelectorConfig: ISelectConfig = {
     fieldKey: "customerBranchId",
@@ -218,7 +235,7 @@ export class InvoicesConfigs {
     dataKey: "name",
     returnKey: "customerBranchId",
     options: [],
-    isMultiple: false
+    isMultiple: false,
   };
 
   invoiceNoGenerationInput: ITextConfig = {
@@ -227,7 +244,7 @@ export class InvoicesConfigs {
       title: "Invoice No.",
       showBorder: true,
       maxlength: 16,
-      isMandatory: true
+      isMandatory: true,
       // hint: "Note: If no Invoice No. is entered it will be generated automatically.",
     },
   };
@@ -238,7 +255,7 @@ export class InvoicesConfigs {
       title: "Invoice Date",
       type: "datepicker",
       showBorder: true,
-      isMandatory: true
+      isMandatory: true,
     },
   };
 
@@ -257,14 +274,14 @@ export class InvoicesConfigs {
     attributes: {
       title: "AWB No",
       showBorder: true,
-      isMandatory: true
+      isMandatory: true,
     },
   };
   dispatchDocNoInput: ITextConfig = {
     fieldKey: "dispatchDocNo",
     attributes: {
       title: "CD No",
-      showBorder: true
+      showBorder: true,
     },
   };
   sbNoInput: ITextConfig = {
@@ -280,7 +297,7 @@ export class InvoicesConfigs {
       title: "Pcs (Qty)",
       type: "number",
       showBorder: true,
-      isMandatory: true
+      isMandatory: true,
     },
   };
   chargeableWtInput: ITextConfig = {
@@ -289,7 +306,7 @@ export class InvoicesConfigs {
       title: "Chargeable Wt.",
       showBorder: true,
       type: "number",
-      isMandatory: true
+      isMandatory: true,
       // Unit dropdown required
     },
   };
@@ -299,7 +316,7 @@ export class InvoicesConfigs {
       title: "Gross Weight in KGs",
       showBorder: true,
       type: "number",
-      isMandatory: true
+      isMandatory: true,
       // Unit dropdown required
     },
   };
@@ -329,7 +346,7 @@ export class InvoicesConfigs {
       title: "Departure Date",
       type: "datepicker",
       showBorder: true,
-      isMandatory: true
+      isMandatory: true,
       // Validation Needed
     },
   };
@@ -348,7 +365,7 @@ export class InvoicesConfigs {
       title: "Departure Date",
       type: "datepicker",
       showBorder: true,
-      isMandatory: true
+      isMandatory: true,
       // Validation Needed
     },
   };
@@ -357,7 +374,7 @@ export class InvoicesConfigs {
     attributes: {
       title: "Flight No",
       showBorder: true,
-      isMandatory: true
+      isMandatory: true,
     },
   };
   cargoTypeSelectorConfig: ISelectConfig = {
@@ -365,12 +382,12 @@ export class InvoicesConfigs {
     attributes: {
       class: "header-item",
       title: "Cargo Type",
-      isMandatory: true
+      isMandatory: true,
     },
     dataKey: "name",
     returnKey: "cargoTypeId",
     options: [],
-    isMultiple: false
+    isMultiple: false,
   };
   airlineSelectorConfig: ISelectConfig = {
     fieldKey: "airlineId",
@@ -381,7 +398,7 @@ export class InvoicesConfigs {
     dataKey: "name",
     returnKey: "id",
     options: [],
-    isMultiple: false
+    isMultiple: false,
   };
   shipperRefInput: ITextConfig = {
     fieldKey: "shipperRef",
@@ -402,7 +419,7 @@ export class InvoicesConfigs {
   shipperSelect: ISelectConfig = {
     fieldKey: "shipperId",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
       title: "Shipper",
     },
@@ -414,15 +431,15 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   consigneeSelect: ISelectConfig = {
     fieldKey: "consigneeId",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
-      title: "Consignee"
+      title: "Consignee",
     },
     dataKey: "name",
     returnKey: "consigneeId",
@@ -432,13 +449,13 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   recieptCountrySelect: ISelectConfig = {
     fieldKey: "recieptCountry",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
       title: "Country",
     },
@@ -450,13 +467,13 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   recieptStateSelect: ISelectConfig = {
     fieldKey: "recieptState",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
       title: "State",
       disable: true,
@@ -469,13 +486,13 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   recieptCitySelect: ISelectConfig = {
     fieldKey: "recieptCity",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
       title: "City",
       disable: true,
@@ -488,13 +505,13 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   deliveryCountrySelect: ISelectConfig = {
     fieldKey: "deliveryCountry",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
       title: "Country",
     },
@@ -506,13 +523,13 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   deliveryStateSelect: ISelectConfig = {
     fieldKey: "deliveryState",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
       title: "State",
       disable: true,
@@ -525,7 +542,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   deliveryCitySelect: ISelectConfig = {
@@ -543,7 +560,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   loadingPortSelect: ISelectConfig = {
@@ -551,7 +568,7 @@ export class InvoicesConfigs {
     attributes: {
       class: "header-item",
       title: "Loading Port",
-      isMandatory: true
+      isMandatory: true,
     },
     dataKey: "name",
     returnKey: "loadingPortId",
@@ -561,7 +578,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   dischargePortSelect: ISelectConfig = {
@@ -578,16 +595,16 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   destinationPortSelect: ISelectConfig = {
     fieldKey: "destinationPortId",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
       title: "Destination Port",
-      isMandatory: true
+      isMandatory: true,
     },
     dataKey: "name",
     returnKey: "id",
@@ -597,16 +614,16 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
 
   destinatonPortCountrySelect: ISelectConfig = {
     fieldKey: "countryId",
     attributes: {
-      type: 'select-search',
+      type: "select-search",
       class: "header-item",
       title: "Destination Port Country",
-      isMandatory: true
+      isMandatory: true,
     },
     dataKey: "name",
     returnKey: "countryId",
@@ -616,8 +633,7 @@ export class InvoicesConfigs {
         key: "name",
       },
     ],
-    isMultiple: false
-    
+    isMultiple: false,
   };
 
   // Rate Details
@@ -626,13 +642,13 @@ export class InvoicesConfigs {
     attributes: {
       class: "header-item",
       title: "Service Type",
-      isMandatory: true
+      isMandatory: true,
     },
     dataKey: "name",
     returnKey: "serviceTypeId",
     options: [],
-    disableBoolKey: 'disabled',
-    isMultiple: false
+    disableBoolKey: "disabled",
+    isMultiple: false,
   };
 
   unitConfig: ISelectConfig = {
@@ -644,7 +660,7 @@ export class InvoicesConfigs {
     dataKey: "name",
     returnKey: "unitId",
     options: [],
-    isMultiple: false
+    isMultiple: false,
   };
 
   hsnCodeInput: ITextConfig = {
@@ -655,8 +671,7 @@ export class InvoicesConfigs {
       disable: true,
       readonly: true,
       showBorder: true,
-      max: 999999
-      
+      max: 999999,
     },
   };
 
@@ -674,7 +689,7 @@ export class InvoicesConfigs {
         name: "INR",
       },
     ],
-    isMultiple: false
+    isMultiple: false,
   };
   quantityInput: ITextConfig = {
     fieldKey: "quantity",
@@ -682,7 +697,7 @@ export class InvoicesConfigs {
       title: "Quantity",
       type: "number",
       showBorder: true,
-      isMandatory: true
+      isMandatory: true,
     },
   };
   rateInput: ITextConfig = {
@@ -691,7 +706,7 @@ export class InvoicesConfigs {
       title: "Rate",
       type: "number",
       showBorder: true,
-      isMandatory: true
+      isMandatory: true,
     },
   };
   amountInput: ITextConfig = {
@@ -807,4 +822,6 @@ export class InvoicesConfigs {
       disable: true,
     },
   };
+
+ 
 }

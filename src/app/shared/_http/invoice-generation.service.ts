@@ -112,6 +112,14 @@ export class InvoiceGenerationService {
     return this.http.post(`${this.irnApi}generateIRN`,payload);
   }
 
+  cancelIRN(payload) {
+    return this.http.post(`${this.irnApi}cancelIRN`,payload);
+  }
+
+  updateCancelIRNInvoice(id) {
+    return this.http.put(`${this.liveUrl}/invoices/cancelIRNGeneration/${id}`,{});
+  }
+
   generateAuthToken(payload) {
     return this.http.get(`${this.irnApi}getToken`,payload);// 
   }

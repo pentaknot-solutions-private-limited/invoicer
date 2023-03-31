@@ -1517,7 +1517,8 @@ export class InvoiceGenerationComponent
         }
       );
       // Set First Value
-      if (this.shipmentDetailConfig.cargoTypeConfig.options?.length > 0) {
+      if (this.shipmentDetailConfig.cargoTypeConfig.options?.length > 0 &&
+        this.invoiceDrawerType == "add") {
         this.shipmentDetailsModel.cargoTypeId =
           this.shipmentDetailConfig.cargoTypeConfig.options[0]!.id;
         this.invoiceFinalData.shipmentDetails.cargoTypeName =

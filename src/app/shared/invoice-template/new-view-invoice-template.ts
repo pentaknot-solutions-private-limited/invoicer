@@ -986,7 +986,7 @@ export class InvoicePDF {
                 {
                   text: [
                     { text: `CD No.: `, bold: true },
-                    `${invoiceData?.shipmentDetails?.dispatchDocNo}`,
+                    `${invoiceData?.shipmentDetails?.dispatchDocNo ? invoiceData?.shipmentDetails?.dispatchDocNo : '-'}`,
                   ],
                   fontSize: 10,
                   alignment: `left`,

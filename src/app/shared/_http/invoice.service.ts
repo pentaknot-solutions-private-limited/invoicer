@@ -26,6 +26,10 @@ export class InvoiceService {
     return this.http.get(`${this.liveUrl}/invoices/${id}`);
   }
 
+  getQRCodeByInvoiceId(id: number): Observable<any> {
+    return this.http.get(`${this.liveUrl}/invoices/getQRCodeById/${id}`);
+  }
+
   
 
   

@@ -625,6 +625,8 @@ export class InvoicesComponent implements OnInit {
           res?.data?.companyDetails?.customer?.customerName;
         res.data.stateName = res?.data?.companyDetails?.customerBranch?.name;
         this.invoiceData = res?.data;
+        this.invoiceData.qrCode = ''
+        this.getQRCodeByInvoiceId(id)
         this.invoiceFinalData.bankDetails = {
           id: res?.data?.bankDetails?.bankDetailId,
           organizationId: 1,
@@ -636,13 +638,27 @@ export class InvoicesComponent implements OnInit {
         };
         if (type == "download") {
           // console.log("working download");
-          this.getInvoiceData(this.invoiceData);
+          console.log(this.invoiceData);
+          setTimeout(() => {
+            this.getInvoiceData(this.invoiceData);
+          }, 500);
         } else {
           // console.log("working not download");
           this.openDrawer("invoice-generation");
         }
       }
     });
+  }
+
+  getQRCodeByInvoiceId(invoiceId) {
+    this.invoiceService.getQRCodeByInvoiceId(invoiceId).subscribe(
+      (res: any) => {
+        if (res?.data) {
+          this.invoiceData.qrCode = res?.data;
+        }
+      }
+    )
+    
   }
 
   getAllAirlines() {

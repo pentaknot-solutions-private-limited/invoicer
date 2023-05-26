@@ -474,6 +474,7 @@ export class InvoicesComponent implements OnInit {
       this.clearDrawerData();
       this.loading = false;
     });
+    this.loading = false;
   }
   getAllDraftInvoices(event?: string, isFilterChanged?: boolean) {
     this.loading = true;

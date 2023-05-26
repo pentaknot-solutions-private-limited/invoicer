@@ -22,6 +22,10 @@ import { convertAmountToWords } from "src/app/shared/utils/convert-amount-to-wor
 import { InvoicePDF } from "src/app/shared/invoice-template/new-view-invoice-template";
 import * as moment from "moment";
 import { InvoiceGenerationService } from "src/app/shared/_http/invoice-generation.service";
+import { Observable, Subject, Subscription } from "rxjs";
+import { debounceTime } from "rxjs/internal/operators/debounceTime";
+import { map } from "rxjs/internal/operators/map";
+import { distinctUntilChanged } from "rxjs/internal/operators/distinctUntilChanged";
 
 @Component({
   selector: "invoices",
@@ -43,6 +47,7 @@ export class InvoicesComponent implements OnInit {
   to: any;
   statistics: any = [];
   baseConfig = new InvoicesConfigs();
+  loading = false;
   // INVOICE FILTERS
   selectedFilterType: string = "all";
   searchForm: FormGroup = new FormGroup({
@@ -76,6 +81,10 @@ export class InvoicesComponent implements OnInit {
   invoiceDrawerType: string = "";
   airlineData: any;
   portData: any;
+
+  // new Variables
+  searchInputChanges$ = new Subject<string>();
+  searchInputChangesSubscription: Subscription;
 
   constructor(
     private invoiceService: InvoiceService,
@@ -144,7 +153,8 @@ export class InvoicesComponent implements OnInit {
     this.getAllPorts();
     this.getAllAirlines();
     this.getAllPeriodFilterData();
-    this.getInvoices();
+    this.getAllPendingIRNInvoices();
+    this.getInvoicesCount();
     // Simulation
     setTimeout(() => {
       // this.getAllStatisticsData();
@@ -153,11 +163,17 @@ export class InvoicesComponent implements OnInit {
     // this.getAllEntity();
     // this.getAllUsecase();
     // this.getAllRegion();
+    this.searchInputChangesSubscription = this.searchInputChanges$
+      .pipe(debounceTime(800), distinctUntilChanged()) // Adjust the debounce time as needed
+      .subscribe((value: string) => {
+        // Handle the debounced input change here
+        this.getInvoicesByQuery(value);
+      });
   }
 
   onFilterApply() {
     // console.log(this.searchForm.value);
-    this.getInvoices();
+    this.getAllPendingIRNInvoices();
   }
 
   onLinkClick(event) {
@@ -171,6 +187,12 @@ export class InvoicesComponent implements OnInit {
   onInputChanged(event?: any) {
     if (event?.length >= 3) {
       // this.showResults = true;
+    }
+    if (this.selectedFilterType === "completed" && event?.length === 0) {
+      this.rowData = [];
+    }
+    if (this.selectedFilterType === "completed" && event?.length !== 0) {
+      this.searchInputChanges$.next(event);
     }
   }
 
@@ -209,7 +231,7 @@ export class InvoicesComponent implements OnInit {
   applyAPICall(event) {
     // console.log(event);
     // this.getAllStatisticsData(event);
-    this.getInvoices();
+    this.getAllPendingIRNInvoices();
   }
 
   actionClicked(event) {
@@ -269,7 +291,7 @@ export class InvoicesComponent implements OnInit {
   drawerAction(event) {
     switch (event) {
       case "done":
-        this.getInvoices("all", true);
+        this.getAllPendingIRNInvoices();
         break;
 
       default:
@@ -408,213 +430,285 @@ export class InvoicesComponent implements OnInit {
   }
 
   onRefreshClick() {
-    this.getInvoices("all", true);
+    this.getAllPendingIRNInvoices();
   }
 
   // API Calls
-  getInvoices(event?: string, isFilterChanged?: boolean) {
-    const searchFilter = {
-      filter: this.selectedFilterType,
-      ...this.searchForm.value,
-    };
-    this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
+  getAllPendingIRNInvoices(event?: string, isFilterChanged?: boolean) {
+    this.loading = true;
+    // const searchFilter = {
+    //   filter: this.selectedFilterType,
+    //   ...this.searchForm.value,
+    // };
+    this.invoiceService.getAllPendingIRNInvoicesApi().subscribe((res: any) => {
       if (res.data) {
         this.rowData = res.data
           .map((row: any) => {
-            if (row?.isCompleted == 1 && row?.isIrnGenerated == 1) {
-              const date = moment(row?.ackDate).add(24, "hours").toDate();
-              date.setHours(date.getHours() - 5);
-              date.setMinutes(date.getMinutes() - 30);
-              date.getTime();
-              const countdownDate = date.getTime();
-
-              // Get the current date and time
-              const now = new Date().getTime();
-
-              // Calculate the time remaining
-              const timeRemaining = countdownDate - now;
-
-              // Calculate the hours, minutes, and seconds remaining
-              const hours = Math.floor(
-                (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-              );
-              const minutes = Math.floor(
-                (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
-              );
-              const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-
-              // Display the time remaining
-              if (timeRemaining > 0) {
-                row.countdown = `${hours}hr ${minutes}min`;
-              } else {
-                row.countdown = "Expired!";
-              }
-            } else {
-              row.countdown = "-";
-            }
+            row.countdown = "-";
             return {
-              ...row
+              ...row,
             };
           })
           .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
-          
-        // TEMP
-        // this.invoiceData = res.data[0];
-        if (!isFilterChanged) {
-          const all = {
-            label: "All",
-            type: "all",
-            value: res.data.length ? res.data.length : 0,
-          };
-          this.statistics.push(all);
-
-          const draft = {
-            label: "Draft",
-            type: "draft",
-            value: res.data.filter(
-              (row: any) =>
-                row.isActive == 1 &&
-                (!row.isCompleted || row.isCompleted == (0 || null)) &&
-                row.isDeleted == 0
-            ).length,
-          };
-          this.statistics.push(draft);
-
-          const IRNGenerated = {
-            label: "IRN Not Generated",
-            type: "irn_generated",
-            value: res.data.filter(
-              (row: any) =>
-                row.isActive == 1 &&
-                row.isIrnGenerated == 0 &&
-                row.isCompleted == 1 &&
-                row.isDeleted == 0
-            ).length,
-          };
-          this.statistics.push(IRNGenerated);
-
-          const completed = {
-            label: "Completed",
-            type: "completed",
-            value: res.data.filter(
-              (row: any) =>
-                row.isActive == 1 &&
-                row.isCompleted == 1 &&
-                row.isDeleted == 0 &&
-                row.isIrnGenerated == 1
-            ).length,
-          };
-          this.statistics.push(completed);
-        } else {
-          switch (event) {
-            case "all":
-              this.rowData = res.data.sort((a, b) =>
-                b.createdAt > a.createdAt ? 1 : -1
-              );
-              this.statistics[0].value = res?.data?.length;
-              break;
-
-            case "draft":
-              this.rowData = res.data
-                .filter(
-                  (row: any) =>
-                    row.isActive == 1 &&
-                    (row.isCompleted == 0 || null) &&
-                    row.isDeleted == 0
-                )
-                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
-              this.statistics[1].value = res.data.filter(
-                (row: any) =>
-                  row.isActive == 1 &&
-                  (row.isCompleted == 0 || null) &&
-                  row.isDeleted == 0
-              ).length;
-              break;
-
-            case "not_approved":
-              this.rowData = res.data
-                .filter(
-                  (row: any) =>
-                    row.isActive == 1 &&
-                    (row.isApproved == 0 || null) &&
-                    row.isDeleted == 0
-                )
-                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
-              break;
-
-            case "not_downloaded":
-              this.rowData = res.data
-                .filter(
-                  (row: any) =>
-                    row.isActive == 1 &&
-                    (row.isDownloaded == 0 || null) &&
-                    row.isDeleted == 0
-                )
-                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
-              break;
-
-            case "irn_generated":
-              this.rowData = res.data
-                .filter(
-                  (row: any) =>
-                    row.isActive == 1 &&
-                    row.isIrnGenerated == 0 &&
-                    row.isDeleted == 0
-                )
-                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
-              this.statistics[2].value = res.data.filter(
-                (row: any) =>
-                  row.isActive == 1 &&
-                  row.isIrnGenerated == 0 &&
-                  row.isDeleted == 0
-              ).length;
-              break;
-
-            case "completed":
-              this.rowData = res.data
-                .filter(
-                  (row: any) =>
-                    row.isActive == 1 &&
-                    row.isCompleted == 1 &&
-                    row.isDeleted == 0 &&
-                    row.isIrnGenerated == 1
-                )
-                .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
-              break;
-
-            default:
-              this.rowData = res.data.sort((a, b) =>
-                b.createdAt > a.createdAt ? 1 : -1
-              );
-              break;
-          }
-
-          this.statistics[0].value = res?.data?.length;
-
-          this.statistics[1].value = res?.data?.filter(
-            (row: any) =>
-              row.isActive == 1 &&
-              (row.isCompleted == 0 || null) &&
-              row.isDeleted == 0
-          )?.length;
-
-          this.statistics[2].value = res?.data?.filter(
-            (row: any) =>
-              row.isActive == 1 && row.isIrnGenerated == 0 && row.isDeleted == 0
-          )?.length;
-
-          this.statistics[3].value = res?.data?.filter(
-            (row: any) =>
-              row.isActive == 1 &&
-              row.isCompleted == 1 &&
-              row.isDeleted == 0 &&
-              row.isIrnGenerated == 1
-          )?.length;
-        }
+        this.loading = false;
+        this.selectedFilterType = "irn_generated";
       }
       this.clearDrawerData();
+      this.loading = false;
     });
   }
+  getInvoicesByQuery(query: string) {
+    this.loading = true;
+    this.invoiceService.getInvoicesByQueryApi(query).subscribe((res: any) => {
+      if (res.data) {
+        this.rowData = res.data
+          .map((row: any) => {
+            row.countdown = "-";
+            return {
+              ...row,
+            };
+          })
+          .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+        this.loading = false;
+      }
+      this.clearDrawerData();
+      this.loading = false;
+    });
+  }
+  getAllDraftInvoices(event?: string, isFilterChanged?: boolean) {
+    this.loading = true;
+    // const searchFilter = {
+    //   filter: this.selectedFilterType,
+    //   ...this.searchForm.value,
+    // };
+    this.invoiceService.getAllDraftInvoicesApi().subscribe((res: any) => {
+      if (res.data) {
+        this.rowData = res.data
+          .map((row: any) => {
+            row.countdown = "-";
+            return {
+              ...row,
+            };
+          })
+          .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+        this.loading = false;
+      }
+      this.clearDrawerData();
+      this.loading = false;
+    });
+  }
+  // getInvoices(event?: string, isFilterChanged?: boolean) {
+  //   if (event !== "all") {
+  //     this.loading = true;
+  //     const searchFilter = {
+  //       filter: this.selectedFilterType,
+  //       ...this.searchForm.value,
+  //     };
+  //     this.invoiceService.getInvoices(searchFilter).subscribe((res: any) => {
+  //       if (res.data) {
+  //         this.rowData = res.data
+  //           .map((row: any) => {
+  //             if (row?.isCompleted == 1 && row?.isIrnGenerated == 1) {
+  //               const date = moment(row?.ackDate).add(24, "hours").toDate();
+  //               date.setHours(date.getHours() - 5);
+  //               date.setMinutes(date.getMinutes() - 30);
+  //               date.getTime();
+  //               const countdownDate = date.getTime();
+
+  //               // Get the current date and time
+  //               const now = new Date().getTime();
+
+  //               // Calculate the time remaining
+  //               const timeRemaining = countdownDate - now;
+
+  //               // Calculate the hours, minutes, and seconds remaining
+  //               const hours = Math.floor(
+  //                 (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  //               );
+  //               const minutes = Math.floor(
+  //                 (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+  //               );
+  //               const seconds = Math.floor(
+  //                 (timeRemaining % (1000 * 60)) / 1000
+  //               );
+
+  //               // Display the time remaining
+  //               if (timeRemaining > 0) {
+  //                 row.countdown = `${hours}hr ${minutes}min`;
+  //               } else {
+  //                 row.countdown = "Expired!";
+  //               }
+  //             } else {
+  //               row.countdown = "-";
+  //             }
+  //             return {
+  //               ...row,
+  //             };
+  //           })
+  //           .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+
+  //         // TEMP
+  //         // this.invoiceData = res.data[0];
+  //         if (!isFilterChanged) {
+  //           // const all = {
+  //           //   label: "All",
+  //           //   type: "all",
+  //           //   value: res.data.length ? res.data.length : 0,
+  //           // };
+  //           // this.statistics.push(all);
+
+  //           const draft = {
+  //             label: "Draft",
+  //             type: "draft",
+  //             value: res.data.filter(
+  //               (row: any) =>
+  //                 row.isActive == 1 &&
+  //                 (!row.isCompleted || row.isCompleted == (0 || null)) &&
+  //                 row.isDeleted == 0
+  //             ).length,
+  //           };
+  //           this.statistics.push(draft);
+
+  //           const IRNGenerated = {
+  //             label: "IRN Not Generated",
+  //             type: "irn_generated",
+  //             value: res.data.filter(
+  //               (row: any) =>
+  //                 row.isActive == 1 &&
+  //                 row.isIrnGenerated == 0 &&
+  //                 row.isCompleted == 1 &&
+  //                 row.isDeleted == 0
+  //             ).length,
+  //           };
+  //           this.statistics.push(IRNGenerated);
+
+  //           const completed = {
+  //             label: "Completed",
+  //             type: "completed",
+  //             value: res.data.filter(
+  //               (row: any) =>
+  //                 row.isActive == 1 &&
+  //                 row.isCompleted == 1 &&
+  //                 row.isDeleted == 0 &&
+  //                 row.isIrnGenerated == 1
+  //             ).length,
+  //           };
+  //           this.statistics.push(completed);
+  //         } else {
+  //           switch (event) {
+  //             // case "all":
+  //             //   this.rowData = res.data.sort((a, b) =>
+  //             //     b.createdAt > a.createdAt ? 1 : -1
+  //             //   );
+  //             //   this.statistics[0].value = res?.data?.length;
+  //             //   break;
+
+  //             case "draft":
+  //               this.rowData = res.data
+  //                 .filter(
+  //                   (row: any) =>
+  //                     row.isActive == 1 &&
+  //                     (row.isCompleted == 0 || null) &&
+  //                     row.isDeleted == 0
+  //                 )
+  //                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+  //               this.statistics[1].value = res.data.filter(
+  //                 (row: any) =>
+  //                   row.isActive == 1 &&
+  //                   (row.isCompleted == 0 || null) &&
+  //                   row.isDeleted == 0
+  //               ).length;
+  //               break;
+
+  //             case "not_approved":
+  //               this.rowData = res.data
+  //                 .filter(
+  //                   (row: any) =>
+  //                     row.isActive == 1 &&
+  //                     (row.isApproved == 0 || null) &&
+  //                     row.isDeleted == 0
+  //                 )
+  //                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+  //               break;
+
+  //             case "not_downloaded":
+  //               this.rowData = res.data
+  //                 .filter(
+  //                   (row: any) =>
+  //                     row.isActive == 1 &&
+  //                     (row.isDownloaded == 0 || null) &&
+  //                     row.isDeleted == 0
+  //                 )
+  //                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+  //               break;
+
+  //             case "irn_generated":
+  //               this.rowData = res.data
+  //                 .filter(
+  //                   (row: any) =>
+  //                     row.isActive == 1 &&
+  //                     row.isIrnGenerated == 0 &&
+  //                     row.isDeleted == 0
+  //                 )
+  //                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+  //               this.statistics[2].value = res.data.filter(
+  //                 (row: any) =>
+  //                   row.isActive == 1 &&
+  //                   row.isIrnGenerated == 0 &&
+  //                   row.isDeleted == 0
+  //               ).length;
+  //               break;
+
+  //             case "completed":
+  //               this.rowData = res.data
+  //                 .filter(
+  //                   (row: any) =>
+  //                     row.isActive == 1 &&
+  //                     row.isCompleted == 1 &&
+  //                     row.isDeleted == 0 &&
+  //                     row.isIrnGenerated == 1
+  //                 )
+  //                 .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+  //               break;
+
+  //             default:
+  //               this.rowData = res.data.sort((a, b) =>
+  //                 b.createdAt > a.createdAt ? 1 : -1
+  //               );
+  //               break;
+  //           }
+
+  //           this.statistics[0].value = res?.data?.length;
+
+  //           this.statistics[1].value = res?.data?.filter(
+  //             (row: any) =>
+  //               row.isActive == 1 &&
+  //               (row.isCompleted == 0 || null) &&
+  //               row.isDeleted == 0
+  //           )?.length;
+
+  //           this.statistics[2].value = res?.data?.filter(
+  //             (row: any) =>
+  //               row.isActive == 1 &&
+  //               row.isIrnGenerated == 0 &&
+  //               row.isDeleted == 0
+  //           )?.length;
+
+  //           this.statistics[3].value = res?.data?.filter(
+  //             (row: any) =>
+  //               row.isActive == 1 &&
+  //               row.isCompleted == 1 &&
+  //               row.isDeleted == 0 &&
+  //               row.isIrnGenerated == 1
+  //           )?.length;
+  //         }
+  //         this.loading = false;
+  //       }
+  //       this.clearDrawerData();
+  //       this.loading = false;
+  //     });
+  //   }
+  // }
 
   // GET INOVICE BY ID
   getInvoiceById(id, type?: string) {
@@ -625,8 +719,8 @@ export class InvoicesComponent implements OnInit {
           res?.data?.companyDetails?.customer?.customerName;
         res.data.stateName = res?.data?.companyDetails?.customerBranch?.name;
         this.invoiceData = res?.data;
-        this.invoiceData.qrCode = ''
-        this.getQRCodeByInvoiceId(id)
+        this.invoiceData.qrCode = "";
+        this.getQRCodeByInvoiceId(id);
         this.invoiceFinalData.bankDetails = {
           id: res?.data?.bankDetails?.bankDetailId,
           organizationId: 1,
@@ -651,14 +745,60 @@ export class InvoicesComponent implements OnInit {
   }
 
   getQRCodeByInvoiceId(invoiceId) {
-    this.invoiceService.getQRCodeByInvoiceId(invoiceId).subscribe(
-      (res: any) => {
+    this.invoiceService
+      .getQRCodeByInvoiceId(invoiceId)
+      .subscribe((res: any) => {
         if (res?.data) {
           this.invoiceData.qrCode = res?.data;
         }
+      });
+  }
+
+  getInvoicesCount() {
+    this.invoiceService.getInvoicesCountApi().subscribe((res: any) => {
+      if (res?.data) {
+        this.statistics = [
+          {
+            label: "All",
+            type: "all",
+            count: res?.data?.allInvoicesCount,
+          },
+          {
+            label: "Draft",
+            type: "draft",
+            count: res?.data?.draftInvoicesCount,
+          },
+          {
+            label: "IRN Not Generated",
+            type: "irn_generated",
+            count: res?.data?.IRNNotGeneratedInvoicesCount,
+          },
+          {
+            label: "Completed",
+            type: "completed",
+            count: res?.data?.completedInvoicesCount,
+          },
+        ];
       }
-    )
-    
+    });
+  }
+
+  getInvoicesByFilter(filterType) {
+    console.log(filterType);
+    switch (filterType) {
+      case "draft":
+        this.getAllDraftInvoices();
+        break;
+      case "irn_generated":
+        this.getAllPendingIRNInvoices();
+        break;
+      case "completed":
+        this.rowData = [];
+        break;
+
+      default:
+        break;
+    }
   }
 
   getAllAirlines() {
@@ -694,4 +834,9 @@ export class InvoicesComponent implements OnInit {
       }
     });
   }
+
+  // handleInputChange(value: string): void {
+  //   // Perform the desired action with the debounced input value
+  //   console.log("Debounced input value:", value);
+  // }
 }

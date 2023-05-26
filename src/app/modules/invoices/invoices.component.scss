@@ -94,7 +94,10 @@ span.pipe {
 .box {
   transition: box-shadow 0.3s;
   cursor: pointer;
-  &:hover {
+  &.no-hover {
+    cursor: default;
+  }
+  &:not(.no-hover):hover {
     box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
   }
   &.selected {
@@ -120,7 +123,7 @@ span.pipe {
     font-size: 8px;
     line-height: 2em;
   }
-  
+
   b {
     font-size: 12px;
   }
@@ -135,7 +138,7 @@ span.pipe {
   .details-title {
     border-bottom: 2px solid #191919;
   }
-  .table>:not(caption)>*>* {
+  .table > :not(caption) > * > * {
     padding: 0px !important;
   }
 }
@@ -145,7 +148,22 @@ span.pipe {
   width: 100%;
 }
 
-@media print { 
+.loader-body {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff96;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+@media print {
   /* All your print styles go here */
-     #pdfTable { display: block !important; } 
- }
+  #pdfTable {
+    display: block !important;
+  }
+}

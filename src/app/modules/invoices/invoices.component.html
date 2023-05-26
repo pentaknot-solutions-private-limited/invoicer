@@ -1,4 +1,9 @@
 <div class="invoices">
+  <ng-container *ngIf="loading">
+    <div class="loader-body">
+      <vsa-loader></vsa-loader>
+    </div>
+  </ng-container>
   <form class="policiesForm">
     <div class="row header-row">
       <div class="col-6 text-left">
@@ -18,15 +23,15 @@
       </div>
       <div class="col-6 text-right days-filter">
         <vsa-button
-            class="ml-2"
-            [type]="'button'"
-            role="primary"
-            (onClick)="onRefreshClick()"
-            size="small"
-            [icon]="'refresh'"
-            [iconSize]="'medium'"
-            >Refresh
-          </vsa-button>
+          class="ml-2"
+          [type]="'button'"
+          role="primary"
+          (onClick)="onRefreshClick()"
+          size="small"
+          [icon]="'refresh'"
+          [iconSize]="'medium'"
+          >Refresh
+        </vsa-button>
         <!-- <button class="menu" mat-button [matMenuTriggerFor]="menu">
           <mat-icon>filter_list</mat-icon>&nbsp;&nbsp;<span>{{
             displayPeriodText
@@ -119,21 +124,41 @@
       <div class="col-12">
         <div class="dashboard mb-4 mt-2">
           <div class="row">
+            <!-- <ng-container *ngIf="invoicesCount">
+              <div class="col-3">
+                <div class="box no-hover">
+                  <div class="content">
+                    <p class="title">
+                      {{ invoicesCount | number }}
+                    </p>
+                    <span class="description"> All </span>
+                  </div>
+                </div>
+              </div>
+            </ng-container> -->
+
             <!-- Stats Card Filter -->
             <ng-container *ngFor="let item of statistics">
               <div
                 class="col-3"
-                (click)="selectedFilterType = item!.type; getInvoices(item!.type, true)"
+                (click)="
+                  item!.type !== 'all'
+                    ? (selectedFilterType = item!.type)
+                    : null;
+                  getInvoicesByFilter(item!.type, true)
+                "
               >
                 <div
                   class="box"
                   [ngClass]="{
-                    selected: selectedFilterType == item!.type
+                    selected:
+                      selectedFilterType == item!.type && item!.type !== 'all',
+                    'no-hover': item!.type === 'all'
                   }"
                 >
                   <div class="content">
                     <p class="title">
-                      {{ item?.value | number }}
+                      {{ item?.count | number }}
                       <!-- {{ item | json }} -->
                     </p>
                     <span class="description"> {{ item.label }} </span>
@@ -214,13 +239,14 @@
     <div class="row" *ngIf="showGrid">
       <div class="col-12">
         <grid-search-input
-            #gridSearch
-            class="w-100"
-            [tablesRef]="grid"
-            placeholder="Search Invoice No/Customer/Location..."
-            (onInputChanged)="onInputChanged($event)"
-          ></grid-search-input>
+          #gridSearch
+          class="w-100"
+          [tablesRef]="grid"
+          placeholder="Search Invoice No/Customer/Location..."
+          (onInputChanged)="onInputChanged($event)"
+        ></grid-search-input>
         <div class="grid">
+          <!-- {{ rowData?.slice(0, 2) | json }} -->
           <vsa-grid
             #grid
             [rowData]="rowData"
@@ -228,6 +254,32 @@
             (onLinkClick)="onLinkClick($event)"
             (actionClicked)="actionClicked($event)"
           ></vsa-grid>
+          <!-- <ng-container
+            *ngIf="
+              (selectedFilterType !== 'completed' ||
+                selectedFilterType == 'draft') &&
+                rowData !== undefined;
+              else completedInvoicesEmptyScreen
+            "
+          >
+            <vsa-grid
+              #grid
+              [rowData]="rowData"
+              [config]="invoicesGridConfig"
+              (onLinkClick)="onLinkClick($event)"
+              (actionClicked)="actionClicked($event)"
+            ></vsa-grid>
+          </ng-container>
+          <ng-template #completedInvoicesEmptyScreen>
+            <div
+              [style.height]="invoicesGridConfig?.gridHeightDelta"
+              class="d-flex justify-content-center align-items-center"
+            >
+              <p>
+                Type something inside the search box in order to see the result
+              </p>
+            </div>
+          </ng-template> -->
         </div>
       </div>
     </div>
@@ -243,4 +295,3 @@
     *ngIf="pageComponentVisibility?.showInvoiceGeneration"
   ></invoice-generation>
 </ng-template>
-

@@ -20,10 +20,19 @@ import { InvoiceGenerationComponent } from "./common/invoice-generation/invoice-
 import { VSAStepperModule } from "src/app/shared/components/vsa-stepper/package.module";
 import { PMRStepperModule } from "src/app/shared/components/pmr-stepper/package.module";
 import { InvoiceGenerationService } from "src/app/shared/_http/invoice-generation.service";
-import { AutoCompleteModule } from 'primeng/autocomplete';
+import { AutoCompleteModule } from "primeng/autocomplete";
 import { PdfViewerModule } from "ng2-pdf-viewer";
+import { VSALoaderModule } from "../../shared/components/vsa-loader/package.module";
 
 @NgModule({
+  declarations: [InvoicesComponent, InvoiceGenerationComponent],
+  providers: [
+    VSAToastyService,
+    InvoiceService,
+    DrawerPanelService,
+    InvoiceGenerationService,
+    DashboardService,
+  ],
   imports: [
     CommonModule,
     FormsModule,
@@ -52,14 +61,7 @@ import { PdfViewerModule } from "ng2-pdf-viewer";
         component: InvoicesComponent,
       },
     ]),
-  ],
-  declarations: [InvoicesComponent, InvoiceGenerationComponent],
-  providers: [
-    VSAToastyService,
-    InvoiceService,
-    DrawerPanelService,
-    InvoiceGenerationService,
-    DashboardService,
+    VSALoaderModule,
   ],
 })
 export class InvoicesModule {}

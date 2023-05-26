@@ -18,7 +18,7 @@ export class GridSearchInputComponent implements OnInit {
   @Input() tablesRef: VSAGridComponent;
   @Input() placeholder?: string;
   // @Output() tablesRefChange: EventEmitter<VSAGridComponent[]> = new EventEmitter()
-  @Output() onInputChanged: EventEmitter<any> = new EventEmitter()
+  @Output() onInputChanged: EventEmitter<any> = new EventEmitter();
   // Variables
   searchedData: string = "";
   constructor() {}
@@ -27,8 +27,8 @@ export class GridSearchInputComponent implements OnInit {
 
   searchByInputChange() {
     // console.log(this.searchedData);
-    
-    this.onInputChanged.emit(this.searchedData)
+
+    this.onInputChanged.emit(this.searchedData);
     this.tablesRef.searchValue = this.searchedData;
     // this.tablesRef.forEach((table) => {
     //   table.searchValue = this.searchedData ? this.searchedData : "";

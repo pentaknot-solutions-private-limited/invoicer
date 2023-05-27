@@ -435,6 +435,7 @@ export class InvoicesComponent implements OnInit {
 
   // API Calls
   getAllPendingIRNInvoices(event?: string, isFilterChanged?: boolean) {
+    this.getInvoicesCount();
     this.loading = true;
     // const searchFilter = {
     //   filter: this.selectedFilterType,

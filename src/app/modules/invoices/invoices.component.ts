@@ -85,6 +85,7 @@ export class InvoicesComponent implements OnInit {
   // new Variables
   searchInputChanges$ = new Subject<string>();
   searchInputChangesSubscription: Subscription;
+  searchQuery: string;
 
   constructor(
     private invoiceService: InvoiceService,
@@ -185,11 +186,17 @@ export class InvoicesComponent implements OnInit {
   }
 
   onInputChanged(event?: any) {
-    if (event?.length >= 3) {
-      // this.showResults = true;
-    }
+    this.searchQuery = event;
+    this.selectedFilterType === "completed" && event?.length !== 0
+      ? (this.invoicesGridConfig.emptyMessage = "Loading...")
+      : null;
+    // if (event?.length >= 3) {
+    //   // this.showResults = true;
+    // }
     if (this.selectedFilterType === "completed" && event?.length === 0) {
       this.rowData = [];
+      this.invoicesGridConfig.emptyMessage =
+        "Please search any key word in order to get the result.";
     }
     if (this.selectedFilterType === "completed" && event?.length !== 0) {
       this.searchInputChanges$.next(event);
@@ -435,6 +442,7 @@ export class InvoicesComponent implements OnInit {
 
   // API Calls
   getAllPendingIRNInvoices(event?: string, isFilterChanged?: boolean) {
+    this.getInvoicesCount();
     this.loading = true;
     // const searchFilter = {
     //   filter: this.selectedFilterType,
@@ -473,6 +481,10 @@ export class InvoicesComponent implements OnInit {
       }
       this.clearDrawerData();
       this.loading = false;
+      this.invoicesGridConfig.emptyMessage =
+        !this.searchQuery?.length && !this.rowData?.length
+          ? "Please search any key word in order to get the result."
+          : "No records found.";
     });
     this.loading = false;
   }
@@ -785,7 +797,6 @@ export class InvoicesComponent implements OnInit {
   }
 
   getInvoicesByFilter(filterType) {
-    console.log(filterType);
     switch (filterType) {
       case "draft":
         this.getAllDraftInvoices();
@@ -795,6 +806,10 @@ export class InvoicesComponent implements OnInit {
         break;
       case "completed":
         this.rowData = [];
+        this.invoicesGridConfig.emptyMessage =
+          !this.searchQuery?.length && !this.rowData?.length
+            ? "Please search any key word in order to get the result."
+            : "No records found.";
         break;
 
       default:

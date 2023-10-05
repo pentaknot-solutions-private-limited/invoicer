@@ -393,7 +393,7 @@ export class InvoiceGenerationComponent
   setInitValues() {
     this.rateDetailsModel.cgstRate = ""; //0.09;
     this.rateDetailsModel.sgstRate = ""; //0.09;
-    this.rateDetailsModel.igstRate = "18%";
+    this.rateDetailsModel.igstRate = 18;
     // Temp
     this.consignmentDetailsModel.placeOfDeliveryId = 1;
     this.consignmentDetailsModel.placeOfRecieptId = 1;
@@ -511,6 +511,12 @@ export class InvoiceGenerationComponent
         this.invoiceData?.rateDetails?.amountInWords;
       this.rateDetailsModel.igstRate = Number(
         this.invoiceData?.rateDetails?.igstRate
+      );
+      this.rateDetailsModel.cgstRate = Number(
+        this.invoiceData?.rateDetails?.cgstRate
+      );
+      this.rateDetailsModel.sgstRate = Number(
+        this.invoiceData?.rateDetails?.sgstRate
       );
       this.rateDetailsModel.taxableAmount = Number(
         this.invoiceData?.rateDetails?.taxableAmount
@@ -723,7 +729,12 @@ export class InvoiceGenerationComponent
         Number(this.lineItemForm.get("lineItemList").value[i].quantity) *
           Number(this.lineItemForm.get("lineItemList").value[i].rate);
       const igstRateValue =
-        Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) / 100;
+        this.invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+          ? (Number(this.rateDetailsModel?.sgstRate.toString().split("%")[0]) +
+            Number(this.rateDetailsModel?.cgstRate.toString().split("%")[0])) /
+              100
+          : Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) /
+            100;
       this.rateDetailsModel.taxableAmount =
         Math.round(
           Number(this.rateDetailsModel?.amount) * Number(igstRateValue) * 100
@@ -965,7 +976,7 @@ export class InvoiceGenerationComponent
           100;
         this.rateDetailsModel.taxableAmount =
           Math.round(
-            Number(this.rateDetailsModel?.amount) * Number(igstRateValue) * 100
+            Number(this.rateDetailsModel?.amount) * (this.invoiceData?.companyDetails?.customer?.stateName == "Maharashtra" ? cgstRateValue + sgstRateValue : Number(igstRateValue)) * 100
           ) / 100;
 
         // Update Total Amount
@@ -1023,6 +1034,12 @@ export class InvoiceGenerationComponent
     this.invoiceFinalData.rateDetails.amount = this.rateDetailsModel?.amount;
     this.invoiceFinalData.rateDetails.igstRate = Number(
       this.rateDetailsModel?.igstRate.toString().split("%")[0]
+    );
+    this.invoiceFinalData.rateDetails.cgstRate = Number(
+      this.rateDetailsModel?.cgstRate.toString().split("%")[0]
+    );
+    this.invoiceFinalData.rateDetails.sgstRate = Number(
+      this.rateDetailsModel?.sgstRate.toString().split("%")[0]
     );
     this.invoiceFinalData.invoiceDate = this.basicDetailsModel.invoiceDate;
     this.invoiceFinalData.invoiceDueDate =
@@ -1135,11 +1152,16 @@ export class InvoiceGenerationComponent
         invoiceItems:
           this.lineItemForm.get("lineItemList").value || this.lineItems,
         amount: Number(this.rateDetailsModel?.amount),
-        cgstRate: 0,
-        sgstRate: 0,
-        igstRate: Number(
-          this.rateDetailsModel?.igstRate.toString().split("%")[0]
+        cgstRate: Number(
+          this.rateDetailsModel?.cgstRate.toString().split("%")[0]
         ),
+        sgstRate: Number(
+          this.rateDetailsModel?.sgstRate.toString().split("%")[0]
+        ),
+        igstRate:
+          this.rateDetailsModel?.cgstRate && this.rateDetailsModel?.sgstRate
+            ? 0
+            : Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]),
         taxableAmount: Number(this.rateDetailsModel?.taxableAmount),
         totalAmount: Number(this.rateDetailsModel?.totalAmount),
         amountInWords: this.rateDetailsModel?.amountInWords,
@@ -1219,15 +1241,16 @@ export class InvoiceGenerationComponent
         Gstin: invoiceData?.companyDetails?.customerBranch?.gstin,
         LglNm: invoiceData?.companyDetails?.customer?.customerName,
         // TrdNm: invoiceData?.companyDetails?.customer?.customerName,
-        Pos:
-          invoiceData?.shipmentDetails?.placeOfSupply !=
-          "[96] Foreign Countries"
-            ? Number(
-                invoiceData?.shipmentDetails?.placeOfSupply
-                  ?.split(" ")[0]
-                  .replace(/[[\]]/g, "")
-              )
-            : 97,
+        // Pos:
+        //   invoiceData?.shipmentDetails?.placeOfSupply !=
+        //   "[96] Foreign Countries"
+        //     ? Number(
+        //         invoiceData?.shipmentDetails?.placeOfSupply
+        //           ?.split(" ")[0]
+        //           .replace(/[[\]]/g, "")
+        //       )
+        //     : 97,
+        Pos: Number(invoiceData?.companyDetails?.customerBranch?.stateTinCode),
         Addr1: invoiceData?.companyDetails?.customer?.address,
         Addr2: invoiceData?.companyDetails?.customer?.address2,
         Loc: invoiceData?.companyDetails?.customer?.stateName,
@@ -1248,11 +1271,27 @@ export class InvoiceGenerationComponent
         (row: any, index: number) => {
           const igstRateValue =
             Number(invoiceData?.rateDetails?.igstRate) / 100;
+          const sgstRateValue =
+            Number(invoiceData?.rateDetails?.sgstRate) / 100;
+          const cgstRateValue =
+            Number(invoiceData?.rateDetails?.cgstRate) / 100;
           const gstRateValue = 0.09;
           const igstAmt =
             (Number(row?.quantity) *
               Number(row?.rate) *
               Number(igstRateValue) *
+              100) /
+            100;
+          const cgstAmt =
+            (Number(row?.quantity) *
+              Number(row?.rate) *
+              Number(sgstRateValue) *
+              100) /
+            100;
+          const sgstAmt =
+            (Number(row?.quantity) *
+              Number(row?.rate) *
+              Number(cgstRateValue) *
               100) /
             100;
           const gstAmt =
@@ -1267,7 +1306,7 @@ export class InvoiceGenerationComponent
             SlNo: (index + 1).toString(),
             PrdDesc: row?.serviceName,
             IsServc: "Y",
-            HsnCd: (row?.hsnCode)?.toString(),
+            HsnCd: row?.hsnCode?.toString(),
             Barcde: "000", // Need Clarity
             Qty: row?.quantity,
             FreeQty: 0, // Need Clarity
@@ -1279,11 +1318,20 @@ export class InvoiceGenerationComponent
             AssAmt: Number(row?.quantity) * Number(row?.rate),
             GstRt: invoiceData?.rateDetails?.igstRate,
             // IgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 0 : Number(igstAmt.toFixed(2)),
-            IgstAmt: Number(igstAmt.toFixed(2)),
+            IgstAmt:
+              invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+                ? 0
+                : Number(igstAmt.toFixed(2)),
             // CgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(gstAmt.toFixed(2)) : 0,
-            CgstAmt: 0,
+            CgstAmt:
+              invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+                ? Number(cgstAmt.toFixed(2))
+                : 0,
             // SgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(gstAmt.toFixed(2)) : 0,
-            SgstAmt: 0,
+            SgstAmt:
+              invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+                ? Number(sgstAmt.toFixed(2))
+                : 0,
             CesRt: 0, // Need Clarity
             CesAmt: 0, // Need Clarity
             CesNonAdvlAmt: 0, // Need Clarity
@@ -1308,11 +1356,20 @@ export class InvoiceGenerationComponent
       ValDtls: {
         AssVal: Number(invoiceData?.rateDetails?.amount),
         // CgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(invoiceData?.rateDetails?.taxableAmount)/2 : 0,
-        CgstVal: 0,
+        CgstVal:
+          invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+            ? Number(invoiceData?.rateDetails?.taxableAmount) / 2
+            : 0,
         // SgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(invoiceData?.rateDetails?.taxableAmount)/2 : 0,
-        SgstVal: 0,
+        SgstVal:
+          invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+            ? Number(invoiceData?.rateDetails?.taxableAmount) / 2
+            : 0,
         // IgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 0 : Number(invoiceData?.rateDetails?.taxableAmount),
-        IgstVal: Number(invoiceData?.rateDetails?.taxableAmount),
+        IgstVal:
+          invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+            ? 0
+            : Number(invoiceData?.rateDetails?.taxableAmount),
         CesVal: 0, // Need clarity
         StCesVal: 0, // Need clarity
         Discount: 0,
@@ -1493,14 +1550,27 @@ export class InvoiceGenerationComponent
           this.companyDetailsModel.customerBranchId =
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]!.id;
           this.invoiceFinalData.companyDetails.customer.address =
-            res[0]?.address;
+            this.companyDetailConfig.customerBranchSelectorConfig.options[0]?.address;
           this.invoiceFinalData.companyDetails.customer.address2 =
-            res[0]?.address2;
-          this.invoiceFinalData.companyDetails.customer.gstin = res[0]?.gstin;
+            this.companyDetailConfig.customerBranchSelectorConfig.options[0]?.address2;
+          this.invoiceFinalData.companyDetails.customer.gstin =
+            this.companyDetailConfig.customerBranchSelectorConfig.options[0]?.gstin;
           this.invoiceFinalData.companyDetails.customer.stateName =
-            res[0]?.stateName;
+            this.companyDetailConfig.customerBranchSelectorConfig.options[0]?.stateName;
           this.invoiceFinalData.companyDetails.customer.stateTinCode =
-            res[0]?.stateTinCode;
+            this.companyDetailConfig.customerBranchSelectorConfig.options[0]?.stateTinCode;
+          console.log(this.invoiceFinalData.companyDetails.customer.stateName);
+        }
+        if (
+          this.invoiceFinalData.companyDetails.customer.stateName ==
+          "Maharashtra"
+        ) {
+          this.rateDetailsModel.cgstRate =
+            this.invoiceFinalData.rateDetails.cgstRate = 9;
+          this.rateDetailsModel.sgstRate =
+            this.invoiceFinalData.rateDetails.sgstRate = 9;
+          this.rateDetailsModel.igstRate =
+            this.invoiceFinalData.rateDetails.igstRate = "";
         }
       });
   }
@@ -1517,8 +1587,10 @@ export class InvoiceGenerationComponent
         }
       );
       // Set First Value
-      if (this.shipmentDetailConfig.cargoTypeConfig.options?.length > 0 &&
-        this.invoiceDrawerType == "add") {
+      if (
+        this.shipmentDetailConfig.cargoTypeConfig.options?.length > 0 &&
+        this.invoiceDrawerType == "add"
+      ) {
         this.shipmentDetailsModel.cargoTypeId =
           this.shipmentDetailConfig.cargoTypeConfig.options[0]!.id;
         this.invoiceFinalData.shipmentDetails.cargoTypeName =
@@ -1699,43 +1771,44 @@ export class InvoiceGenerationComponent
   }
 
   generateIRN(payload) {
-    this.invoiceGenerationService.generateIRN(payload).subscribe((res: any) => {
-      console.log(res);
-      if (res?.success) {
-        this.invoiceData.irn = res?.data?.outcome?.Irn;
-        this.invoiceData.ackDate = res?.data?.outcome?.AckDt;
-        this.invoiceData.ackNo = res?.data?.outcome?.AckNo;
-        this.invoiceData.qrCode =
-          "data:image/png;base64," + res?.data?.outcome?.QrImage;
-        this.invoiceData.bankDetails = {
-          id: 1,
-          organizationId: 1,
-          name: "AXIS BANK LTD",
-          branchName: "Mahim",
-          ifscCode: "UTIB0001243",
-          accountNumber: "920020018286808",
-          swiftCode: "UTIB0001243",
-        };
-        this.invoiceData.companyDetails.organization.id =
-          this.companyDetailsModel.organizationId;
-        this.invoiceData.companyDetails.customer.customerId =
-          this.companyDetailsModel.customerId;
-        this.invoiceData.isIrnGenerated = 1;
-        let data = this.generatePostData();
-        data.rateDetails.invoiceItems = this.lineItems;
-        this.addUpdateInvoice(data);
-        // this.onBtnClick.emit("done");
-      } else {
-        this.toasty.error(res?.error?.message);
-        this.onBtnClick.emit("done");
-      }
-    });
+    console.log(payload)
+    // this.invoiceGenerationService.generateIRN(payload).subscribe((res: any) => {
+    //   console.log(res);
+    //   if (res?.success) {
+    //     this.invoiceData.irn = res?.data?.outcome?.Irn;
+    //     this.invoiceData.ackDate = res?.data?.outcome?.AckDt;
+    //     this.invoiceData.ackNo = res?.data?.outcome?.AckNo;
+    //     this.invoiceData.qrCode =
+    //       "data:image/png;base64," + res?.data?.outcome?.QrImage;
+    //     this.invoiceData.bankDetails = {
+    //       id: 1,
+    //       organizationId: 1,
+    //       name: "AXIS BANK LTD",
+    //       branchName: "Mahim",
+    //       ifscCode: "UTIB0001243",
+    //       accountNumber: "920020018286808",
+    //       swiftCode: "UTIB0001243",
+    //     };
+    //     this.invoiceData.companyDetails.organization.id =
+    //       this.companyDetailsModel.organizationId;
+    //     this.invoiceData.companyDetails.customer.customerId =
+    //       this.companyDetailsModel.customerId;
+    //     this.invoiceData.isIrnGenerated = 1;
+    //     let data = this.generatePostData();
+    //     data.rateDetails.invoiceItems = this.lineItems;
+    //     this.addUpdateInvoice(data);
+    //     // this.onBtnClick.emit("done");
+    //   } else {
+    //     this.toasty.error(res?.error?.message);
+    //     this.onBtnClick.emit("done");
+    //   }
+    // });
   }
 
   cancelIRN(payload) {
     this.invoiceGenerationService.cancelIRN(payload).subscribe((res: any) => {
       if (res?.success) {
-        this.updateCancelIRNInvoice(this.invoiceData?.id)
+        this.updateCancelIRNInvoice(this.invoiceData?.id);
       } else {
         this.toasty.error(res?.error?.message);
         this.onBtnClick.emit("done");

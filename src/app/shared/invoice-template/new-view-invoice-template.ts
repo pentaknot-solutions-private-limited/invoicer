@@ -79,10 +79,10 @@ export class InvoicePDF {
     const template = {
       text: `Registered Address:- Flat No. 02, Gulshan Mahal, behind Axis Bank, L.J. Road, Mahim West,
       Mumbai, Mumbai Suburban, Maharashtra, 400016`,
-        bold: false,
-        fontSize: 10,
-        alignment: 'center',
-        margin: [0, 5, 0, 5],
+      bold: false,
+      fontSize: 10,
+      alignment: "center",
+      margin: [0, 5, 0, 5],
     };
     return template;
   }
@@ -211,7 +211,12 @@ export class InvoicePDF {
                         {
                           stack: [
                             {
-                              text: `${invoiceData?.companyDetails?.organization?.cinNo ? invoiceData?.companyDetails?.organization?.cinNo : 'U63090MH2020PTC338237'}`,
+                              text: `${
+                                invoiceData?.companyDetails?.organization?.cinNo
+                                  ? invoiceData?.companyDetails?.organization
+                                      ?.cinNo
+                                  : "U63090MH2020PTC338237"
+                              }`,
                               fontSize: 8,
                               alignment: `left`,
                             },
@@ -242,7 +247,13 @@ export class InvoicePDF {
                         {
                           stack: [
                             {
-                              text: `${invoiceData?.companyDetails?.organization?.pancardNo ? invoiceData?.companyDetails?.organization?.pancardNo : 'AACCU5773F'}`,
+                              text: `${
+                                invoiceData?.companyDetails?.organization
+                                  ?.pancardNo
+                                  ? invoiceData?.companyDetails?.organization
+                                      ?.pancardNo
+                                  : "AACCU5773F"
+                              }`,
                               fontSize: 8,
                               alignment: `left`,
                             },
@@ -569,7 +580,8 @@ export class InvoicePDF {
                             {
                               stack: [
                                 {
-                                  text: `${invoiceData?.shipmentDetails?.placeOfSupply}`,
+                                  // text: `${invoiceData?.shipmentDetails?.placeOfSupply}`,
+                                  text: `${invoiceData?.companyDetails?.customerBranch?.name}`,
                                   fontSize: 10,
                                   alignment: `right`,
                                 },
@@ -651,7 +663,7 @@ export class InvoicePDF {
 
   private createInvoiceTable(invoiceData: any) {
     // data
-    console.log(invoiceData?.rateDetails?.invoiceItems);
+    console.log(invoiceData?.rateDetails);
 
     const costItems = [
       {
@@ -986,7 +998,11 @@ export class InvoicePDF {
                 {
                   text: [
                     { text: `CD No.: `, bold: true },
-                    `${invoiceData?.shipmentDetails?.dispatchDocNo ? invoiceData?.shipmentDetails?.dispatchDocNo : '-'}`,
+                    `${
+                      invoiceData?.shipmentDetails?.dispatchDocNo
+                        ? invoiceData?.shipmentDetails?.dispatchDocNo
+                        : "-"
+                    }`,
                   ],
                   fontSize: 10,
                   alignment: `left`,
@@ -1077,7 +1093,13 @@ export class InvoicePDF {
               rowSpan: 2,
             },
             {
-              text: `IGST`,
+              text: `${
+                invoiceData?.companyDetails?.customerBranch?.name ==
+                "Maharashtra"
+                  ? "CGST + SGST"
+                  : "IGST"
+              }`,
+              // text: `CGST + SGST`,
               alignment: `center`,
               fontSize: 8,
               bold: true,
@@ -1112,8 +1134,14 @@ export class InvoicePDF {
           .concat(
             // Cost Items
             invoiceData?.rateDetails?.invoiceItems.map((item: any, index) => {
-              const igstRateValue =
-                Number(invoiceData?.rateDetails?.igstRate) / 100;
+              const gstRateValue =
+                invoiceData?.companyDetails?.customerBranch?.name ==
+                "Maharashtra"
+                  ? Number(invoiceData?.rateDetails?.sgstRate) +
+                    Number(invoiceData?.rateDetails?.cgstRate)
+                  : Number(invoiceData?.rateDetails?.igstRate);
+              console.log(gstRateValue);
+              const igstRateValue = gstRateValue / 100;
               const igstAmt =
                 (Number(item?.quantity) *
                   Number(item?.rate) *
@@ -1156,9 +1184,7 @@ export class InvoicePDF {
                   alignment: `right`,
                 },
                 {
-                  text: this.numberFormat(
-                    Number(invoiceData?.rateDetails?.igstRate)
-                  ),
+                  text: this.numberFormat(Number(gstRateValue)),
                   fontSize: 8,
                   alignment: `right`,
                 },
@@ -1687,7 +1713,7 @@ export class InvoicePDF {
                             fontSize: 10,
                             alignment: `left`,
                           },
-                          
+
                           {
                             text: `* This is a system-generated invoice; hence it does not require any signature.`,
                             fontSize: 10,
@@ -1963,7 +1989,11 @@ export class InvoicePDF {
   }
 
   calculateGSTAmount(array, invoiceData?: any) {
-    const igstRateValue = Number(invoiceData?.rateDetails?.igstRate) / 100;
+    const igstRateValue =
+      (invoiceData?.companyDetails?.customerBranch?.name == "Maharashtra"
+        ? Number(invoiceData?.rateDetails?.cgstRate) +
+          Number(invoiceData?.rateDetails?.sgstRate)
+        : Number(invoiceData?.rateDetails?.igstRate)) / 100;
     const initialValue = 0;
     const sumWithInitial = array.reduce(
       (accumulator, currentValue) =>

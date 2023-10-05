@@ -312,6 +312,7 @@ export class InvoicesComponent implements OnInit {
 
   // Get invoice Data
   getInvoiceData(invoiceData) {
+    console.log(invoiceData)
     const airlineData = this.airlineData?.find(
       (item: any) =>
         item.airlineCode == invoiceData?.shipmentDetails?.flightNo?.slice(0, 2)
@@ -356,6 +357,12 @@ export class InvoicesComponent implements OnInit {
     this.invoiceFinalData.rateDetails.amount = invoiceData?.rateDetails?.amount;
     this.invoiceFinalData.rateDetails.igstRate = Number(
       invoiceData?.rateDetails?.igstRate
+    );
+    this.invoiceFinalData.rateDetails.cgstRate = Number(
+      invoiceData?.rateDetails?.cgstRate
+    );
+    this.invoiceFinalData.rateDetails.sgstRate = Number(
+      invoiceData?.rateDetails?.sgstRate
     );
     this.invoiceFinalData.invoiceDate = invoiceData?.invoiceDate;
     this.invoiceFinalData.irn = invoiceData?.irn ? invoiceData?.irn : "";

@@ -722,7 +722,7 @@ export class InvoicesConfigs {
   cgstRateInput: ITextConfig = {
     fieldKey: "cgstRate",
     attributes: {
-      title: "CGST",
+      title: "CGST (%)",
       // showBorder: true,
       readonly: true,
       disable: true,
@@ -731,7 +731,7 @@ export class InvoicesConfigs {
   sgstRateInput: ITextConfig = {
     fieldKey: "sgstRate",
     attributes: {
-      title: "SGST",
+      title: "SGST (%)",
       // showBorder: true,
       readonly: true,
       disable: true,
@@ -740,7 +740,7 @@ export class InvoicesConfigs {
   igstRateInput: ITextConfig = {
     fieldKey: "igstRate",
     attributes: {
-      title: "IGST",
+      title: "IGST (%)",
       // showBorder: true,
       readonly: true,
       disable: true,

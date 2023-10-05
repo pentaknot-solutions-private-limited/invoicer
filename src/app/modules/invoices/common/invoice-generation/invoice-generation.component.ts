@@ -1771,38 +1771,37 @@ export class InvoiceGenerationComponent
   }
 
   generateIRN(payload) {
-    console.log(payload)
-    // this.invoiceGenerationService.generateIRN(payload).subscribe((res: any) => {
-    //   console.log(res);
-    //   if (res?.success) {
-    //     this.invoiceData.irn = res?.data?.outcome?.Irn;
-    //     this.invoiceData.ackDate = res?.data?.outcome?.AckDt;
-    //     this.invoiceData.ackNo = res?.data?.outcome?.AckNo;
-    //     this.invoiceData.qrCode =
-    //       "data:image/png;base64," + res?.data?.outcome?.QrImage;
-    //     this.invoiceData.bankDetails = {
-    //       id: 1,
-    //       organizationId: 1,
-    //       name: "AXIS BANK LTD",
-    //       branchName: "Mahim",
-    //       ifscCode: "UTIB0001243",
-    //       accountNumber: "920020018286808",
-    //       swiftCode: "UTIB0001243",
-    //     };
-    //     this.invoiceData.companyDetails.organization.id =
-    //       this.companyDetailsModel.organizationId;
-    //     this.invoiceData.companyDetails.customer.customerId =
-    //       this.companyDetailsModel.customerId;
-    //     this.invoiceData.isIrnGenerated = 1;
-    //     let data = this.generatePostData();
-    //     data.rateDetails.invoiceItems = this.lineItems;
-    //     this.addUpdateInvoice(data);
-    //     // this.onBtnClick.emit("done");
-    //   } else {
-    //     this.toasty.error(res?.error?.message);
-    //     this.onBtnClick.emit("done");
-    //   }
-    // });
+    this.invoiceGenerationService.generateIRN(payload).subscribe((res: any) => {
+      console.log(res);
+      if (res?.success) {
+        this.invoiceData.irn = res?.data?.outcome?.Irn;
+        this.invoiceData.ackDate = res?.data?.outcome?.AckDt;
+        this.invoiceData.ackNo = res?.data?.outcome?.AckNo;
+        this.invoiceData.qrCode =
+          "data:image/png;base64," + res?.data?.outcome?.QrImage;
+        this.invoiceData.bankDetails = {
+          id: 1,
+          organizationId: 1,
+          name: "AXIS BANK LTD",
+          branchName: "Mahim",
+          ifscCode: "UTIB0001243",
+          accountNumber: "920020018286808",
+          swiftCode: "UTIB0001243",
+        };
+        this.invoiceData.companyDetails.organization.id =
+          this.companyDetailsModel.organizationId;
+        this.invoiceData.companyDetails.customer.customerId =
+          this.companyDetailsModel.customerId;
+        this.invoiceData.isIrnGenerated = 1;
+        let data = this.generatePostData();
+        data.rateDetails.invoiceItems = this.lineItems;
+        this.addUpdateInvoice(data);
+        // this.onBtnClick.emit("done");
+      } else {
+        this.toasty.error(res?.error?.message);
+        this.onBtnClick.emit("done");
+      }
+    });
   }
 
   cancelIRN(payload) {

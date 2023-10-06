@@ -20,6 +20,7 @@ export class InvoicePDF {
   private bindingData: bindingDataModel;
   private documentDefinition: any;
   gstTotalAmt: any;
+  totalItemValue: number;
   // stampBase64
   constructor(bindingData: bindingDataModel) {
     this.bindingData = bindingData;
@@ -690,11 +691,11 @@ export class InvoicePDF {
 
     const table = {
       table: {
-        widths: [15, 80, 27, 20, 45, 25, 40, 50, 50, 30, "*", 40],
+        widths: [15, 60, 27, 20, 40, 25, 40, 30, 50, 22, 22, 21, "*", 40],
         body: [
           [
             {
-              colSpan: 7,
+              colSpan: 8,
               stack: [
                 {
                   columns: [
@@ -935,8 +936,9 @@ export class InvoicePDF {
             {},
             {},
             {},
+            {},
             {
-              colSpan: 5,
+              colSpan: 6,
               stack: [
                 // {
                 //   text: [{ text: `Shipper Ref. : `, bold: true }, ``],
@@ -1013,6 +1015,8 @@ export class InvoicePDF {
             {},
             {},
             {},
+            {},
+            
           ],
           [
             {
@@ -1093,18 +1097,20 @@ export class InvoicePDF {
               rowSpan: 2,
             },
             {
-              text: `${
-                invoiceData?.companyDetails?.customerBranch?.name ==
-                "Maharashtra"
-                  ? "CGST + SGST"
-                  : "IGST"
-              }`,
-              // text: `CGST + SGST`,
+              // text: `${
+              //   invoiceData?.companyDetails?.customerBranch?.name ==
+              //   "Maharashtra"
+              //     ? "CGST + SGST"
+              //     : "IGST"
+              // }`,
+              text: `GST`,
               alignment: `center`,
               fontSize: 8,
               bold: true,
-              colSpan: 2,
+              colSpan: 4,
             },
+            {},
+            {},
             {},
             {
               text: "Total (INR)",
@@ -1126,7 +1132,9 @@ export class InvoicePDF {
             {},
             // {},
             // {},
-            { text: `Rate`, alignment: `center`, fontSize: 8, bold: true },
+            { text: `CGST`, alignment: `center`, fontSize: 8, bold: true },
+            { text: `SGST`, alignment: `center`, fontSize: 8, bold: true },
+            { text: `IGST`, alignment: `center`, fontSize: 8, bold: true },
             { text: `Amount`, alignment: `center`, fontSize: 8, bold: true },
             {},
           ],
@@ -1148,8 +1156,9 @@ export class InvoicePDF {
                   Number(igstRateValue) *
                   100) /
                 100;
-              const totItemVal =
+              const totItemVal = 
                 Number(item?.quantity) * Number(item?.rate) + Number(igstAmt);
+              this.totalItemValue += totItemVal
               return [
                 { text: `${index + 1}`, fontSize: 8 },
                 { text: item?.serviceName, fontSize: 8 },
@@ -1184,7 +1193,17 @@ export class InvoicePDF {
                   alignment: `right`,
                 },
                 {
-                  text: this.numberFormat(Number(gstRateValue)),
+                  text: this.numberFormat(Number(invoiceData?.rateDetails?.cgstRate))+".00",
+                  fontSize: 8,
+                  alignment: `right`,
+                },
+                {
+                  text: this.numberFormat(Number(invoiceData?.rateDetails?.cgstRate))+".00",
+                  fontSize: 8,
+                  alignment: `right`,
+                },
+                {
+                  text: this.numberFormat(Number(invoiceData?.rateDetails?.igstRate)),
                   fontSize: 8,
                   alignment: `right`,
                 },
@@ -1210,9 +1229,10 @@ export class InvoicePDF {
                   alignment: `left`,
                   fontSize: 7,
                   bold: true,
-                  colSpan: 5,
+                  colSpan: 6,
                   margin: [0, 1.5, 0, 0],
                 },
+                {},
                 {},
                 {},
                 {},
@@ -1225,7 +1245,6 @@ export class InvoicePDF {
                   bold: true,
                   colSpan: 2,
                 },
-                {},
                 // {
                 //   text: ``,
                 //   alignment: `center`,
@@ -1241,7 +1260,7 @@ export class InvoicePDF {
                     )
                   ),
                   alignment: `right`,
-                  fontSize: 8,
+                  fontSize: 7,
                   bold: true,
                 },
                 {
@@ -1252,26 +1271,29 @@ export class InvoicePDF {
                     )
                   ),
                   alignment: `right`,
-                  fontSize: 8,
+                  fontSize: 7,
                   bold: true,
-                  colSpan: 2,
+                  colSpan: 4,
                 },
+                {},
+                {},
                 {},
                 {
                   text: this.numberFormat(
                     Number(invoiceData?.rateDetails?.totalAmount)
                   ),
                   alignment: `right`,
-                  fontSize: 8,
+                  fontSize: 7,
                   bold: true,
                 },
+                
               ],
             ] as any
           )
           .concat([
             [
               {
-                colSpan: 7,
+                colSpan: 8,
                 stack: [
                   {
                     columns: [
@@ -1345,8 +1367,9 @@ export class InvoicePDF {
               {},
               {},
               {},
+              {},
               {
-                colSpan: 5,
+                colSpan: 6,
                 stack: [
                   {
                     columns: [
@@ -1624,12 +1647,13 @@ export class InvoicePDF {
               {},
               {},
               {},
+              {},
             ],
           ] as any)
           .concat([
             [
               {
-                colSpan: 12,
+                colSpan: 14,
                 stack: [
                   {
                     text: [
@@ -1651,12 +1675,15 @@ export class InvoicePDF {
               {},
               {},
               {},
+              {},
+              {},
+              {},
             ],
           ] as any)
           .concat([
             [
               {
-                colSpan: 12,
+                colSpan: 14,
                 stack: [
                   {
                     text: `Remark : `,
@@ -1676,12 +1703,15 @@ export class InvoicePDF {
               {},
               {},
               {},
+              {},
+              {},
+              {},
             ],
           ] as any)
           .concat([
             [
               {
-                colSpan: 12,
+                colSpan: 14,
                 stack: [
                   {
                     columns: [
@@ -1763,6 +1793,9 @@ export class InvoicePDF {
                   },
                 ],
               },
+              {},
+              {},
+              {},
               {},
               {},
               {},

@@ -873,7 +873,7 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.stateTinCode;
         if (
           this.invoiceFinalData.companyDetails.customer.stateName ==
-          this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
+          event?.selectedObj?.stateName
         ) {
           this.rateDetailsModel.cgstRate =
             this.invoiceFinalData.rateDetails.cgstRate = 9;
@@ -889,7 +889,7 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.name;
         break;
       case "customerBranch":
-        // this.getAllBranchByCustomerId();
+        this.getAllBranchByCustomerId();
         this.invoiceFinalData.companyDetails.customer.address =
           event?.selectedObj?.address;
         this.invoiceFinalData.companyDetails.customer.address2 =
@@ -900,17 +900,7 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.stateName;
         this.invoiceFinalData.companyDetails.customer.stateTinCode =
           event?.selectedObj?.stateTinCode;
-        if (
-          this.invoiceFinalData.companyDetails.customer.stateName ==
-          this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
-        ) {
-          this.rateDetailsModel.cgstRate =
-            this.invoiceFinalData.rateDetails.cgstRate = 9;
-          this.rateDetailsModel.sgstRate =
-            this.invoiceFinalData.rateDetails.sgstRate = 9;
-          this.rateDetailsModel.igstRate =
-            this.invoiceFinalData.rateDetails.igstRate = "";
-        }
+        
         break;
       case "country":
         this.consignmentDetailConfig.destinationPort.options =
@@ -1610,6 +1600,17 @@ export class InvoiceGenerationComponent
           this.invoiceFinalData.companyDetails.customer.stateTinCode =
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]?.stateTinCode;
           console.log(this.invoiceFinalData.companyDetails.customer.stateName);
+        }
+        if (
+          this.invoiceFinalData.companyDetails.customer.stateName ==
+          this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
+        ) {
+          this.rateDetailsModel.cgstRate =
+            this.invoiceFinalData.rateDetails.cgstRate = 9;
+          this.rateDetailsModel.sgstRate =
+            this.invoiceFinalData.rateDetails.sgstRate = 9;
+          this.rateDetailsModel.igstRate =
+            this.invoiceFinalData.rateDetails.igstRate = "";
         }
       });
   }

@@ -728,19 +728,30 @@ export class InvoiceGenerationComponent
         this.rateDetailsModel.amount -
         Number(this.lineItemForm.get("lineItemList").value[i].quantity) *
           Number(this.lineItemForm.get("lineItemList").value[i].rate);
+      // const igstRateValue =
+      //   this.invoiceData?.companyDetails?.customer?.stateName ==
+      //   this.invoiceData?.companyDetails?.organizationBranch?.stateName
+      //     ? (Number(this.rateDetailsModel?.sgstRate.toString().split("%")[0]) +
+      //         Number(
+      //           this.rateDetailsModel?.cgstRate.toString().split("%")[0]
+      //         )) /
+      //       100
+      //     : Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) /
+      //       100;
+      const cgstRateValue =
+        Number(this.rateDetailsModel?.cgstRate.toString().split("%")[0]) / 100;
+      const sgstRateValue =
+        Number(this.rateDetailsModel?.sgstRate.toString().split("%")[0]) / 100;
       const igstRateValue =
-        this.invoiceData?.companyDetails?.customer?.stateName ==
-        this.invoiceData?.companyDetails?.organizationBranch?.stateName
-          ? (Number(this.rateDetailsModel?.sgstRate.toString().split("%")[0]) +
-              Number(
-                this.rateDetailsModel?.cgstRate.toString().split("%")[0]
-              )) /
-            100
-          : Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) /
-            100;
+        Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) / 100;
       this.rateDetailsModel.taxableAmount =
         Math.round(
-          Number(this.rateDetailsModel?.amount) * Number(igstRateValue) * 100
+          Number(this.rateDetailsModel?.amount) *
+            (this.invoiceFinalData?.companyDetails?.customer?.stateName ==
+            this.invoiceFinalData?.companyDetails?.organization?.stateName
+              ? Number(cgstRateValue) + Number(sgstRateValue)
+              : Number(igstRateValue)) *
+            100
         ) / 100;
 
       // Update Total Amount
@@ -983,12 +994,17 @@ export class InvoiceGenerationComponent
         this.rateDetailsModel.taxableAmount =
           Math.round(
             Number(this.rateDetailsModel?.amount) *
-              (this.invoiceData?.companyDetails?.customer?.stateName ==
-              this.invoiceData?.companyDetails?.organizationBranch?.stateName
+              (this.invoiceFinalData?.companyDetails?.customer?.stateName ==
+              this.invoiceFinalData?.companyDetails?.organization?.stateName
                 ? Number(cgstRateValue) + Number(sgstRateValue)
                 : Number(igstRateValue)) *
               100
           ) / 100;
+        console.log(
+          this.invoiceData,
+          this.invoiceFinalData,
+          this.rateDetailsModel
+        );
 
         // Update Total Amount
         this.rateDetailsModel.totalAmount = Math.round(

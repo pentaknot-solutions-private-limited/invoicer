@@ -858,7 +858,6 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.name;
         this.invoiceFinalData.companyDetails.organization.emailId =
           event?.selectedObj?.emailId;
-
         break;
       case "orgBranch":
         // this.getAllBranchByOrgId();
@@ -871,17 +870,8 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.stateName;
         this.invoiceFinalData.companyDetails.organization.stateTinCode =
           event?.selectedObj?.stateTinCode;
-        if (
-          this.invoiceFinalData.companyDetails.customer.stateName ==
-          event?.selectedObj?.stateName
-        ) {
-          this.rateDetailsModel.cgstRate =
-            this.invoiceFinalData.rateDetails.cgstRate = 9;
-          this.rateDetailsModel.sgstRate =
-            this.invoiceFinalData.rateDetails.sgstRate = 9;
-          this.rateDetailsModel.igstRate =
-            this.invoiceFinalData.rateDetails.igstRate = "";
-        }
+
+        this.calculateGst();
         break;
       case "customer":
         this.getAllBranchByCustomerId();
@@ -900,7 +890,7 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.stateName;
         this.invoiceFinalData.companyDetails.customer.stateTinCode =
           event?.selectedObj?.stateTinCode;
-        
+        this.calculateGst();
         break;
       case "country":
         this.consignmentDetailConfig.destinationPort.options =
@@ -995,7 +985,7 @@ export class InvoiceGenerationComponent
             Number(this.rateDetailsModel?.amount) *
               (this.invoiceData?.companyDetails?.customer?.stateName ==
               this.invoiceData?.companyDetails?.organizationBranch?.stateName
-                ? cgstRateValue + sgstRateValue
+                ? Number(cgstRateValue) + Number(sgstRateValue)
                 : Number(igstRateValue)) *
               100
           ) / 100;
@@ -1322,7 +1312,11 @@ export class InvoiceGenerationComponent
               100) /
             100;
           const totItemVal =
-            Number(row?.quantity) * Number(row?.rate) + Number(igstAmt);
+            Number(row?.quantity) * Number(row?.rate) +
+            (invoiceData?.companyDetails?.customer?.stateName ==
+            invoiceData?.companyDetails?.organizationBranch?.stateName
+              ? Number(cgstAmt) + Number(sgstAmt)
+              : Number(igstAmt));
           return {
             SlNo: (index + 1).toString(),
             PrdDesc: row?.serviceName,
@@ -1337,7 +1331,12 @@ export class InvoiceGenerationComponent
             Discount: 0,
             PreTaxVal: Number(row?.quantity) * Number(row?.rate),
             AssAmt: Number(row?.quantity) * Number(row?.rate),
-            GstRt: invoiceData?.rateDetails?.igstRate,
+            GstRt:
+              invoiceData?.companyDetails?.customer?.stateName ==
+              invoiceData?.companyDetails?.organizationBranch?.stateName
+                ? Number(invoiceData?.rateDetails?.cgstRate) +
+                  Number(invoiceData?.rateDetails?.sgstRate)
+                : invoiceData?.rateDetails?.igstRate,
             // IgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 0 : Number(igstAmt.toFixed(2)),
             IgstAmt:
               invoiceData?.companyDetails?.customer?.stateName ==
@@ -1472,6 +1471,28 @@ export class InvoiceGenerationComponent
     }, 1000); // update every second
   }
 
+  calculateGst() {
+    let organizationStateName =
+      this.invoiceFinalData.companyDetails.organization.stateName;
+    let customerStateName =
+      this.invoiceFinalData.companyDetails.customer.stateName;
+    if (customerStateName == organizationStateName) {
+      this.rateDetailsModel.cgstRate =
+        this.invoiceFinalData.rateDetails.cgstRate = 9;
+      this.rateDetailsModel.sgstRate =
+        this.invoiceFinalData.rateDetails.sgstRate = 9;
+      this.rateDetailsModel.igstRate =
+        this.invoiceFinalData.rateDetails.igstRate = "";
+    } else {
+      this.rateDetailsModel.cgstRate =
+        this.invoiceFinalData.rateDetails.cgstRate = "";
+      this.rateDetailsModel.sgstRate =
+        this.invoiceFinalData.rateDetails.sgstRate = "";
+      this.rateDetailsModel.igstRate =
+        this.invoiceFinalData.rateDetails.igstRate = 18;
+    }
+  }
+
   // API Call
   getAllOrganization() {
     this.invoiceGenerationService.getAllOrganization().subscribe((res: any) => {
@@ -1530,17 +1551,18 @@ export class InvoiceGenerationComponent
             this.companyDetailConfig.branchSelectorConfig.options[0]?.cityCode; //cityCode
         }
 
-        if (
-          this.invoiceFinalData.companyDetails.customer.stateName ==
-          this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
-        ) {
-          this.rateDetailsModel.cgstRate =
-            this.invoiceFinalData.rateDetails.cgstRate = 9;
-          this.rateDetailsModel.sgstRate =
-            this.invoiceFinalData.rateDetails.sgstRate = 9;
-          this.rateDetailsModel.igstRate =
-            this.invoiceFinalData.rateDetails.igstRate = "";
-        }
+        // if (
+        //   this.invoiceFinalData.companyDetails.customer.stateName ==
+        //   this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
+        // ) {
+        //   this.rateDetailsModel.cgstRate =
+        //     this.invoiceFinalData.rateDetails.cgstRate = 9;
+        //   this.rateDetailsModel.sgstRate =
+        //     this.invoiceFinalData.rateDetails.sgstRate = 9;
+        //   this.rateDetailsModel.igstRate =
+        //     this.invoiceFinalData.rateDetails.igstRate = "";
+        // }
+        this.calculateGst();
       });
   }
   // Customer
@@ -1601,17 +1623,18 @@ export class InvoiceGenerationComponent
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]?.stateTinCode;
           console.log(this.invoiceFinalData.companyDetails.customer.stateName);
         }
-        if (
-          this.invoiceFinalData.companyDetails.customer.stateName ==
-          this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
-        ) {
-          this.rateDetailsModel.cgstRate =
-            this.invoiceFinalData.rateDetails.cgstRate = 9;
-          this.rateDetailsModel.sgstRate =
-            this.invoiceFinalData.rateDetails.sgstRate = 9;
-          this.rateDetailsModel.igstRate =
-            this.invoiceFinalData.rateDetails.igstRate = "";
-        }
+        this.calculateGst();
+        // if (
+        //   this.invoiceFinalData.companyDetails.customer.stateName ==
+        //   this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
+        // ) {
+        //   this.rateDetailsModel.cgstRate =
+        //     this.invoiceFinalData.rateDetails.cgstRate = 9;
+        //   this.rateDetailsModel.sgstRate =
+        //     this.invoiceFinalData.rateDetails.sgstRate = 9;
+        //   this.rateDetailsModel.igstRate =
+        //     this.invoiceFinalData.rateDetails.igstRate = "";
+        // }
       });
   }
 

@@ -1143,8 +1143,8 @@ export class InvoicePDF {
             // Cost Items
             invoiceData?.rateDetails?.invoiceItems.map((item: any, index) => {
               const gstRateValue =
-                invoiceData?.companyDetails?.customerBranch?.name ==
-                "Maharashtra"
+                invoiceData?.companyDetails?.customerBranch?.stateName ==
+                invoiceData?.companyDetails?.organizationBranch?.stateName
                   ? Number(invoiceData?.rateDetails?.sgstRate) +
                     Number(invoiceData?.rateDetails?.cgstRate)
                   : Number(invoiceData?.rateDetails?.igstRate);
@@ -2023,7 +2023,8 @@ export class InvoicePDF {
 
   calculateGSTAmount(array, invoiceData?: any) {
     const igstRateValue =
-      (invoiceData?.companyDetails?.customerBranch?.name == "Maharashtra"
+      (invoiceData?.companyDetails?.customerBranch?.stateName ==
+        invoiceData?.companyDetails?.organizationBranch?.stateName
         ? Number(invoiceData?.rateDetails?.cgstRate) +
           Number(invoiceData?.rateDetails?.sgstRate)
         : Number(invoiceData?.rateDetails?.igstRate)) / 100;

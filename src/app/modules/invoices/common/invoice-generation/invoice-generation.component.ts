@@ -729,10 +729,13 @@ export class InvoiceGenerationComponent
         Number(this.lineItemForm.get("lineItemList").value[i].quantity) *
           Number(this.lineItemForm.get("lineItemList").value[i].rate);
       const igstRateValue =
-        this.invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+        this.invoiceData?.companyDetails?.customer?.stateName ==
+        this.invoiceData?.companyDetails?.organizationBranch?.stateName
           ? (Number(this.rateDetailsModel?.sgstRate.toString().split("%")[0]) +
-            Number(this.rateDetailsModel?.cgstRate.toString().split("%")[0])) /
-              100
+              Number(
+                this.rateDetailsModel?.cgstRate.toString().split("%")[0]
+              )) /
+            100
           : Number(this.rateDetailsModel?.igstRate.toString().split("%")[0]) /
             100;
       this.rateDetailsModel.taxableAmount =
@@ -858,6 +861,7 @@ export class InvoiceGenerationComponent
 
         break;
       case "orgBranch":
+        // this.getAllBranchByOrgId();
         this.companyDetailsModel.cityCode = event.selectedObj.cityCode;
         this.invoiceFinalData.companyDetails.organization.address =
           event?.selectedObj?.address;
@@ -867,6 +871,17 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.stateName;
         this.invoiceFinalData.companyDetails.organization.stateTinCode =
           event?.selectedObj?.stateTinCode;
+        if (
+          this.invoiceFinalData.companyDetails.customer.stateName ==
+          this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
+        ) {
+          this.rateDetailsModel.cgstRate =
+            this.invoiceFinalData.rateDetails.cgstRate = 9;
+          this.rateDetailsModel.sgstRate =
+            this.invoiceFinalData.rateDetails.sgstRate = 9;
+          this.rateDetailsModel.igstRate =
+            this.invoiceFinalData.rateDetails.igstRate = "";
+        }
         break;
       case "customer":
         this.getAllBranchByCustomerId();
@@ -874,7 +889,7 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.name;
         break;
       case "customerBranch":
-        this.getAllBranchByCustomerId();
+        // this.getAllBranchByCustomerId();
         this.invoiceFinalData.companyDetails.customer.address =
           event?.selectedObj?.address;
         this.invoiceFinalData.companyDetails.customer.address2 =
@@ -885,6 +900,17 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.stateName;
         this.invoiceFinalData.companyDetails.customer.stateTinCode =
           event?.selectedObj?.stateTinCode;
+        if (
+          this.invoiceFinalData.companyDetails.customer.stateName ==
+          this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
+        ) {
+          this.rateDetailsModel.cgstRate =
+            this.invoiceFinalData.rateDetails.cgstRate = 9;
+          this.rateDetailsModel.sgstRate =
+            this.invoiceFinalData.rateDetails.sgstRate = 9;
+          this.rateDetailsModel.igstRate =
+            this.invoiceFinalData.rateDetails.igstRate = "";
+        }
         break;
       case "country":
         this.consignmentDetailConfig.destinationPort.options =
@@ -976,7 +1002,12 @@ export class InvoiceGenerationComponent
           100;
         this.rateDetailsModel.taxableAmount =
           Math.round(
-            Number(this.rateDetailsModel?.amount) * (this.invoiceData?.companyDetails?.customer?.stateName == "Maharashtra" ? cgstRateValue + sgstRateValue : Number(igstRateValue)) * 100
+            Number(this.rateDetailsModel?.amount) *
+              (this.invoiceData?.companyDetails?.customer?.stateName ==
+              this.invoiceData?.companyDetails?.organizationBranch?.stateName
+                ? cgstRateValue + sgstRateValue
+                : Number(igstRateValue)) *
+              100
           ) / 100;
 
         // Update Total Amount
@@ -1319,17 +1350,20 @@ export class InvoiceGenerationComponent
             GstRt: invoiceData?.rateDetails?.igstRate,
             // IgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 0 : Number(igstAmt.toFixed(2)),
             IgstAmt:
-              invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+              invoiceData?.companyDetails?.customer?.stateName ==
+              invoiceData?.companyDetails?.organizationBranch?.stateName
                 ? 0
                 : Number(igstAmt.toFixed(2)),
             // CgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(gstAmt.toFixed(2)) : 0,
             CgstAmt:
-              invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+              invoiceData?.companyDetails?.customer?.stateName ==
+              invoiceData?.companyDetails?.organizationBranch?.stateName
                 ? Number(cgstAmt.toFixed(2))
                 : 0,
             // SgstAmt: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(gstAmt.toFixed(2)) : 0,
             SgstAmt:
-              invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+              invoiceData?.companyDetails?.customer?.stateName ==
+              invoiceData?.companyDetails?.organizationBranch?.stateName
                 ? Number(sgstAmt.toFixed(2))
                 : 0,
             CesRt: 0, // Need Clarity
@@ -1357,17 +1391,20 @@ export class InvoiceGenerationComponent
         AssVal: Number(invoiceData?.rateDetails?.amount),
         // CgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(invoiceData?.rateDetails?.taxableAmount)/2 : 0,
         CgstVal:
-          invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+          invoiceData?.companyDetails?.customer?.stateName ==
+          invoiceData?.companyDetails?.organizationBranch?.stateName
             ? Number(invoiceData?.rateDetails?.taxableAmount) / 2
             : 0,
         // SgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(invoiceData?.rateDetails?.taxableAmount)/2 : 0,
         SgstVal:
-          invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+          invoiceData?.companyDetails?.customer?.stateName ==
+          invoiceData?.companyDetails?.organizationBranch?.stateName
             ? Number(invoiceData?.rateDetails?.taxableAmount) / 2
             : 0,
         // IgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 0 : Number(invoiceData?.rateDetails?.taxableAmount),
         IgstVal:
-          invoiceData?.companyDetails?.customer?.stateName == "Maharashtra"
+          invoiceData?.companyDetails?.customer?.stateName ==
+          invoiceData?.companyDetails?.organizationBranch?.stateName
             ? 0
             : Number(invoiceData?.rateDetails?.taxableAmount),
         CesVal: 0, // Need clarity
@@ -1492,14 +1529,27 @@ export class InvoiceGenerationComponent
           this.companyDetailsModel.organizationBranchId =
             this.companyDetailConfig.branchSelectorConfig.options[0]!.id;
           this.invoiceFinalData.companyDetails.organization.address =
-            res[0]?.address;
+            this.companyDetailConfig.branchSelectorConfig.options[0]?.address;
           this.invoiceFinalData.companyDetails.organization.gstin =
-            res[0]?.gstin;
+            this.companyDetailConfig.branchSelectorConfig.options[0]?.gstin;
           this.invoiceFinalData.companyDetails.organization.stateName =
-            res[0]?.stateName;
+            this.companyDetailConfig.branchSelectorConfig.options[0]?.stateName;
           this.invoiceFinalData.companyDetails.organization.stateTinCode =
-            res[0]?.stateTinCode;
-          this.companyDetailsModel.cityCode = res[0]?.cityCode; //cityCode
+            this.companyDetailConfig.branchSelectorConfig.options[0]?.stateTinCode;
+          this.companyDetailsModel.cityCode =
+            this.companyDetailConfig.branchSelectorConfig.options[0]?.cityCode; //cityCode
+        }
+
+        if (
+          this.invoiceFinalData.companyDetails.customer.stateName ==
+          this.invoiceFinalData?.companyDetails?.organizationBranch?.stateName
+        ) {
+          this.rateDetailsModel.cgstRate =
+            this.invoiceFinalData.rateDetails.cgstRate = 9;
+          this.rateDetailsModel.sgstRate =
+            this.invoiceFinalData.rateDetails.sgstRate = 9;
+          this.rateDetailsModel.igstRate =
+            this.invoiceFinalData.rateDetails.igstRate = "";
         }
       });
   }
@@ -1560,17 +1610,6 @@ export class InvoiceGenerationComponent
           this.invoiceFinalData.companyDetails.customer.stateTinCode =
             this.companyDetailConfig.customerBranchSelectorConfig.options[0]?.stateTinCode;
           console.log(this.invoiceFinalData.companyDetails.customer.stateName);
-        }
-        if (
-          this.invoiceFinalData.companyDetails.customer.stateName ==
-          "Maharashtra"
-        ) {
-          this.rateDetailsModel.cgstRate =
-            this.invoiceFinalData.rateDetails.cgstRate = 9;
-          this.rateDetailsModel.sgstRate =
-            this.invoiceFinalData.rateDetails.sgstRate = 9;
-          this.rateDetailsModel.igstRate =
-            this.invoiceFinalData.rateDetails.igstRate = "";
         }
       });
   }

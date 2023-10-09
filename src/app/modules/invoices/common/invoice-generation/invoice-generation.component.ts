@@ -404,6 +404,12 @@ export class InvoiceGenerationComponent
       this.getAllBranchByOrgId();
       this.getAllBranchByCustomerId();
     }, 500);
+    if (
+      this.invoiceDrawerType === "edit" &&
+      JSON.stringify(this.invoiceData) != "{}"
+    ) {
+      this.invoiceFinalData.companyDetails = this.invoiceData.companyDetails;
+    }
   }
 
   ngOnChanges() {
@@ -776,7 +782,6 @@ export class InvoiceGenerationComponent
     //     ...row
     //   }
     // })
-    console.log();
   }
 
   getLineItem(i) {
@@ -881,7 +886,7 @@ export class InvoiceGenerationComponent
           event?.selectedObj?.stateName;
         this.invoiceFinalData.companyDetails.organization.stateTinCode =
           event?.selectedObj?.stateTinCode;
-
+        console.log(this.invoiceFinalData, "invoiceFinalData");
         this.calculateGst();
         break;
       case "customer":
@@ -978,6 +983,8 @@ export class InvoiceGenerationComponent
     switch (type) {
       case "quantity":
       case "rate":
+        console.log("rate is changed");
+
         this.rateDetailsModel.amount = this.calculateAmount(
           this.lineItemForm.get("lineItemList").value
         );
@@ -1488,10 +1495,16 @@ export class InvoiceGenerationComponent
   }
 
   calculateGst() {
-    let organizationStateName =
-      this.invoiceFinalData.companyDetails.organization.stateName;
-    let customerStateName =
-      this.invoiceFinalData.companyDetails.customer.stateName;
+    console.log(this.invoiceFinalData, this.invoiceData);
+    let organizationStateName = this.invoiceFinalData.companyDetails
+      .organization.stateName
+      ? this.invoiceFinalData.companyDetails.organization.stateName
+      : this.invoiceData.companyDetails.organization.stateName;
+    let customerStateName = this.invoiceFinalData.companyDetails.customer
+      .stateName
+      ? this.invoiceFinalData.companyDetails.customer.stateName
+      : this.invoiceData.companyDetails.customer.stateName;
+
     if (customerStateName == organizationStateName) {
       this.rateDetailsModel.cgstRate =
         this.invoiceFinalData.rateDetails.cgstRate = 9;

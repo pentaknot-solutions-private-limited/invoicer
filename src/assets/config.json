@@ -1,4 +1,4 @@
 {
-  "apiURL": "https://api-ci.pentabridge.com",
-  "IRN_GENERATION_API_ENDPOINT": "http://43.204.84.29:8087"
+  "apiURL": "https://api-ci.mversesolutions.com",
+  "IRN_GENERATION_API_ENDPOINT": "https://einvoice.mversesolutions.com"
 }

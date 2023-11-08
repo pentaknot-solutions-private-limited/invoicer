@@ -382,9 +382,7 @@ export class InvoicePDF {
                             {
                               stack: [
                                 {
-                                  text: `${invoiceData?.companyDetails?.customer?.gstin
-                                    ?.slice(0, -3)
-                                    .substring(2)}`,
+                                  text: `${invoiceData?.companyDetails?.customer?.panNo}`,
                                   fontSize: 10,
                                   alignment: `left`,
                                 },

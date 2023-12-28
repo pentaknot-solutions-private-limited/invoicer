@@ -16,17 +16,16 @@
   font-family: $primary_font-family;
   color: #767676;
   transition: 0.5s;
-  
-
 }
 .title2 {
   margin-bottom: 5px;
   font-size: 12px;
-  font-weight: 600;
+  // font-weight: 600;
+  font-weight: 400;
   font-family: $primary_font-family;
-  color: #051226;
+  // color: #051226;
+  color: #767676;
   transition: 0.5s;
-
 }
 .error-custom {
   color: #851414;
@@ -52,7 +51,7 @@
 }
 
 .showEye.showIcon {
-  color: #5E6871;
+  color: #5e6871;
 }
 
 input {
@@ -106,7 +105,7 @@ input {
       &.mat-form-field-disabled.readonly {
         pointer-events: none;
         .mat-form-field-flex {
-          background-color: #E5E7EB !important;
+          background-color: #e5e7eb !important;
         }
         .mat-input-element:disabled {
           color: #7c8188;
@@ -162,7 +161,6 @@ input {
             // top: -2px !important;
             // top: -4px !important;
             // left: 2em;
-            
           }
           .mat-form-field-infix {
             border-top-width: 4px;
@@ -254,11 +252,11 @@ input {
   }
   .hasError .mat-form-field-infix {
     border: 1px solid #eb5757 !important;
-    outline: #fadddd solid 2px  !important;
+    outline: #fadddd solid 2px !important;
   }
   .valid .mat-form-field-infix {
     border: 1px solid #3f9171 !important;
-    outline: #cee9e3 solid 2px  !important;
+    outline: #cee9e3 solid 2px !important;
   }
   .showBorder .mat-form-field-infix {
     border: 1px solid #dee5ef !important;
@@ -277,7 +275,7 @@ input {
     width: calc(100% - 1.5em);
     margin-left: 1.5em;
   }
-  span.svg_icon.vsa-icon_delete-circle.solid.smallSize{
+  span.svg_icon.vsa-icon_delete-circle.solid.smallSize {
     font-size: 9px;
     height: 9px;
     width: 9px;

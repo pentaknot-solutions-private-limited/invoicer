@@ -2,11 +2,53 @@
   {
     "top": [
       {
-        "name": "Invoices",
+        "name": "Invoice",
         "icon": "assignment",
         "isActive": false,
         "size": "medium",
-        "route": "/policies"
+        "route": "/invoices"
+      },
+      {
+        "name": "Customer",
+        "icon": "group",
+        "isActive": false,
+        "size": "medium",
+        "route": "/customer"
+      },
+      {
+        "name": "Purchase",
+        "icon": "shopping_bag",
+        "isActive": false,
+        "size": "medium",
+        "route": "/purchase"
+      },
+      {
+        "name": "Sale",
+        "icon": "payments",
+        "isActive": false,
+        "size": "medium",
+        "route": "/sale"
+      },
+      {
+        "name": "Mechanical",
+        "icon": "engineering",
+        "isActive": false,
+        "size": "medium",
+        "route": "/mechanical"
+      },
+      {
+        "name": "Expense",
+        "icon": "wallet",
+        "isActive": false,
+        "size": "medium",
+        "route": "/expense"
+      },
+      {
+        "name": "Reports",
+        "icon": "insert_chart",
+        "isActive": false,
+        "size": "medium",
+        "route": "/report"
       }
     ],
     "bottom": [

@@ -253,7 +253,7 @@ export class InvoiceGenerationComponent
   selectedPlaceOfDeliveryCountry: any = "";
   selectedPlaceOfDeliveryState: any = "";
   selectedPlaceOfDeliveryCity: any = "";
-  organizationName = "UNIFIED LOGISTICS SOLUTIONS PRIVATE LIMITED";
+  organizationName = "PENTAKNOT SOLUTIONS PRIVATE LIMITED";
   customerName = "QWERTY India Ltd.";
   cargoType = "Airways";
   airline = "Air India";

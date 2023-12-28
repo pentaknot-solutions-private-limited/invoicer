@@ -1,0 +1,365 @@
+<div class="drawer-body">
+  <div class="row">
+    <!-- <div class="col-12">
+      <h3>Basic Details</h3>
+    </div> -->
+    <div class="col-3">
+      <vsa-select
+        [config]="saleConfig?.customerSelect"
+        [dataModel]="saleDetails"
+        (onSelectionChange)="selectionChanged('customer', $event)"
+      >
+      </vsa-select>
+    </div>
+    <div class="col-9" *ngIf="this.selectedCustomer">
+      <div class="row">
+        <div class="col-12">
+          Address:
+          {{ formatAddress(this.selectedCustomer) }}
+        </div>
+
+        <div
+          class="col-12 mt-2"
+          *ngIf="this.selectedCustomer?.gstNo; else panNoTemplate"
+        >
+          GST: {{ this.selectedCustomer?.gstNo }}
+        </div>
+        <ng-template #panNoTemplate>
+          <div class="col-12 mt-2">PAN: {{ this.selectedCustomer?.panNo }}</div>
+        </ng-template>
+
+        <div class="col-12 mt-2">Phone: {{ this.selectedCustomer?.phone }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <!-- <div class="col-12">
+      <h3>Invoice Details</h3>
+    </div> -->
+    <div class="col-3">
+      <vsa-select
+        [config]="saleConfig?.placeOfSupplySelect"
+        [dataModel]="saleDetails"
+        (onSelectionChange)="selectionChanged('pos', $event)"
+      >
+      </vsa-select>
+    </div>
+    <div class="col-3">
+      <vsa-input [config]="saleConfig?.invoiceNumber" [dataModel]="saleDetails">
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-input [config]="saleConfig?.invoiceDate" [dataModel]="saleDetails">
+      </vsa-input>
+    </div>
+
+    <div class="col-3">
+      <vsa-input [config]="saleConfig?.dueDate" [dataModel]="saleDetails">
+      </vsa-input>
+    </div>
+  </div>
+  <hr />
+  <!-- Form Group Array -->
+  <!-- <div class="row mt-4">
+    <div class="col-12">Table Item</div>
+    <div class="col-3">
+      <vsa-select
+        [config]="saleConfig?.inventorySelect"
+        [dataModel]="saleDetails"
+        (onSelectionChange)="selectionChanged('inventory', $event)"
+      >
+      </vsa-select>
+    </div>
+  </div> -->
+  <div class="row mt-2 mb-4">
+    <!-- Title -->
+    <div class="col-12">
+      <!-- {{lineItemForm.get("lineItemList").value | json}} -->
+      <h3 class="rate-setup-header">
+        <span> Rate Setup </span>
+        <vsa-button
+          [type]="'button'"
+          [role]="'tertiary'"
+          [icon]="'add-1'"
+          [iconSize]="'small'"
+          size="small"
+          (onClick)="onAddNewLineItemClick(true)"
+          >Add Line Item +
+        </vsa-button>
+      </h3>
+    </div>
+    <form [formGroup]="lineItemForm">
+      <ng-container
+        formArrayName="lineItemList"
+        *ngFor="
+          let address of lineItemForm.get('lineItemList')['controls'];
+          let i = index
+        "
+      >
+        <div [formGroupName]="i" class="row spacer">
+          <div class="col-1 singleItem">
+            <p class="srno">#{{ i + 1 }}</p>
+          </div>
+          <!-- Inventory Select -->
+          <div class="col-4 inventorySelect">
+            <vsa-select
+              [config]="lineItemFormConfigList[i].inventorySelect"
+              [dataModel]="getLineItem(i)"
+              [fControl]="lineItemForm.get('inventoryId')"
+              (onSelectionChange)="selectionChanged('inventory', $event, i)"
+            >
+            </vsa-select>
+          </div>
+          <!-- HSN -->
+          <!-- <div class="col-2">
+            <vsa-input
+              [config]="lineItemFormConfigList[i]?.hsnSacCode"
+              formControlName="hsnSacCode"
+              [dataModel]="getLineItem(i)"
+            >
+            </vsa-input>
+          </div> -->
+          <!-- Quantity (in Kgs) -->
+          <!-- <div class="col-2">
+            <vsa-input
+              [config]="lineItemFormConfigList[i]?.qty"
+              formControlName="qty"
+              [dataModel]="getLineItem(i)"
+              (onBlur)="valueChanged('qty', i)"
+            >
+            </vsa-input>
+          </div> -->
+          <!-- Rate -->
+          <div class="col-2">
+            <vsa-input
+              [config]="lineItemFormConfigList[i]?.rate"
+              formControlName="rate"
+              [dataModel]="getLineItem(i)"
+              (onBlur)="valueChanged('rate', i)"
+            >
+            </vsa-input>
+          </div>
+          <div class="col-3 center-text">
+            <small>{{ numToText(lineItems[i]?.rate) }}</small>
+          </div>
+          <div class="col-5" *ngIf="lineItems[i]?.carDetails">
+            <div class="row">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-4">CAR No:</div>
+                  <div class="col-8">MH 01 AC 6256</div>
+                </div>
+                <div class="row">
+                  <div class="col-4">ENGINE:</div>
+                  <div class="col-8">210419Y0446PT204</div>
+                </div>
+                <div class="row">
+                  <div class="col-4">VIN NO:</div>
+                  <div class="col-8">SALWA2AX8NA797820</div>
+                </div>
+                <div class="row">
+                  <div class="col-4">YEAR:</div>
+                  <div class="col-8">
+                    {{ lineItems[i]?.carDetails?.Car_Detail?.year }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-4">OWNER:</div>
+                  <div class="col-8">
+                    {{ lineItems[i]?.carDetails?.Car_Detail?.ownerShip }}
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-4">COLOR:</div>
+                  <div class="col-8">
+                    {{ lineItems[i]?.carDetails?.Car_Detail?.color }}
+                  </div>
+                </div>
+                <!-- {{ lineItems[i]?.carDetails?.Car_Detail?.year | json }} -->
+              </div>
+            </div>
+          </div>
+          <div class="col-3" *ngIf="lineItems[i]?.carDetails">
+            <img
+              class="full-img"
+              [src]="lineItems[i]?.carDetails?.Car_Images[0]?.imageLink"
+              alt="car image"
+            />
+          </div>
+          <!-- <div class="col-2">
+            <vsa-input
+              [config]="lineItemFormConfigList[i]?.amount"
+              formControlName="amount"
+              [dataModel]="getLineItem(i)"
+              (onBlur)="valueChanged('amount', i)"
+            >
+            </vsa-input>
+          </div> -->
+
+          <!-- 
+
+          123 * 1
+          123 * 12
+
+         -->
+          <!-- Unit -->
+          <!-- <div class="col-1">
+            <vsa-select
+              [config]="rateDetailsConfig?.unitConfig"
+              [dataModel]="getLineItem(i)"
+              [fControl]="lineItemForm.get('unitId')"
+              (onSelectionChange)="selectionChanged('unit', $event, i)"
+            ></vsa-select>
+          </div> -->
+          <!-- Rate -->
+          <!-- <div class="col-1">
+            <vsa-input
+              [config]="lineItemFormConfig?.rate"
+              formControlName="rate"
+              [dataModel]="getLineItem(i)"
+              (onBlur)="valueChanged('rate', i)"
+            >
+            </vsa-input>
+          </div> -->
+          <div class="col-1 singleItem">
+            <!-- <vsa-button
+              [type]="'button'"
+              [role]="'primary'"
+              color="red"
+              size="small"
+              [disabled]="lineItems.length < 2"
+              (onClick)="onDeleteLineItemClick(i)"
+              >Delete
+            </vsa-button> -->
+            <vsa-icon
+              icon="delete-bin-1"
+              customColor="#DE350B"
+              [disabled]="lineItems.length < 2"
+              (onClick)="onDeleteLineItemClick(i)"
+              state="hover"
+            ></vsa-icon>
+          </div>
+          <div class="col-12 divider mt-2 mb-2"></div>
+        </div>
+      </ng-container>
+    </form>
+
+    <!-- Currency -->
+    <!-- <div class="col-4">
+      <vsa-select
+        [config]="rateDetailsConfig?.currencyConfig"
+        [dataModel]="rateDetailsModel"
+        (onSelectionChange)="
+          selectionChanged('currency', $event);
+          currency = $event.source.triggerValue
+        "
+      >
+      </vsa-select>
+    </div> -->
+
+    <!-- Second Row -->
+    <!-- Quantity (in Kgs) -->
+    <div class="col-4 addNewButton">
+      <!-- <vsa-input
+        [config]="rateDetailsConfig?.quantity"
+        formControlName="quantity"
+        [dataModel]="rateDetailsModel"
+        (onBlur)="valueChanged('quantity')"
+      >
+      </vsa-input> -->
+    </div>
+    <!-- <span>x</span> -->
+    <!-- Rate -->
+    <div class="col-4">
+      <!-- <vsa-input
+        [config]="rateDetailsConfig?.rate"
+        formControlName="rate"
+        [dataModel]="rateDetailsModel"
+        (onBlur)="valueChanged('rate')"
+      >
+      </vsa-input> -->
+    </div>
+    <!-- <span>=</span> -->
+    <!-- Amount -->
+    <!-- <div class="col-4">
+      <vsa-input
+        [config]="rateDetailsConfig?.amount"
+        [dataModel]="rateDetailsModel"
+      >
+      </vsa-input>
+    </div> -->
+    <!-- Third Row -->
+    <!-- GST  -->
+    <!-- CSGT -->
+    <!-- <div class="col-4">
+      <vsa-input
+        [config]="rateDetailsConfig?.cgstRate"
+        [dataModel]="rateDetailsModel"
+      >
+      </vsa-input>
+    </div> -->
+    <!-- SGST -->
+    <!-- <div class="col-4">
+      <vsa-input
+        [config]="rateDetailsConfig?.sgstRate"
+        [dataModel]="rateDetailsModel"
+      >
+      </vsa-input>
+    </div> -->
+    <!-- IGST -->
+    <!-- <div class="col-4">
+      <vsa-input
+        [config]="rateDetailsConfig?.igstRate"
+        [dataModel]="rateDetailsModel"
+      >
+      </vsa-input>
+    </div> -->
+
+    <!-- Single Row -->
+    <!-- Taxable Amount -->
+    <!-- dummy -->
+    <div class="col-8">
+      <!-- empty -->
+    </div>
+    <div class="col-4">
+      <!-- <vsa-input
+        [config]="rateDetailsConfig?.taxableAmount"
+        [dataModel]="rateDetailsModel"
+      >
+      </vsa-input> -->
+    </div>
+    <!-- Final Row -->
+    <!-- Total Amount ($CURRENCY$) -->
+    <!-- <div class="col-4">
+      <vsa-input
+        [config]="rateDetailsConfig?.totalAmount"
+        [dataModel]="rateDetailsModel"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-8">
+      <vsa-input
+        [config]="rateDetailsConfig?.amountInWords"
+        [dataModel]="rateDetailsModel"
+      >
+      </vsa-input>
+    </div> -->
+  </div>
+</div>
+<div class="drawer-footer">
+  <vsa-button
+    [type]="'button'"
+    [role]="'tertiary'"
+    size="small"
+    customColor="red"
+    (onClick)="actionEvent('cancel')"
+    >Close</vsa-button
+  >
+  <vsa-button
+    [type]="'button'"
+    [role]="'primary'"
+    size="small"
+    (onClick)="actionEvent('save')"
+    >Save</vsa-button
+  >
+</div>

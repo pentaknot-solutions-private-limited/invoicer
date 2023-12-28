@@ -9,7 +9,8 @@
 //Initialize theme variable
 :root {
   --global-row-height: 40px;
-  --global-theme: #003ea9; //Base-theme
+  // --global-theme: #003ea9; //Base-theme
+  --global-theme: #000; //Base-theme
 }
 
 /* You can add global styles to this file, and also import other style files */
@@ -813,6 +814,45 @@ b {
 // }
 
 .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover
-  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+  > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(
+    .mat-calendar-body-comparison-identical
+  ) {
   background-color: $global-primary-light !important;
+}
+
+// LAyout
+
+.row.header-row {
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  padding-bottom: 1.5em;
+  border-bottom: 1px solid $border-color;
+  // padding: 0px 20px;
+
+  h3.title {
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 28px;
+    color: $global-grey-shade-6;
+    // border-bottom: 1px solid $border-color;
+    padding: 0px;
+    // margin-bottom: 1em;
+    // padding-bottom: 0.5em;
+    // Custom for Add Button
+  }
+}
+
+:host::ng-deep {
+  .drawer-body {
+    height: calc(100% - 117px) !important;
+    padding: 20px !important;
+  }
+
+  .drawer-footer {
+    padding: 20px !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }

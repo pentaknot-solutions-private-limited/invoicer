@@ -1,0 +1,131 @@
+<div class="drawer-body">
+  <div class="row">
+    <div class="col-12">
+      <h3>Basic Details</h3>
+    </div>
+    <div class="col-3">
+      <vsa-select
+        [config]="customerConfig?.salutationSelect"
+        [dataModel]="customerDetails"
+        (onSelectionChange)="selectionChanged('salutation', $event)"
+      >
+      </vsa-select>
+    </div>
+    <div class="col-3">
+      <vsa-input
+        [config]="customerConfig?.firstName"
+        [dataModel]="customerDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-input
+        [config]="customerConfig?.middleName"
+        [dataModel]="customerDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-input
+        [config]="customerConfig?.lastName"
+        [dataModel]="customerDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-9">
+      <vsa-input
+        [config]="customerConfig?.companyName"
+        [dataModel]="customerDetails"
+      >
+      </vsa-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <h3>Address Details</h3>
+    </div>
+    <!-- <div class="col-3">
+      <vsa-select
+        [config]="customerConfig?.salutationSelect"
+        [dataModel]="customerDetails"
+        (onSelectionChange)="selectionChanged('salutation', $event)"
+      >
+      </vsa-select>
+    </div> -->
+    <div class="col-6">
+      <vsa-input
+        [config]="customerConfig?.addressLine1"
+        [dataModel]="customerDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-6">
+      <vsa-input
+        [config]="customerConfig?.addressLine2"
+        [dataModel]="customerDetails"
+      >
+      </vsa-input>
+    </div>
+
+    <div class="col-3">
+      <vsa-input [config]="customerConfig?.city" [dataModel]="customerDetails">
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-select
+        [config]="customerConfig?.stateSelect"
+        [dataModel]="customerDetails"
+        (onSelectionChange)="selectionChanged('state', $event)"
+      >
+      </vsa-select>
+    </div>
+
+    <div class="col-3">
+      <vsa-input
+        [config]="customerConfig?.pincode"
+        [dataModel]="customerDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-input [config]="customerConfig?.phone" [dataModel]="customerDetails">
+      </vsa-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <vsa-input [config]="customerConfig?.panNo" [dataModel]="customerDetails">
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-input [config]="customerConfig?.gstNo" [dataModel]="customerDetails">
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-select
+        [config]="customerConfig?.placeOfSupplySelect"
+        [dataModel]="customerDetails"
+        (onSelectionChange)="selectionChanged('pos', $event)"
+      >
+      </vsa-select>
+    </div>
+  </div>
+  <!-- <p>add-customer works! {{ customerData | json }}</p> -->
+</div>
+<div class="drawer-footer">
+  <vsa-button
+    [type]="'button'"
+    [role]="'tertiary'"
+    size="small"
+    customColor="red"
+    (onClick)="actionEvent('cancel')"
+    >Close</vsa-button
+  >
+  <vsa-button
+    [type]="'button'"
+    [role]="'primary'"
+    size="small"
+    (onClick)="actionEvent('save')"
+    >Save</vsa-button
+  >
+</div>

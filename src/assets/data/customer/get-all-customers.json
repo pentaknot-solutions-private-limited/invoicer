@@ -1,0 +1,22 @@
+{
+  "data": [
+    {
+      "customerId": 1,
+      "salutationId": 1,
+      "firstName": "Kantilal",
+      "middleName": "Mavji",
+      "lastName": "Patel",
+      "companyName": "",
+      "placeOfSupplyId": 27,
+      "addressLine1": "1501, Siddhi Grandeur, Plot - 84",
+      "addressLine2": "Near Reliance Fresh, Sector - 19, Kharghar",
+      "city": "Mumbai",
+      "stateId": 27,
+      "pincode": 410210,
+      "phone": 7894561230,
+      "panNo": "ABAPP6513A",
+      "gstNo": "",
+      "totalDue": 1450000
+    }
+  ]
+}

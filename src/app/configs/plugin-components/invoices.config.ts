@@ -43,7 +43,7 @@ export class InvoicesConfigs {
   invoicesGrid: IGridConfig = {
     rowId: "id",
     // gridHeightDelta: "calc(100vh - 510px)",
-    gridHeightDelta: "calc(100vh - 410px)",
+    gridHeightDelta: "calc(100vh - 310px)",
     pagination: true,
     emptyMessage: "No records found.",
     colDefs: [

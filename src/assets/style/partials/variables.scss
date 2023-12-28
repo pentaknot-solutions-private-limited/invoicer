@@ -29,10 +29,14 @@ $secondary_font-family: "Visa_True", sans-serif;
 $global-orange-gradient: #F7BD19;
 $global-secondary-blue: #FFD700;
 $global-secondary-text: #F7B600;
-$global-blue-gradient: #003EA9;
-$global-primary-blue: #1951B1;
-$global-primary-text: #1A1F71;
-$global-primary-light: #dfebff;
+// $global-blue-gradient: #003EA9;
+$global-blue-gradient: #000;
+$global-primary-blue: #b3b3b3;
+// $global-primary-blue: #1951B1;
+// $global-primary-text: #1A1F71;
+$global-primary-text: #191919;
+// $global-primary-light: #dfebff;
+$global-primary-light: #f4f4f4;
 $global-horizontal-sidebar-background: linear-gradient(
   90deg,
   #4c8af5 0%,

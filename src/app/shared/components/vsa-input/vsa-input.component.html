@@ -7,16 +7,20 @@
       title2: !config?.attributes?.showBorder
     }"
   >
-    {{ config?.attributes?.title }}&nbsp;<span *ngIf="config?.attributes?.isMandatory" class="red text-danger">*</span>
+    {{ config?.attributes?.title }}&nbsp;<span
+      *ngIf="config?.attributes?.isMandatory"
+      class="red text-danger"
+      >*</span
+    >
   </p>
   <ng-container *ngIf="config?.attributes?.errorMessage">
     <span class="error-custom"
       ><vsa-icon
-      icon="delete-circle"
-      [color]="'#DF3030'"
-      size="small"
-    ></vsa-icon>
-    &nbsp;&nbsp;{{ config?.attributes?.errorMessage }}</span
+        icon="delete-circle"
+        [color]="'#DF3030'"
+        size="small"
+      ></vsa-icon>
+      &nbsp;&nbsp;{{ config?.attributes?.errorMessage }}</span
     >
   </ng-container>
   <mat-form-field
@@ -73,9 +77,13 @@
         (blur)="onTouchedFn()"
         [formControl]="planClient"
       />
-      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectAutoCompleteOption($event)">
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        (optionSelected)="selectAutoCompleteOption($event)"
+      >
         <mat-option
-          *ngFor="let item of config?.attributes?.autoCompleteOptions" [value]="item.name"
+          *ngFor="let item of config?.attributes?.autoCompleteOptions"
+          [value]="item.name"
         >
           {{ item.name }}
         </mat-option>
@@ -84,8 +92,10 @@
 
     <!-- Simple Input fields -->
     <ng-container
-      *ngIf="config?.attributes?.type !== 'datepicker' &&
-      !config?.attributes?.autoComplete"
+      *ngIf="
+        config?.attributes?.type !== 'datepicker' &&
+        !config?.attributes?.autoComplete
+      "
       class="test"
     >
       <input
@@ -111,6 +121,34 @@
         (change)="onChange()"
         (blur)="onTouchedFn()"
       />
+    </ng-container>
+
+    <!-- Currency Input fields -->
+    <ng-container *ngIf="config?.attributes?.type == 'currency'" class="test">
+      <input
+        [readonly]="config?.attributes?.readonly"
+        matInput
+        [pattern]="config?.attributes?.pattern"
+        [type]="config?.attributes?.type || 'text'"
+        [placeholder]="config?.attributes?.placeholder"
+        [ngClass]="{
+          password: config?.attributes?.togglePassword,
+          prefixInput: config.attributes?.prefixIcon
+        }"
+        [required]="
+          config?.attributes?.isMandatory && !config?.attributes?.readonly
+        "
+        [disabled]="config?.attributes?.disable"
+        [maxlength]="config?.attributes?.maxlength"
+        [autocomplete]="
+          config?.attributes?.disableNativeAutoComplete ? 'off' : 'on'
+        "
+        [(ngModel)]="dataModel[config?.fieldKey]"
+        (input)="onChange()"
+        (change)="onChange()"
+        (blur)="onTouchedFn()"
+      />
+      <span>{{ dataModel[config?.fieldKey] | indianCurrency }}</span>
     </ng-container>
 
     <!-- Datepicker Input fields -->

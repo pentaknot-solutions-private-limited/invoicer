@@ -1,0 +1,56 @@
+<div class="invoices">
+  <ng-container *ngIf="loading">
+    <div class="loader-body">
+      <vsa-loader></vsa-loader>
+    </div>
+  </ng-container>
+  <form class="customer">
+    <div class="row header-row">
+      <div class="col-6 text-left">
+        <h3 class="title">
+          Purchase
+          <vsa-button
+            class="ml-2"
+            [type]="'button'"
+            role="primary"
+            (onClick)="addCustomer()"
+            size="small"
+            [icon]="'add-1'"
+            [iconSize]="'small'"
+            >New
+          </vsa-button>
+        </h3>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-12">
+        <grid-search-input
+          #gridSearch
+          class="w-100"
+          [tablesRef]="grid"
+          placeholder="Search Customer"
+          (onInputChanged)="onInputChanged($event)"
+        ></grid-search-input>
+        <div class="grid">
+          <vsa-grid
+            #grid
+            [rowData]="rowData"
+            [config]="customerConfig.customerGrid"
+            (onLinkClick)="onLinkClick($event)"
+            (actionClicked)="actionClicked($event)"
+          ></vsa-grid>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<ng-template #drawerTemplate>
+  <add-customer
+    [customerData]="customerData"
+    (onBtnClick)="drawerAction($event)"
+    *ngIf="pageComponentVisibility?.showAddCustomer"
+  >
+  </add-customer>
+</ng-template>

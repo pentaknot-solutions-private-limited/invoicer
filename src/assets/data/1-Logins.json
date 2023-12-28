@@ -1,26 +1,26 @@
 [
   {
-    "email": "as@unifiedlogs.com",
+    "email": "admin@pentaknot.com",
     "role": "Admin",
     "password": "Abc@123",
     "role_id": 1,
-    "firstName": "Ayesha",
-    "lastName": "Sheikh"
+    "firstName": "Rahul",
+    "lastName": "Grover"
   },
   {
-    "email": "harshsguna@gmail.com",
+    "email": "ca@pentaknot.com",
     "role": "CA",
     "password": "Abc@123",
     "role_id": 2,
-    "firstName": "Harsh",
-    "lastName": "Guna"
+    "firstName": "CA",
+    "lastName": "Mitesh"
   },
   {
-    "email": "accdel@unifiedlogs.com",
+    "email": "user@pentaknot.com",
     "role": "User",
     "password": "Abc@123",
     "role_id": 3,
-    "firstName": "Anil",
-    "lastName": "Kumar"
+    "firstName": "Anas",
+    "lastName": "Khan"
   }
 ]

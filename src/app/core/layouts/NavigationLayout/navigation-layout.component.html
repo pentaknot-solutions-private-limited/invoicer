@@ -14,12 +14,10 @@
   #drawer
 >
   <!-- (isActiveChange)="drawerActiveChange($event)" [escClose]="drawerPanelConfig.escClose"  -->
-  <div
-    class="app-wrapper"
-    [ngClass]="{
-      'sidebar-is-expanded': !sideBarToggle
-    }"
-  >
+  <div class="app-wrappe sidebar-is-expanded">
+    <!-- [ngClass]="{
+    'sidebar-is-expanded': !sideBarToggle
+  }" -->
     <!-- 'sidebar-is-reduced': sideBarToggle -->
     <header class="l-header">
       <div class="l-header__inner clearfix">
@@ -48,7 +46,8 @@
           <div class="col-4">
             <div class="header-icons-group">
               <div class="c-header-icon logout">
-                Hi,&nbsp;{{ loggedInUserData?.firstName }} {{loggedInUserData?.lastName}}
+                Hi,&nbsp;{{ loggedInUserData?.firstName }}
+                {{ loggedInUserData?.lastName }}
               </div>
             </div>
           </div>
@@ -74,8 +73,7 @@
       <div class="logo">
         <div class="logo__txt">
           <!-- <img src="../../../../assets/img/placeholder-logo.jpg" /> -->
-          <img src="../../../../assets/img/logo/unified-logo.png" />
-          <!-- <p class="pt10">UNIFIED LOGISTICS</p> -->
+          <img src="../../../../assets/img/logo/pentaknot-logo.png" />
         </div>
       </div>
       <div class="l-sidebar__content">

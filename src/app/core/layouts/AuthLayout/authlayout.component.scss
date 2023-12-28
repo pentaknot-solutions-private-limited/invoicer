@@ -2,6 +2,10 @@
 
 .auth_layout {
   background-color: white;
+  .product-title {
+    font-weight: 500;
+    font-size: 4rem;
+  }
   .constant-view {
     background-color: $global-blue-gradient;
     min-height: 100vh;
@@ -14,18 +18,21 @@
       font-weight: 500;
       color: white;
     }
+    .brand {
+      width: 120px;
+    }
     img {
       width: 40%;
     }
-    p.medtech {
-      padding-top: 2em;
-      font-family: $primary_font-family;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 18px;
-      line-height: 130%;
-      text-align: center;
-      letter-spacing: 0.1em;
+    p.invoicer {
+      // padding-top: 2em;
+      // font-family: $primary_font-family;
+      // font-style: normal;
+      // font-weight: normal;
+      // font-size: 18px;
+      // line-height: 130%;
+      // text-align: center;
+      // letter-spacing: 0.1em;
       color: #ffffff;
     }
     .bg_img {

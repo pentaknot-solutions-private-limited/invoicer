@@ -34,6 +34,33 @@ const routes: Routes = [
         (m) => m.InvoicesModule
       ),
   },
+  {
+    path: "customer",
+    component: NavigationLayoutComponent,
+    canActivate: [AuthRouteGuard],
+    loadChildren: () =>
+      import("./modules/customer/customer.module").then(
+        (m) => m.CustomerModule
+      ),
+  },
+  {
+    path: "purchase",
+    component: NavigationLayoutComponent,
+    canActivate: [AuthRouteGuard],
+    loadChildren: () =>
+      import("./modules/purchase/purchase.module").then(
+        (m) => m.PurchaseModule
+      ),
+  },
+  {
+    path: "sale",
+    component: NavigationLayoutComponent,
+    canActivate: [AuthRouteGuard],
+    loadChildren: () =>
+      import("./modules/sale/sale.module").then(
+        (m) => m.SaleModule
+      ),
+  },
 ];
 
 @NgModule({

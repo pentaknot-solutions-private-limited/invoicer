@@ -176,7 +176,7 @@
             >
             </vsa-input>
           </div>
-          
+
           <!-- SB No -->
           <!-- <div class="col-3">
             <vsa-input
@@ -186,7 +186,7 @@
             >
             </vsa-input>
           </div> -->
-          
+
           <!-- Net (Wt) -->
           <!-- <div class="col-3">
             <vsa-input
@@ -628,31 +628,22 @@
               <div class="row">
                 <div class="col-md-8 text-left">
                   <h3 class="invoice-title mb-0 xl">
-                    <b>{{
-                      invoiceData?.companyDetails?.organization?.name ||
-                        organizationName
-                    }}</b>
+                    <b
+                      >{{ invoiceData?.companyDetails?.organization?.name ||
+                      organizationName }}</b
+                    >
                   </h3>
                   <p class="mb-0">
                     <ng-container *ngIf="invoiceData">
                       {{
-                        invoiceData?.companyDetails?.organizationBranch?.address
-                      }}
-                      {{
-                        invoiceData?.companyDetails?.organizationBranch?.cityId
-                      }}
-                      -
-                      {{
-                        invoiceData?.companyDetails?.organizationBranch
-                          ?.pincode
-                      }},
-                      {{
-                        invoiceData?.companyDetails?.organizationBranch?.stateId
-                      }}
-                      ({{
-                        invoiceData?.companyDetails?.organizationBranch
-                          ?.countryId
-                      }})<br />
+                      invoiceData?.companyDetails?.organizationBranch?.address
+                      }} {{
+                      invoiceData?.companyDetails?.organizationBranch?.cityId }}
+                      - {{ invoiceData?.companyDetails?.organizationBranch
+                      ?.pincode }}, {{
+                      invoiceData?.companyDetails?.organizationBranch?.stateId
+                      }} ({{ invoiceData?.companyDetails?.organizationBranch
+                      ?.countryId }})<br />
                     </ng-container>
                     <ng-container *ngIf="!invoiceData">
                       {{ companyDetailsModel?.organizationBranchId }}<br />
@@ -663,20 +654,16 @@
                       <div class="row">
                         <div class="col-md-3"><strong>STATE</strong></div>
                         <div class="col-md-9">
-                          [00]
-                          {{
-                            invoiceData?.companyDetails?.organizationBranch
-                              ?.stateId || "xxxxxxx"
-                          }}
+                          [00] {{
+                          invoiceData?.companyDetails?.organizationBranch
+                          ?.stateId || "xxxxxxx" }}
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-3"><strong>CIN</strong></div>
                         <div class="col-md-9">
-                          {{
-                            invoiceData?.companyDetails?.organization?.cinNo ||
-                              "xxxxxxx"
-                          }}
+                          {{ invoiceData?.companyDetails?.organization?.cinNo ||
+                          "xxxxxxx" }}
                         </div>
                       </div>
                     </div>
@@ -684,19 +671,15 @@
                       <div class="row">
                         <div class="col-md-3"><strong>GSTIN</strong></div>
                         <div class="col-md-9">
-                          {{
-                            invoiceData?.companyDetails?.organizationBranch
-                              ?.gstin || "xxxxxxx"
-                          }}
+                          {{ invoiceData?.companyDetails?.organizationBranch
+                          ?.gstin || "xxxxxxx" }}
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-md-3"><strong>PAN</strong></div>
                         <div class="col-md-9">
-                          {{
-                            invoiceData?.companyDetails?.organizationBranch
-                              ?.panNo || "xxxxxxx"
-                          }}
+                          {{ invoiceData?.companyDetails?.organizationBranch
+                          ?.panNo || "xxxxxxx" }}
                         </div>
                       </div>
                     </div>
@@ -707,11 +690,8 @@
                     <b>Tax Invoice</b>
                   </p>
                   <p>
-                    #{{
-                      invoiceData?.invoiceNo ||
-                        companyDetailsModel?.invoiceNo ||
-                        "xxxxxx"
-                    }}
+                    #{{ invoiceData?.invoiceNo || companyDetailsModel?.invoiceNo
+                    || "xxxxxx" }}
                   </p>
                 </div>
               </div>
@@ -722,62 +702,45 @@
                     <b>Recipient (Company Details)</b>
                   </p>
                   <p class="mb-0">
-                    <b>{{
-                      invoiceData?.companyDetails?.customer?.name ||
-                        customerName
-                    }}</b>
+                    <b
+                      >{{ invoiceData?.companyDetails?.customer?.name ||
+                      customerName }}</b
+                    >
                   </p>
                   <p class="mb-0">
-                    {{
-                      invoiceData?.companyDetails?.customerBranch?.address ||
-                        "xxxxxxxx"
-                    }}
+                    {{ invoiceData?.companyDetails?.customerBranch?.address ||
+                    "xxxxxxxx" }}
                   </p>
                   <p class="mb-0">
-                    {{
-                      invoiceData?.companyDetails?.customerBranch?.cityId ||
-                        "xxxxxx"
-                    }}
-                    -
-                    {{
-                      invoiceData?.companyDetails?.customerBranch?.pincode ||
-                        "xxxxx"
-                    }},
-                    {{
-                      invoiceData?.companyDetails?.customerBranch?.stateId ||
-                        "xxxxx"
-                    }}
-                    ({{
-                      invoiceData?.companyDetails?.customerBranch?.countryId ||
-                        "xxxxx"
-                    }})
+                    {{ invoiceData?.companyDetails?.customerBranch?.cityId ||
+                    "xxxxxx" }} - {{
+                    invoiceData?.companyDetails?.customerBranch?.pincode ||
+                    "xxxxx" }}, {{
+                    invoiceData?.companyDetails?.customerBranch?.stateId ||
+                    "xxxxx" }} ({{
+                    invoiceData?.companyDetails?.customerBranch?.countryId ||
+                    "xxxxx" }})
                   </p>
                   <div class="row">
                     <div class="col-md-3"><strong>PAN NO</strong></div>
                     <div class="col-md-9">
-                      {{
-                        invoiceData?.companyDetails?.customerBranch?.panNo ||
-                          "xxxx"
-                      }}
+                      {{ invoiceData?.companyDetails?.customerBranch?.panNo ||
+                      "xxxx" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-3"><strong>GST NO</strong></div>
                     <div class="col-md-9">
-                      {{
-                        invoiceData?.companyDetails?.customerBranch?.gstin ||
-                          "xxxx"
-                      }}
+                      {{ invoiceData?.companyDetails?.customerBranch?.gstin ||
+                      "xxxx" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-3"><strong>STATE</strong></div>
                     <!-- <div class="col-md-9">Customer Branch GST</div> -->
                     <div class="col-md-9">
-                      {{
-                        invoiceData?.companyDetails?.customerBranch?.stateId ||
-                          "xxxx"
-                      }}
+                      {{ invoiceData?.companyDetails?.customerBranch?.stateId ||
+                      "xxxx" }}
                     </div>
                   </div>
                 </div>
@@ -785,23 +748,17 @@
                   <div class="row">
                     <div class="col-md-5"><strong>INVOICE DATE</strong></div>
                     <div class="col-md-7">
-                      {{
-                        (invoiceData?.invoiceDate | date: "mediumDate") ||
-                          (companyDetailsModel?.invoiceDate
-                            | date: "mediumDate") ||
-                          "-"
-                      }}
+                      {{ (invoiceData?.invoiceDate | date: "mediumDate") ||
+                      (companyDetailsModel?.invoiceDate | date: "mediumDate") ||
+                      "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>DATE DUE</strong></div>
                     <div class="col-md-7">
-                      {{
-                        (invoiceData?.dueDate | date: "mediumDate") ||
-                          (companyDetailsModel?.invoiceDueDate
-                            | date: "mediumDate") ||
-                          "-"
-                      }}
+                      {{ (invoiceData?.dueDate | date: "mediumDate") ||
+                      (companyDetailsModel?.invoiceDueDate | date: "mediumDate")
+                      || "-" }}
                     </div>
                   </div>
                   <div class="row">
@@ -832,86 +789,57 @@
                   <div class="row">
                     <div class="col-md-6"><strong>MAWB NO</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.mawbNo ||
-                          shipmentDetailsModel?.mawbNo ||
-                          "-"
-                      }}
+                      {{ invoiceData?.shipmentDetails?.mawbNo ||
+                      shipmentDetailsModel?.mawbNo || "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>HAWB NO</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.hawbNo ||
-                          shipmentDetailsModel?.hawbNo ||
-                          "-"
-                      }}
+                      {{ invoiceData?.shipmentDetails?.hawbNo ||
+                      shipmentDetailsModel?.hawbNo || "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>SB NO</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.sbNo ||
-                          shipmentDetailsModel?.sbNo ||
-                          "-"
-                      }}
+                      {{ invoiceData?.shipmentDetails?.sbNo ||
+                      shipmentDetailsModel?.sbNo || "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>PACKAGES</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.packageQty ||
-                          shipmentDetailsModel?.packageQty ||
-                          0
-                      }}
-                      (NOS)
+                      {{ invoiceData?.shipmentDetails?.packageQty ||
+                      shipmentDetailsModel?.packageQty || 0 }} (NOS)
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>CHARGEABLE WT.</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.chargeableWt ||
-                          shipmentDetailsModel?.chargeableWt ||
-                          0
-                      }}
-                      (KGS)
+                      {{ invoiceData?.shipmentDetails?.chargeableWt ||
+                      shipmentDetailsModel?.chargeableWt || 0 }} (KGS)
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>GROSS WT.</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.grossWt ||
-                          shipmentDetailsModel?.grossWt ||
-                          0
-                      }}
-                      (KGS)
+                      {{ invoiceData?.shipmentDetails?.grossWt ||
+                      shipmentDetailsModel?.grossWt || 0 }} (KGS)
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>NET WT.</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.netWt ||
-                          shipmentDetailsModel?.netWt ||
-                          0
-                      }}
-                      (KGS)
+                      {{ invoiceData?.shipmentDetails?.netWt ||
+                      shipmentDetailsModel?.netWt || 0 }} (KGS)
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>VOLUME</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.volume ||
-                          shipmentDetailsModel?.volume ||
-                          "-"
-                      }}
-                      (CBM)
+                      {{ invoiceData?.shipmentDetails?.volume ||
+                      shipmentDetailsModel?.volume || "-" }} (CBM)
                     </div>
                   </div>
                 </div>
@@ -922,65 +850,46 @@
                   <div class="row">
                     <div class="col-md-5"><strong>DATE 1</strong></div>
                     <div class="col-md-7">
-                      {{
-                        (invoiceData?.shipmentDetails?.date1
-                          | date: "mediumDate") ||
-                          (shipmentDetailsModel?.date1 | date: "mediumDate") ||
-                          "-"
-                      }}
+                      {{ (invoiceData?.shipmentDetails?.date1 | date:
+                      "mediumDate") || (shipmentDetailsModel?.date1 | date:
+                      "mediumDate") || "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>DATE 2</strong></div>
                     <div class="col-md-7">
-                      {{
-                        (invoiceData?.shipmentDetails?.date2
-                          | date: "mediumDate") ||
-                          (shipmentDetailsModel?.date2 | date: "mediumDate") ||
-                          "-"
-                      }}
+                      {{ (invoiceData?.shipmentDetails?.date2 | date:
+                      "mediumDate") || (shipmentDetailsModel?.date2 | date:
+                      "mediumDate") || "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>ARRIVAL DATE</strong></div>
                     <div class="col-md-7">
-                      {{
-                        (invoiceData?.shipmentDetails?.arrivalDate
-                          | date: "mediumDate") ||
-                          (shipmentDetailsModel?.arrivalDate
-                            | date: "mediumDate") ||
-                          "-"
-                      }}
+                      {{ (invoiceData?.shipmentDetails?.arrivalDate | date:
+                      "mediumDate") || (shipmentDetailsModel?.arrivalDate |
+                      date: "mediumDate") || "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>CARGO TYPE</strong></div>
                     <div class="col-md-7">
-                      {{
-                        invoiceData?.shipmentDetails?.cargoTypeName ||
-                          cargoType ||
-                          "-"
-                      }}
+                      {{ invoiceData?.shipmentDetails?.cargoTypeName ||
+                      cargoType || "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>AIRLINE</strong></div>
                     <div class="col-md-7">
-                      {{
-                        invoiceData?.shipmentDetails?.airlineName ||
-                          airline ||
-                          "-"
-                      }}
+                      {{ invoiceData?.shipmentDetails?.airlineName || airline ||
+                      "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-5"><strong>FLIGHT NO.</strong></div>
                     <div class="col-md-7">
-                      {{
-                        invoiceData?.shipmentDetails?.flightNo ||
-                          shipmentDetailsModel?.flightNo ||
-                          "-"
-                      }}
+                      {{ invoiceData?.shipmentDetails?.flightNo ||
+                      shipmentDetailsModel?.flightNo || "-" }}
                     </div>
                   </div>
                 </div>
@@ -1029,21 +938,15 @@
                   <div class="row">
                     <div class="col-md-6"><strong>SHIPPER REF.</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.shipperRef ||
-                          shipmentDetailsModel?.shipperRef ||
-                          "-"
-                      }}
+                      {{ invoiceData?.shipmentDetails?.shipperRef ||
+                      shipmentDetailsModel?.shipperRef || "-" }}
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6"><strong>INCO TERMS</strong></div>
                     <div class="col-md-6">
-                      {{
-                        invoiceData?.shipmentDetails?.incoTerms ||
-                          shipmentDetailsModel?.incoTerms ||
-                          "-"
-                      }}
+                      {{ invoiceData?.shipmentDetails?.incoTerms ||
+                      shipmentDetailsModel?.incoTerms || "-" }}
                     </div>
                   </div>
                 </div>
@@ -1093,38 +996,23 @@
                         <td>1</td>
                         <td>Air Export Freight</td>
                         <td>
-                          {{
-                            invoiceData?.rateDetails?.hsnCode ||
-                              rateDetailsModel?.hsnCode ||
-                              "-"
-                          }}
+                          {{ invoiceData?.rateDetails?.hsnCode ||
+                          rateDetailsModel?.hsnCode || "-" }}
                         </td>
                         <td>
-                          {{
-                            invoiceData?.rateDetails?.quantity ||
-                              rateDetailsModel?.quantity ||
-                              0
-                          }}
-                          (KGS)
+                          {{ invoiceData?.rateDetails?.quantity ||
+                          rateDetailsModel?.quantity || 0 }} (KGS)
                         </td>
                         <td>
-                          Rs.
-                          {{
-                            (invoiceData?.rateDetails?.rate
-                              | currency: "":"") ||
-                              (rateDetailsModel?.rate | currency: "":"") ||
-                              "0.00"
-                          }}
+                          Rs. {{ (invoiceData?.rateDetails?.rate | currency:
+                          "":"") || (rateDetailsModel?.rate | currency: "":"")
+                          || "0.00" }}
                         </td>
                         <td>{{ currency }}</td>
                         <td>
-                          Rs.
-                          {{
-                            (invoiceData?.rateDetails?.amount
-                              | currency: "":"") ||
-                              (rateDetailsModel?.amount | currency: "":"") ||
-                              "0.00"
-                          }}
+                          Rs. {{ (invoiceData?.rateDetails?.amount | currency:
+                          "":"") || (rateDetailsModel?.amount | currency: "":"")
+                          || "0.00" }}
                         </td>
                       </tr>
                       <tr class="content">
@@ -1135,13 +1023,9 @@
                         <td></td>
                         <td>Taxable Amount&nbsp;:</td>
                         <td>
-                          Rs.
-                          {{
-                            (invoiceData?.rateDetails?.amount
-                              | currency: "":"") ||
-                              (rateDetailsModel?.amount | currency: "":"") ||
-                              "0.00"
-                          }}
+                          Rs. {{ (invoiceData?.rateDetails?.amount | currency:
+                          "":"") || (rateDetailsModel?.amount | currency: "":"")
+                          || "0.00" }}
                         </td>
                       </tr>
                       <tr class="content">
@@ -1154,67 +1038,34 @@
                           <ng-container
                             *ngIf="invoiceData?.id; else flatDetails"
                           >
-                            GST @
-                            {{
-                              getNumber(
-                                invoiceData?.rateDetails?.cgstRate.split("")[0]
-                              ) +
-                                getNumber(
-                                  invoiceData?.rateDetails?.sgstRate.split(
-                                    ""
-                                  )[0]
-                                ) ==
-                              0
-                                ? getNumber(
-                                    invoiceData?.rateDetails?.igstRate.split(
-                                      ""
-                                    )[0]
-                                  )
-                                : getNumber(
-                                    invoiceData?.rateDetails?.cgstRate.split(
-                                      ""
-                                    )[0]
-                                  ) +
-                                  getNumber(
-                                    invoiceData?.rateDetails?.sgstRate.split(
-                                      ""
-                                    )[0]
-                                  )
+                            GST @ {{ getNumber(
+                            invoiceData?.rateDetails?.cgstRate.split("")[0] ) +
+                            getNumber( invoiceData?.rateDetails?.sgstRate.split(
+                            "" )[0] ) == 0 ? getNumber(
+                            invoiceData?.rateDetails?.igstRate.split( "" )[0] )
+                            : getNumber(
+                            invoiceData?.rateDetails?.cgstRate.split( "" )[0] )
+                            + getNumber(
+                            invoiceData?.rateDetails?.sgstRate.split( "" )[0] )
                             }}%&nbsp;:
                           </ng-container>
                           <ng-template #flatDetails>
-                            GST @
-                            {{
-                              getNumber(
-                                rateDetailsModel?.cgstRate.split("")[0]
-                              ) +
-                                getNumber(
-                                  rateDetailsModel?.sgstRate.split("")[0]
-                                ) ==
-                              0
-                                ? getNumber(
-                                    rateDetailsModel?.igstRate.split("")[0]
-                                  )
-                                : getNumber(
-                                    rateDetailsModel?.cgstRate.split("")[0]
-                                  ) +
-                                  getNumber(
-                                    rateDetailsModel?.sgstRate.split("")[0]
-                                  )
-                            }}%&nbsp;:
+                            GST @ {{ getNumber(
+                            rateDetailsModel?.cgstRate.split("")[0] ) +
+                            getNumber( rateDetailsModel?.sgstRate.split("")[0] )
+                            == 0 ? getNumber(
+                            rateDetailsModel?.igstRate.split("")[0] ) :
+                            getNumber( rateDetailsModel?.cgstRate.split("")[0] )
+                            + getNumber( rateDetailsModel?.sgstRate.split("")[0]
+                            ) }}%&nbsp;:
                           </ng-template>
                         </td>
                         <td>
-                          Rs.
-                          {{
-                            invoiceData?.rateDetails?.taxableAmount?.toLocaleString(
-                              "en-IN"
-                            ) ||
-                              rateDetailsModel?.taxableAmount?.toLocaleString(
-                                "en-IN"
-                              ) ||
-                              "0.00"
-                          }}
+                          Rs. {{
+                          invoiceData?.rateDetails?.taxableAmount?.toLocaleString(
+                          "en-IN" ) ||
+                          rateDetailsModel?.taxableAmount?.toLocaleString(
+                          "en-IN" ) || "0.00" }}
                         </td>
                       </tr>
                       <tr class="content">
@@ -1226,14 +1077,9 @@
                         <td><b>Total</b></td>
                         <td>
                           <b
-                            >Rs.
-                            {{
-                              (invoiceData?.rateDetails?.totalAmount
-                                | currency: "":"") ||
-                                (rateDetailsModel?.totalAmount
-                                  | currency: "":"") ||
-                                "0.00"
-                            }}</b
+                            >Rs. {{ (invoiceData?.rateDetails?.totalAmount |
+                            currency: "":"") || (rateDetailsModel?.totalAmount |
+                            currency: "":"") || "0.00" }}</b
                           >
                         </td>
                       </tr>
@@ -1245,19 +1091,14 @@
                 <div class="col-md-12">
                   <p class="mb-0">
                     <b
-                      >Amount in words ({{
-                        (invoiceData
-                          ? invoiceData?.rateDetails?.currencyName
-                          : rateDetailsModel?.currencyName) || "INR"
-                      }}):
+                      >Amount in words ({{ (invoiceData ?
+                      invoiceData?.rateDetails?.currencyName :
+                      rateDetailsModel?.currencyName) || "INR" }}):
                     </b>
                   </p>
                   <p class="mb-0">
-                    {{
-                      invoiceData?.rateDetails?.amountInWords ||
-                        rateDetailsModel?.amountInWords ||
-                        "-"
-                    }}
+                    {{ invoiceData?.rateDetails?.amountInWords ||
+                    rateDetailsModel?.amountInWords || "-" }}
                   </p>
                 </div>
               </div>
@@ -1324,7 +1165,7 @@
       <div class="row">
         <div class="col-md-8 text-left">
           <h3 class="invoice-title mb-0 xl" style="font-size: 12px !important">
-            <b>Unified Logistics Solution Pvt. Ltd.</b>
+            <b>Pentaknot Solutions Pvt. Ltd.</b>
           </h3>
           <p class="mb-0">
             Customer Branch Address<br />

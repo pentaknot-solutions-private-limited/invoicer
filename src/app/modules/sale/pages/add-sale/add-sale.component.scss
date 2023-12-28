@@ -1,0 +1,25 @@
+.singleItem {
+  align-self: center;
+}
+
+.rate-setup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.center-text {
+  display: flex;
+  //   justify-content: center;
+  align-items: center;
+}
+
+.full-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.divider {
+  border: 1px dashed #e0e0e0;
+}

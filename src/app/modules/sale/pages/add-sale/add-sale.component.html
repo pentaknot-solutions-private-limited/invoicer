@@ -357,6 +357,14 @@
   >
   <vsa-button
     [type]="'button'"
+    [role]="'tertiary'"
+    size="small"
+    customColor="red"
+    (onClick)="actionEvent('preview')"
+    >Preview</vsa-button
+  >
+  <vsa-button
+    [type]="'button'"
     [role]="'primary'"
     size="small"
     (onClick)="actionEvent('save')"

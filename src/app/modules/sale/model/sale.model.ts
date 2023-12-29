@@ -25,6 +25,7 @@ export class SaleDetails {
   saleId?: string | number;
   customerId?: string | number;
   placeOfSupplyId?: string | number;
+  posId?: string | number;
   invoiceNumber?: string | number;
   invoiceDate?: Date;
   dueDate?: Date;

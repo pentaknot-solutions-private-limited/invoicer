@@ -27,6 +27,7 @@ import {
 import { minLengthArray } from "src/app/shared/utils/custom-validators";
 import * as _ from "lodash";
 import { convertAmountToWords } from "src/app/shared/utils/convert-amount-to-words";
+import { InvoicePDF } from "src/app/shared/invoice-template/view-invoice-template";
 
 @Component({
   selector: "add-sale",
@@ -187,8 +188,21 @@ export class AddSaleComponent implements OnInit {
   // Drawer Action Events
   actionEvent(event) {
     // let eventData = null;
-    let data: any = {};
+    const customers = this.saleConfig.customerSelect.options;
+    const places = this.saleConfig.placeOfSupplySelect.options;
+    const customer = customers.find(cus => cus?.customerId == this.saleDetails.customerId);
+    const place = places.find(cus => cus?.posId == this.saleDetails.posId);
+    let data: any = {
+      customer: customer,
+      place: place,
+      saleDetails: this.saleDetails,
+      listItems: this.lineItems
+    };
     switch (event) {
+      case "preview":
+        console.log(data);
+        new InvoicePDF(data).openPdf();
+        break;
       default:
         this.onBtnClick.emit("close");
         break;

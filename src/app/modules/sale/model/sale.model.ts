@@ -39,7 +39,7 @@ export class SaleDetails {
   totalAmount?: string;
   customerNotes?: string;
   termsAndConditions?: string;
-  status?: string | number; // 1: active, 0: inactive
+  status?: string | number; // saved, sent, partially_paid, paid, void
 }
 
 export class SaleItem {

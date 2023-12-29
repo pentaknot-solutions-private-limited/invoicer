@@ -12,9 +12,11 @@ import { SaleRoutingModule } from "./sale-routing.module";
 import { InventoryService } from "src/app/shared/_http/inventory.service";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { VSAIconModule } from "src/app/shared/components/vsa-icon/package.module";
+import { SaleService } from "src/app/shared/_http/sale.service";
+import { RecordPaymentComponent } from './pages/record-payment/record-payment.component';
 
 @NgModule({
-  declarations: [SaleComponent, AddSaleComponent],
+  declarations: [SaleComponent, AddSaleComponent, RecordPaymentComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -26,6 +28,6 @@ import { VSAIconModule } from "src/app/shared/components/vsa-icon/package.module
     VSASelectBoxModule,
     VSAGridModule,
   ],
-  providers: [CustomerService, InventoryService],
+  providers: [CustomerService, InventoryService, SaleService],
 })
 export class SaleModule {}

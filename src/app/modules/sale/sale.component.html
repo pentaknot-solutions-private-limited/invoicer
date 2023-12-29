@@ -36,7 +36,7 @@
           <vsa-grid
             #grid
             [rowData]="rowData"
-            [config]="customerConfig.customerGrid"
+            [config]="saleConfig.saleGrid"
             (onLinkClick)="onLinkClick($event)"
             (actionClicked)="actionClicked($event)"
           ></vsa-grid>
@@ -53,4 +53,11 @@
     *ngIf="pageComponentVisibility?.showAddSale"
   >
   </add-sale>
+ 
+  <record-payment
+    [saleDetails]="selectedSale"
+    (onBtnClick)="drawerAction($event)"
+    *ngIf="pageComponentVisibility?.showRecordPayment"
+  >
+  </record-payment>
 </ng-template>

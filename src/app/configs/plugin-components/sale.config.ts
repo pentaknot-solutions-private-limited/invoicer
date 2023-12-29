@@ -162,4 +162,134 @@ export class SaleConfig {
       disable: true,
     },
   };
+  saleGrid: IGridConfig = {
+    rowId: "id",
+    // gridHeightDelta: "calc(100vh - 510px)",
+    gridHeightDelta: "calc(100vh - 310px)",
+    pagination: true,
+    emptyMessage: "No records found.",
+    colDefs: [
+      {
+        field: "invoiceNumber",
+        headerName: "Invoice No",
+        colType: "link",
+        searchByFormatter: true,
+        valueFormatter: (value, row, col) => {
+          return row.invoiceNumber ? row.invoiceNumber : "-";
+        },
+      },
+      {
+        field: "customerName",
+        headerName: "Customer",
+        colType: "text",
+        searchByFormatter: true,
+        valueFormatter: (value, row, col) => {
+          // console.log(row);
+          // return value;
+          return row?.customer?.companyName
+            ? row?.customer?.companyName
+            : row?.customer?.firstName
+            ? `${row?.customer?.firstName} ${row?.customer?.lastName}`
+            : "-";
+        },
+      },
+      // {
+      //   field: "placeOfSupplyId",
+      //   headerName: "Location",
+      //   colType: "text",
+      //   searchByFormatter: true,
+      //   valueFormatter: (value, row, col) => {
+      //     // console.log(row);
+      //     // return value;
+      //     return row?.state?.name || "-";
+      //   },
+      // },
+      {
+        field: "invoiceDate",
+        headerName: "Date",
+        // showSelectFilter: true,
+        colType: "text",
+        searchByFormatter: true,
+        valueFormatter: (value, row, col) => {
+          return row.invoiceDate ? dateFormatter(row.invoiceDate, "DD MMM yyyy") : "-";
+        },
+      },
+      {
+        field: "totalAmount",
+        headerName: "Due Amount",
+        colType: "text",
+        searchByFormatter: true,
+        valueFormatter: (value, row, col) => {
+          return formatIndianCurrency(value);
+          // return row.rateDetails.totalAmount
+          //   ? row.rateDetails.totalAmount
+          //   : "-";
+        },
+      },
+      {
+        field: "status",
+        headerName: "Status",
+        width: "100",
+        colType: "multi",
+        searchByFormatter: true,
+        rendererParams: (value, row, col) => {
+          return {
+            fontSize: "12px",
+            color: "primary",
+            fontWeight: 500,
+          };
+        },
+        // valueFormatter: (value, row, col) => {
+        //   return row.isIrnGenerated == 1
+        //     ? "Completed"
+        //     : row.isCancelled == 1
+        //     ? "Cancelled"
+        //     : "Pending";
+        // },
+      },
+      {
+        headerName: "Action",
+        colType: "actions",
+        align: "center",
+        width: "200",
+        sortByFormatter: false,
+        rendererParams: (value, row, col) => {
+          // Get all data from local storage
+          return {
+            type: "simple",
+            row,
+            actions: [
+              {
+                icon: "edit-write-1",
+                action: "edit",
+                tooltip: "Edit Invoice",
+                title: "Edit Invoice",
+                type: "edit",
+                // disabled:
+                //   row.isIrnGenerated == 1 || row.isCancelled == 1
+                //     ? true
+                //     : false,
+              },
+              {
+                icon: "download-button-2",
+                action: "download",
+                tooltip: "Download Invoice",
+                title: "Download Invoice",
+                type: "edit",
+                // disabled: row.showSteps,
+              },
+              {
+                icon: "data-file-bars",
+                action: "record-payment",
+                tooltip: "Record Payment",
+                title: "Record Payment",
+                // type: "edit",
+                // disabled: row.showSteps,
+              },
+            ],
+          };
+        },
+      },
+    ],
+  };
 }

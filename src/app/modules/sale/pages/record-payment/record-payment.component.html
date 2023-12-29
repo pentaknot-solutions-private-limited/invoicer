@@ -1,0 +1,78 @@
+<div class="drawer-body">
+  <div class="row">
+    <div class="col-6">
+      <vsa-select
+        [config]="paymentConfig?.customerSelect"
+        [dataModel]="paymentDetails"
+        (onSelectionChange)="selectionChanged('customer', $event)"
+      >
+      </vsa-select>
+    </div>
+    <div class="col-2">
+      <vsa-input
+        [config]="paymentConfig?.paymentNumber"
+        [dataModel]="paymentDetails"
+      >
+      </vsa-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <vsa-input
+        [config]="paymentConfig?.amountReceived"
+        [dataModel]="paymentDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-6">
+      <vsa-input
+        [config]="paymentConfig?.bankCharges"
+        [dataModel]="paymentDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-6">
+      <vsa-input
+        [config]="paymentConfig?.paymentDate"
+        [dataModel]="paymentDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-6">
+      <vsa-select
+        [config]="paymentConfig?.paymentModeSelect"
+        [dataModel]="paymentDetails"
+        (onSelectionChange)="selectionChanged('mode', $event)"
+      >
+      </vsa-select>
+    </div>
+    <div class="col-6">
+      <vsa-input
+        [config]="paymentConfig?.referenceNumber"
+        [dataModel]="paymentDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-6">
+      <vsa-input [config]="paymentConfig?.notes" [dataModel]="paymentDetails">
+      </vsa-input>
+    </div>
+  </div>
+</div>
+<div class="drawer-footer">
+  <vsa-button
+    [type]="'button'"
+    [role]="'tertiary'"
+    size="small"
+    customColor="red"
+    (onClick)="actionEvent('cancel')"
+    >Close</vsa-button
+  >
+  <vsa-button
+    [type]="'button'"
+    [role]="'primary'"
+    size="small"
+    (onClick)="actionEvent('save')"
+    >Save</vsa-button
+  >
+</div>

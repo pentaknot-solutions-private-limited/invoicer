@@ -1,6 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { CustomerConfig } from "src/app/configs/plugin-components/customer.config";
+import { SaleConfig } from "src/app/configs/plugin-components/sale.config";
 import { CustomerService } from "src/app/shared/_http/customer.service";
+import { SaleService } from "src/app/shared/_http/sale.service";
 import { DrawerPanelService } from "src/app/shared/components/vsa-drawer-panel/src/vsa-drawer.service";
 
 @Component({
@@ -18,19 +20,25 @@ export class SaleComponent implements OnInit {
 
   pageComponentVisibility = {
     showAddSale: false,
+    showRecordPayment: false,
   };
 
   loading!: boolean;
   customerData: any;
+  selectedSale: any;
   customerConfig: CustomerConfig = new CustomerConfig();
+  saleConfig: SaleConfig = new SaleConfig();
   rowData: any[];
+
   constructor(
     private drawerControllerService: DrawerPanelService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private saleService: SaleService
   ) {}
 
   ngOnInit(): void {
-    this.getAllCustomers();
+    this.getAllSales();
+    // this.getAllCustomers();
   }
 
   onLinkClick(event) {
@@ -40,7 +48,18 @@ export class SaleComponent implements OnInit {
   onInputChanged(event?: any) {}
 
   actionClicked(event) {
-    this.customerData = {};
+    console.log(event);
+    switch (event.event) {
+      case "record-payment":
+        this.selectedSale = event.data;
+        this.openDrawer(event.event);
+        break;
+
+      default:
+        break;
+    }
+
+    // this.customerData = {};
   }
 
   // Drawer
@@ -57,6 +76,15 @@ export class SaleComponent implements OnInit {
         this.drawerControllerService.setTitle(`New Sale`);
         this.drawerControllerService.changeDrawerSize("medium");
         break;
+      case "record-payment":
+        this.pageComponentVisibility.showRecordPayment = true;
+        this.drawerControllerService.createContainer(this.drawerTemplate);
+        this.drawerControllerService.toggleDrawer(true);
+        this.drawerControllerService.showCloseButton(false);
+        this.drawerControllerService.setEscClose(false);
+        this.drawerControllerService.setTitle(`Record Payment for ${this.selectedSale?.invoiceNumber}`);
+        this.drawerControllerService.changeDrawerSize("extra-small");
+        break;
       default:
         break;
     }
@@ -64,6 +92,7 @@ export class SaleComponent implements OnInit {
 
   clearDrawerData() {
     this.customerData = {};
+    this.selectedSale = {};
     this.pageComponentVisibility.showAddSale = false;
     this.drawerControllerService.toggleDrawer(false);
     this.drawerControllerService.setEscClose(false);
@@ -93,8 +122,15 @@ export class SaleComponent implements OnInit {
   }
 
   // API
-  getAllCustomers() {
-    this.customerService.getAllCustomers().subscribe((res: any) => {
+  // getAllCustomers() {
+  //   this.customerService.getAllCustomers().subscribe((res: any) => {
+  //     if (res.data) {
+  //       this.rowData = res.data;
+  //     }
+  //   });
+  // }
+  getAllSales() {
+    this.saleService.getAllSales().subscribe((res: any) => {
       if (res.data) {
         this.rowData = res.data;
       }

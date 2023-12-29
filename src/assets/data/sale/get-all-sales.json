@@ -1,0 +1,38 @@
+{
+  "data": [
+    {
+      "saleId": 1,
+      "customerId": 1,
+      "customer": {
+        "firstName": "Kantilal",
+        "middleName": "Mavji",
+        "lastName": "Patel",
+        "companyName": ""
+      },
+      "placeOfSupplyId": 27,
+      "state": {
+        "stateId": 27,
+        "name": "Maharashtra"
+      },
+      "invoiceNumber": "INV-23/24/001",
+      "invoiceDate": "2023-12-28",
+      "dueDate": "2023-12-28",
+      "saleItems": [
+        {
+          "saleItemId": 1,
+          "inventoryId": 1,
+          "hsnSacCode": "",
+          "qty": 1,
+          "rate": 3100000,
+          "amount": 3100000
+        }
+      ],
+      "deducationTypeId": 1,
+      "deductionRateId": 1,
+      "deductionTotalAmount": 31000,
+      "subTotalAmount": 3100000,
+      "totalAmount": 3131000,
+      "status": "saved"
+    }
+  ]
+}

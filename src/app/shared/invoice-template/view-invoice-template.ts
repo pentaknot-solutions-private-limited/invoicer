@@ -598,6 +598,9 @@ export class InvoicePDF {
                     stack: [
                         {
                             stack: [
+                                {
+                                    text: "E. & O.E.", margin: [0,0,0,5], fontSize: 8
+                                },
                                 { text: `Amount (in words): `, italics: true },
                                 { text: `INR ${convertAmountToWords(finalTotal)} /-`, bold: true },
                             ],
@@ -655,7 +658,15 @@ export class InvoicePDF {
                                 body: [
                                     [
                                         {
-                                            fontSize: 10,
+                                            fontSize: 8,
+                                            alignment: 'center',
+                                            color: "#191919",
+                                            text: 'for M/s Wish Wheels'
+                                        }
+                                    ],
+                                    [
+                                        {
+                                            fontSize: 8,
                                             alignment: 'center',
                                             color: "#5c5c5c",
                                             text: 'Authorised Signatory'
@@ -664,8 +675,8 @@ export class InvoicePDF {
                                 ]
                             },
                             layout: {
-                                paddingBottom: function(i, node) { return 40; },
-                                hLineColor: function (i, node) { return "#e0e0e0" },
+                                paddingBottom: function(i, node) { return i == 0 ? 40 : 0; },
+                                hLineColor: function (i, node) { return i == 1 ? "#fff" : "#e0e0e0" },
                                 vLineColor: function (i, node) { return "#e0e0e0" },
                             },
                             alignment: `right`,

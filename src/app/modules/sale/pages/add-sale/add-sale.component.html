@@ -347,27 +347,31 @@
   </div>
 </div>
 <div class="drawer-footer">
-  <vsa-button
-    [type]="'button'"
-    [role]="'tertiary'"
-    size="small"
-    customColor="red"
-    (onClick)="actionEvent('cancel')"
-    >Close</vsa-button
-  >
-  <vsa-button
-    [type]="'button'"
-    [role]="'tertiary'"
-    size="small"
-    customColor="red"
-    (onClick)="actionEvent('preview')"
-    >Preview</vsa-button
-  >
-  <vsa-button
-    [type]="'button'"
-    [role]="'primary'"
-    size="small"
-    (onClick)="actionEvent('save')"
-    >Save</vsa-button
-  >
+  <div class="left">
+    <vsa-button
+      [type]="'button'"
+      [role]="'tertiary'"
+      size="small"
+      customColor="red"
+      (onClick)="actionEvent('cancel')"
+      >Close</vsa-button
+    >
+  </div>
+  <!-- customColor="red" -->
+  <div class="right">
+    <vsa-button
+      [type]="'button'"
+      [role]="'tertiary'"
+      size="small"
+      (onClick)="actionEvent('preview')"
+      >Preview</vsa-button
+    >
+    <vsa-button
+      [type]="'button'"
+      [role]="'primary'"
+      size="small"
+      (onClick)="actionEvent('save')"
+      >Save</vsa-button
+    >
+  </div>
 </div>

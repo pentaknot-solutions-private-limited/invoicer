@@ -32,7 +32,41 @@
       "deductionTotalAmount": 31000,
       "subTotalAmount": 3100000,
       "totalAmount": 3131000,
-      "status": "saved"
+      "status": "Paid"
+    },
+    {
+      "saleId": 1,
+      "customerId": 1,
+      "customer": {
+        "firstName": "Kantilal",
+        "middleName": "Mavji",
+        "lastName": "Patel",
+        "companyName": ""
+      },
+      "placeOfSupplyId": 27,
+      "state": {
+        "stateId": 27,
+        "name": "Maharashtra"
+      },
+      "invoiceNumber": "INV-23/24/002",
+      "invoiceDate": "2023-12-29",
+      "dueDate": "2023-12-29",
+      "saleItems": [
+        {
+          "saleItemId": 1,
+          "inventoryId": 1,
+          "hsnSacCode": "",
+          "qty": 1,
+          "rate": 4500000,
+          "amount": 4500000
+        }
+      ],
+      "deducationTypeId": 1,
+      "deductionRateId": 1,
+      "deductionTotalAmount": 45000,
+      "subTotalAmount": 4500000,
+      "totalAmount": 4545000,
+      "status": "Partially Paid"
     }
   ]
 }

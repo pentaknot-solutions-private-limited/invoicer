@@ -12,6 +12,8 @@ export class GlobalConfig {
     loginRoute = "/auth/login";
     // dashboardRoute = "/dashboard";
     // dashboardUserRoute = "/dashboard";
-    dashboardRoute = "/invoices";
-    dashboardUserRoute = "/invoices";
+    // dashboardRoute = "/invoices";
+    // dashboardUserRoute = "/invoices";
+    dashboardRoute = "/customer";
+    dashboardUserRoute = "/customer";
 }

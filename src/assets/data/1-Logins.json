@@ -1,11 +1,11 @@
 [
   {
-    "email": "admin@pentaknot.com",
+    "email": "admin@wishwheels.com",
     "role": "Admin",
     "password": "Abc@123",
     "role_id": 1,
-    "firstName": "Rahul",
-    "lastName": "Grover"
+    "firstName": "Amir",
+    "lastName": "Khan"
   },
   {
     "email": "ca@pentaknot.com",

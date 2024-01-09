@@ -1,0 +1,50 @@
+New Customer
+
+- email/ customer ID
+
+
+New Sale
+
+- Customer Select
+    - number
+    - panNo
+    - name
+    - customerId
+
+Inv Date
+- admin 
+    - can create previous dated 
+
+
+Opt for exchange
+
+
+PDF
+
+- remove Per
+
+
+2 - Cash
+8 - Account
+10 - Account
+30/01/24 - 20L - Cash
+
+20/01/24 - 25L - Account
+30/01/24 - 20L - Cash
+
+Sale
+    Proforma
+    Payment Schedule
+    - listing filter
+    Invoice 
+    - filtered
+
+
+
+Purchase Invoice
+    Payment Schedule
+    - listing filter
+
+
+Expense
+- petty cash

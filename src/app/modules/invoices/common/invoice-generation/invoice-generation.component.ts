@@ -49,6 +49,7 @@ import { InvoicePDF } from "src/app/shared/invoice-template/new-view-invoice-tem
 import { PdfViewerComponent } from "ng2-pdf-viewer";
 import * as moment from "moment";
 import { EncryptedStorage } from "src/app/shared/utils/encrypted-storage";
+import { roundUp } from "src/app/shared/utils";
 
 @Component({
   selector: "invoice-generation",
@@ -1405,13 +1406,13 @@ export class InvoiceGenerationComponent
         CgstVal:
           invoiceData?.companyDetails?.customer?.stateName ==
           invoiceData?.companyDetails?.organizationBranch?.stateName
-            ? Number(invoiceData?.rateDetails?.taxableAmount) / 2
+            ? roundUp(Number(invoiceData?.rateDetails?.taxableAmount) / 2, 2)
             : 0,
         // SgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? Number(invoiceData?.rateDetails?.taxableAmount)/2 : 0,
         SgstVal:
           invoiceData?.companyDetails?.customer?.stateName ==
           invoiceData?.companyDetails?.organizationBranch?.stateName
-            ? Number(invoiceData?.rateDetails?.taxableAmount) / 2
+            ? roundUp(Number(invoiceData?.rateDetails?.taxableAmount) / 2, 2)
             : 0,
         // IgstVal: invoiceData?.companyDetails?.organizationBranch?.stateId == invoiceData?.companyDetails?.customerBranch?.stateId ? 0 : Number(invoiceData?.rateDetails?.taxableAmount),
         IgstVal:

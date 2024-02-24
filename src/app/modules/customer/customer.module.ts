@@ -9,6 +9,7 @@ import { VSAInputModule } from "src/app/shared/components/vsa-input/package.modu
 import { VSASelectBoxModule } from "src/app/shared/components/vsa-select-box/package.module";
 import { CustomerService } from "src/app/shared/_http/customer.service";
 import { VSAGridModule } from "src/app/shared/components/vsa-grid/package.module";
+import { VSARadioModule } from "src/app/shared/components/vsa-radio/package.module";
 
 @NgModule({
   declarations: [CustomerComponent, AddCustomerComponent],
@@ -18,6 +19,7 @@ import { VSAGridModule } from "src/app/shared/components/vsa-grid/package.module
     VSAButtonModule,
     VSAInputModule,
     VSASelectBoxModule,
+    VSARadioModule,
     VSAGridModule,
   ],
   providers: [CustomerService],

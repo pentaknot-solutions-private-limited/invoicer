@@ -13,13 +13,14 @@ export class SaleConfig {
       class: "header-item",
       title: "Customer",
       isMandatory: false,
+      type: "select-search",
     },
-    dataKey: "name",
+    dataKey: "nameAndPhone",
     returnKey: "customerId",
     options: [],
     searchBy: [
       {
-        key: "name",
+        key: "nameAndPhone",
       },
     ],
     isMultiple: false,
@@ -51,17 +52,49 @@ export class SaleConfig {
   invoiceNumber: ITextConfig = {
     fieldKey: "invoiceNumber",
     attributes: {
-      title: "Invoice#", //   showBorder: true,
+      title: "Proforma#", //   showBorder: true,
       isMandatory: true,
     },
   };
   invoiceDate: ITextConfig = {
     fieldKey: "invoiceDate",
     attributes: {
-      title: "Invoice Date",
+      title: "Proforma Date",
       type: "datepicker",
       isMandatory: false,
     },
+  };
+  paymentTermSelect: ISelectConfig = {
+    fieldKey: "paymentTermId",
+    attributes: {
+      class: "header-item",
+      title: "Due period",
+      isMandatory: false,
+    },
+    dataKey: "name",
+    returnKey: "paymentTermId",
+    options: [
+      {
+        paymentTermId: 1,
+        name: "7 Days",
+        value: 7,
+      },
+      {
+        paymentTermId: 2,
+        name: "15 Days",
+        value: 15,
+      },
+      {
+        paymentTermId: 3,
+        name: "30 Days",
+        value: 30,
+      },
+      {
+        paymentTermId: 4,
+        name: "Custom",
+        value: 0,
+      },
+    ],
   };
 
   dueDate: ITextConfig = {
@@ -123,6 +156,39 @@ export class SaleConfig {
     },
   };
   rateInput: ITextConfig = {
+    fieldKey: "rate",
+    attributes: {
+      // title: "Rate",
+      title: "Amount",
+      type: "number",
+      isMandatory: true,
+      // readonly: true,
+      // disable: true,
+    },
+  };
+  exchangeTitleInput: ITextConfig = {
+    fieldKey: "title",
+    attributes: {
+      title: "Title",
+      isMandatory: true,
+    },
+  };
+  exchangeYearInput: ITextConfig = {
+    fieldKey: "year",
+    attributes: {
+      title: "Year",
+      isMandatory: true,
+    },
+  };
+  exchangeCarNoInput: ITextConfig = {
+    fieldKey: "carNo",
+    attributes: {
+      title: "Car No.",
+      isMandatory: true,
+    },
+  };
+
+  exchangeRateInput: ITextConfig = {
     fieldKey: "rate",
     attributes: {
       // title: "Rate",
@@ -211,7 +277,9 @@ export class SaleConfig {
         colType: "text",
         searchByFormatter: true,
         valueFormatter: (value, row, col) => {
-          return row.invoiceDate ? dateFormatter(row.invoiceDate, "DD MMM yyyy") : "-";
+          return row.invoiceDate
+            ? dateFormatter(row.invoiceDate, "DD MMM yyyy")
+            : "-";
         },
       },
       {

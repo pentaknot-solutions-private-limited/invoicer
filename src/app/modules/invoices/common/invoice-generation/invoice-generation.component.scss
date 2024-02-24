@@ -1,3 +1,5 @@
+@import "../../../../../assets/style/partials/variables.scss";
+
 .invoice-generation {
   // padding: 20px;
   .dashed-divider {
@@ -25,15 +27,15 @@
 hr {
   color: #0000004f;
   margin-top: 5px;
-  margin-bottom: 5px
+  margin-bottom: 5px;
 }
 .add td {
   color: #c5c4c4;
   text-transform: uppercase;
-  font-size: 12px
+  font-size: 12px;
 }
 .content {
-  font-size: 14px
+  font-size: 14px;
 }
 
 #pdfTable {
@@ -49,7 +51,7 @@ hr {
     font-size: 8px;
     line-height: 2em;
   }
-  
+
   b {
     font-size: 12px;
   }
@@ -64,7 +66,7 @@ hr {
   .details-title {
     border-bottom: 2px solid #191919;
   }
-  .table>:not(caption)>*>* {
+  .table > :not(caption) > * > * {
     padding: 0px !important;
   }
 }
@@ -102,7 +104,6 @@ hr {
 #tableData {
   max-width: 2800px;
   width: 100%;
- 
 }
 
 .custom-col {
@@ -113,7 +114,7 @@ hr {
     font-size: 12px;
     font-weight: 400;
     font-family: "Open Sans", sans-serif;
-    color: #767676;
+    color: $primary_typo-color;
     transition: 0.5s;
   }
 }
@@ -131,7 +132,8 @@ hr {
     box-sizing: border-box;
     border-radius: 4px;
   }
-  .p-inputtext:enabled:focus,.p-inputtext:enabled:hover {
+  .p-inputtext:enabled:focus,
+  .p-inputtext:enabled:hover {
     box-shadow: none !important;
     outline: #d3e2f8 solid 2px;
     box-sizing: border-box;
@@ -144,7 +146,7 @@ hr {
   .valid {
     .p-inputtext {
       border: 1px solid #3f9171 !important;
-      outline: #cee9e3 solid 2px  !important;
+      outline: #cee9e3 solid 2px !important;
     }
   }
 }
@@ -192,18 +194,18 @@ p.srno {
 
 .please-wait {
   display: flex;
-    align-items: center;
-    justify-content: center;
-    height: calc(100vh - 390px) !important;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 390px) !important;
 }
 
 :host ::ng-deep {
   .ng2-pdf-viewer-container {
     height: calc(100vh - 342px) !important;
-  } 
+  }
   .custom-height {
     .ng2-pdf-viewer-container {
       height: calc(100vh - 150px) !important;
-    } 
+    }
   }
 }

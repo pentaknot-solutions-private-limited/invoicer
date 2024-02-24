@@ -2,13 +2,6 @@
   {
     "top": [
       {
-        "name": "Invoice",
-        "icon": "assignment",
-        "isActive": false,
-        "size": "medium",
-        "route": "/invoices"
-      },
-      {
         "name": "Customer",
         "icon": "group",
         "isActive": false,

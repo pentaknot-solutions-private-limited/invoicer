@@ -1,11 +1,29 @@
 import { IGridConfig } from "src/app/shared/components/vsa-grid/vsa-grid.model";
 import { ITextConfig } from "src/app/shared/components/vsa-input/vsa-input.model";
+import { IRadioButtonConfig } from "src/app/shared/components/vsa-radio/vsa-radio.model";
 import { ISelectConfig } from "src/app/shared/components/vsa-select-box/vsa-select-box.model";
 import { dateFormatter } from "src/app/shared/utils/date-formatter";
 import { EncryptedStorage } from "src/app/shared/utils/encrypted-storage";
 import { formatIndianCurrency } from "src/app/shared/utils/format-indian-currency";
 
 export class CustomerConfig {
+  customerTypeOption: IRadioButtonConfig = {
+    fieldKey: "customerTypeId",
+    attributes: {
+      label: "Customer Type",
+      isMandatory: true,
+    },
+    options: [
+      {
+        value: 1,
+        label: "Individual",
+      },
+      {
+        value: 2,
+        label: "Business",
+      },
+    ],
+  };
   salutationSelect: ISelectConfig = {
     fieldKey: "salutationId",
     attributes: {
@@ -28,6 +46,10 @@ export class CustomerConfig {
         salutationId: 3,
         name: "Mrs.",
       },
+      // {
+      //   salutationId: 4,
+      //   name: "M/s.",
+      // },
     ],
     searchBy: [
       {
@@ -128,9 +150,25 @@ export class CustomerConfig {
   phone: ITextConfig = {
     fieldKey: "phone",
     attributes: {
-      title: "Phone",
+      title: "Mobile No.",
+      //   showBorder: true,
+      isMandatory: true,
+    },
+  };
+  altPhone: ITextConfig = {
+    fieldKey: "altPhone",
+    attributes: {
+      title: "Alternate Mobile No.",
       //   showBorder: true,
       isMandatory: false,
+    },
+  };
+  email: ITextConfig = {
+    fieldKey: "email",
+    attributes: {
+      title: "Email address",
+      //   showBorder: true,
+      isMandatory: true,
     },
   };
   panNo: ITextConfig = {
@@ -138,7 +176,7 @@ export class CustomerConfig {
     attributes: {
       title: "PAN",
       //   showBorder: true,
-      isMandatory: false,
+      isMandatory: true,
     },
   };
   gstNo: ITextConfig = {
@@ -195,10 +233,11 @@ export class CustomerConfig {
         headerName: "Company",
         colType: "text",
         searchByFormatter: true,
+        valueFormatter: (val: any) => val || "-",
       },
       {
-        field: "stateId",
-        headerName: "State",
+        field: "phone",
+        headerName: "Mobile No.",
         colType: "text",
         searchByFormatter: true,
       },
@@ -230,6 +269,13 @@ export class CustomerConfig {
                 tooltip: "Edit Customer",
                 title: "Edit Customer",
                 type: "edit",
+              },
+              {
+                icon: "delete-bin-1",
+                action: "delete",
+                tooltip: "Delete Customer",
+                title: "Delete Customer",
+                type: "delete",
               },
             ],
           };

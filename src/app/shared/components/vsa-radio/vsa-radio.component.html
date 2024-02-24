@@ -1,0 +1,22 @@
+<div class="vsa-radio">
+  <label class="vsa-radio-label" *ngIf="config?.attributes?.label">{{ config!.attributes!.label }} : </label>
+  <mat-radio-group
+    class="vsa-radio-group mr-2"
+    name="vsa-radio-group__{{ dataModel[config.fieldKey] }}"
+    [disabled]="config!.attributes!.disabled!"
+    [(ngModel)]="dataModel[config.fieldKey]"
+    (change)="radioChange($event)">
+    
+    <mat-radio-button
+      class="vsa-radio-button mr-4"
+      *ngFor="let option of config?.options"
+      [value]="option?.value"
+    >
+      <ng-container class="vsa-radio-icon pr-1">
+        <vsa-icon [icon]="option?.icon" [size]="option?.iconSize!"></vsa-icon>
+      </ng-container>
+      {{ option?.label }}
+      <ng-container *ngTemplateOutlet="extraTemplate; context: {$implicit: option}"></ng-container>
+    </mat-radio-button>
+  </mat-radio-group>
+</div>

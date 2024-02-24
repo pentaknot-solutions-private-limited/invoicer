@@ -15,6 +15,8 @@ export class CustomerDetails {
   stateId?: string;
   pincode?: number;
   phone?: number;
+  altPhone?: number;
+  email?: string;
   // docs
   panNo?: string;
   gstNo?: string;

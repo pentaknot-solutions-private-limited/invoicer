@@ -1,0 +1,114 @@
+WishWheels - 9th Jan 2023 (MOM)
+
+- Logs for all
+- Admin
+    - Disable TCS for specific invoice (like edit)
+- New Sale
+    - Customer Select
+        - Search select (open search below all should be allowed)
+        - Options
+            - Name
+            - Mobile No.
+            - Alternate Mobile No.
+            - PAN No.
+            - Email Address
+        - Dropdown option
+            - Line 1  (Name)
+            - Line 2 (Mobile No.)
+        - If search item not exist allow “+Add Customer” and redirect back after adding
+    - Place of supply 
+        - Default selection from customer setting
+    - Rename Invoice# to Proforma# 
+    - Auto-generate proforma#
+    - Invoice Date rename to Proforma Date
+    - Proforma Date 
+        - Open ended dates for all roles
+    - Invoice Date
+        - Back dates only admin can access
+    - Due Date
+        - Validation
+            - Greater than preforma date
+        - Additional dropdown option
+            - Custom (calendar)
+            - 7 days 
+            - 15 days
+            - 30 days 
+- Rate Setup
+    - Add Item
+    - Add Exchange Item. (Multiple)
+        - Name of car
+        - Year
+        - Car No.
+        - Exchange Price
+- Notes (add input field with below profiled data - user can change if need be)
+    - Proforma
+        - “This is just a proforma, final invoice with signature will be produced against full payment”
+    - Invoice
+        - “Payment received in full, vehicle delivered to buyer’s complete satisfaction”
+- Invoice Preview
+    - Seller (WW)
+        - Email address 
+    - Buyer Details
+        - Email address (if added)
+    - Table
+        - Remove HSN/ SAC code
+        - In case of exchange (show after exchange price)
+        - NOTE: TCS applicable only post exchange price
+- Sale Listing
+    - Status
+        - Paid
+        - Partially Paid
+        - Cancel/ Void
+    - Action
+        - Generate Invoice
+            - Only if status if Paid
+            - #1 Basic Proforma Details
+            - #2 Filter Payment Schedule
+            - #3 Calculate only selected schedule item for invoice
+        - Refund (Same as Record Payment)
+            - Fully
+            - Partially
+
+Payment Schedule
+    - Record Payment
+        - Bank charges - remove
+    - Payment History
+        - Line Item with selection 
+        - Each row should have download PDF (acknowledge)
+        - Payment Receipt (Template will be provided by Amir)
+    - ROLES
+        - Admin can delete recorded payment
+        - User can do everything except delete/ edit
+
+
+
+Customer
+    - New Customer
+        - Basic 
+            - Customer Type (radio)
+                - Individual
+                - Business
+            - Salutation
+                - Mr. 
+                - M/s. (Company)
+                - Ms.
+                - Mrs.
+            - FirstName (Mandatory)
+            - MiddleName
+            - LastName 
+        - Address
+            - Address Line 1 (*)
+            - Phone rename to Mobile No. (*)
+            - Email address (*)
+            - PAN No. (*)
+    - Listing
+        - Name
+        - Company
+        - Mobile No.
+        - Receivable
+    - ROLES
+        - User
+            - Add
+        - Admin
+            - Delete
+

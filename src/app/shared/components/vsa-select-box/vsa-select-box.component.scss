@@ -19,8 +19,7 @@
   font-size: 12px;
   font-weight: 400;
   font-family: $primary_font-family;
-  color: #767676;
-
+  color: $primary_typo-color;
 }
 
 :host ::ng-deep {
@@ -235,12 +234,13 @@
         }
       }
     }
-  } 
+  }
   .vsa-select.header-item.custom {
     .mat-select-value {
       color: rgb(92, 92, 92);
     }
-    .mat-form-field-appearance-outline.mat-form-field-disabled .mat-form-field-outline {
+    .mat-form-field-appearance-outline.mat-form-field-disabled
+      .mat-form-field-outline {
       color: rgb(194, 194, 194) !important;
     }
   }
@@ -256,8 +256,11 @@
         }
       }
     }
-  } 
-  .header-filter-item .no-label.mat-form-field .mat-form-field-wrapper .mat-form-field-flex {
+  }
+  .header-filter-item
+    .no-label.mat-form-field
+    .mat-form-field-wrapper
+    .mat-form-field-flex {
     height: 35px !important;
   }
   .no-label.mat-form-field-appearance-outline .mat-select-arrow-wrapper {
@@ -266,14 +269,14 @@
   // Remove Bottom Spacing from grid header select dropdown
   .header-item.vsa-select .mat-form-field .mat-form-field-wrapper {
     margin-bottom: 0 !important;
-    padding-bottom: 0; 
+    padding-bottom: 0;
   }
   .pristine .mat-form-field-infix {
     border: 1px solid #1e63cb !important;
     outline: #d3e2f8 solid 2px !important;
   }
   .no-border .mat-form-field-infix {
-    border: 1px solid #DEE5EF !important;
+    border: 1px solid #dee5ef !important;
     outline: none !important;
   }
   // .valid .mat-form-field-infix {

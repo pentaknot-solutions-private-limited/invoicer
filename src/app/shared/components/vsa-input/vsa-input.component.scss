@@ -14,7 +14,7 @@
   font-size: 12px;
   font-weight: 400;
   font-family: $primary_font-family;
-  color: #767676;
+  color: $primary_typo-color;
   transition: 0.5s;
 }
 .title2 {
@@ -24,7 +24,7 @@
   font-weight: 400;
   font-family: $primary_font-family;
   // color: #051226;
-  color: #767676;
+  color: $primary_typo-color;
   transition: 0.5s;
 }
 .error-custom {

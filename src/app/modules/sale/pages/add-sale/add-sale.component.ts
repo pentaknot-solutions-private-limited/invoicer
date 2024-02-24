@@ -1,15 +1,6 @@
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import {
-  AfterContentChecked,
-  AfterViewChecked,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from "@angular/core";
-import { CustomerConfig } from "src/app/configs/plugin-components/customer.config";
-import {
-  CustomerDetails,
+  ExchangeItem,
   LineItem,
   SaleDetails,
   SaleItem,
@@ -17,13 +8,7 @@ import {
 import { SaleConfig } from "src/app/configs/plugin-components/sale.config";
 import { CustomerService } from "src/app/shared/_http/customer.service";
 import { InventoryService } from "src/app/shared/_http/inventory.service";
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { minLengthArray } from "src/app/shared/utils/custom-validators";
 import * as _ from "lodash";
 import { convertAmountToWords } from "src/app/shared/utils/convert-amount-to-words";
@@ -44,13 +29,33 @@ export class AddSaleComponent implements OnInit {
   selectedInventory: any;
   lineItemForm: FormGroup;
   lineItemListForm: FormArray;
+
+  saleItem: SaleItem = new SaleItem();
   lineItems: SaleItem[] = [];
+
   lineItemFormConfigList = [];
   lineItemFormConfig = {
     inventorySelect: this.saleConfig.inventorySelect,
     hsnSacCode: this.saleConfig.hsnSacCodeInput,
     qty: this.saleConfig.quantityInput,
     rate: this.saleConfig.rateInput,
+    // unitId: this.saleConfig.unitConfig,
+    amount: this.saleConfig.amountInput,
+  };
+
+  // Exchange
+  exchangeLineItemForm: FormGroup;
+  exchangeLineItemListForm: FormArray;
+  exchangeLineItems: ExchangeItem[] = [];
+  exchangeLineItemFormConfigList = [];
+  exchangeLineItemFormConfig = {
+    title: this.saleConfig.exchangeTitleInput,
+    year: this.saleConfig.exchangeYearInput,
+    carNo: this.saleConfig.exchangeCarNoInput,
+    rate: this.saleConfig.exchangeRateInput,
+
+    hsnSacCode: this.saleConfig.hsnSacCodeInput,
+    qty: this.saleConfig.quantityInput,
     // unitId: this.saleConfig.unitConfig,
     amount: this.saleConfig.amountInput,
   };
@@ -61,8 +66,13 @@ export class AddSaleComponent implements OnInit {
     private inventoryService: InventoryService,
     private fb: FormBuilder
   ) {
+    // Sale
     this.lineItemForm = this.fb.group({
       lineItemList: this.fb.array([], minLengthArray(1)),
+    });
+    // Exchange
+    this.exchangeLineItemForm = this.fb.group({
+      exchangeLineItemList: this.fb.array([], minLengthArray(1)),
     });
   }
 
@@ -78,6 +88,11 @@ export class AddSaleComponent implements OnInit {
   getLineItem(i) {
     // this.lineItems[i].qty = this.inv.packageQty;
     return this.lineItems[i];
+  }
+
+  getExchangeLineItem(i) {
+    // this.exchangeLineItems[i].qty = this.inv.packageQty;
+    return this.exchangeLineItems[i];
   }
 
   createLineItemForm(lineItem?: any) {
@@ -96,6 +111,21 @@ export class AddSaleComponent implements OnInit {
 
     // this.shipmentDetailsModel.packageQty
     // this.shipmentDetailsModel.chargeableWt
+  }
+
+  createExchangeLineItemForm(lineItem?: ExchangeItem) {
+    return this.fb.group({
+      exchangeItemId: [lineItem?.exchangeItemId || ""],
+      title: [lineItem?.title || ""],
+      year: [lineItem?.year || ""],
+      carNo: [lineItem?.carNo || ""],
+
+      hsnSacCode: [lineItem?.hsnSacCode || ""],
+      qty: new FormControl(1),
+      rate: [lineItem?.rate || 0],
+      amount: [lineItem?.amount || 0],
+      carDetails: [lineItem?.carDetails || {}],
+    });
   }
 
   onAddNewLineItemClick(isNew) {
@@ -123,6 +153,34 @@ export class AddSaleComponent implements OnInit {
     this.lineItemFormConfigList[formIndex].inventorySelect.attributes.hint = "";
   }
 
+  onAddNewExchangeLineItemClick(isNew) {
+    this.exchangeLineItemListForm = this.exchangeLineItemForm.get(
+      "exchangeLineItemList"
+    ) as FormArray;
+    const formIndex =
+      this.exchangeLineItemFormConfigList.push(
+        _.cloneDeep(this.exchangeLineItemFormConfig)
+      ) - 1;
+    // this.exchangeLineItemFormConfigList[formIndex].inventorySelect.options =
+    //   formIndex == 0 ? this.inventory : this.inventory;
+
+    // : this.getServiceTypeData(
+    //     true,
+    //     this.lineItemForm.get("lineItemList").value[formIndex - 1]
+    //       .inventoryId
+    //   );
+
+    this.exchangeLineItemListForm.push(this.createExchangeLineItemForm());
+
+    if (isNew) {
+      this.exchangeLineItems.push(new ExchangeItem());
+      this.exchangeLineItems[formIndex].qty = 1;
+      this.exchangeLineItems[formIndex].rate = 0;
+    }
+
+    // this.exchangeLineItemFormConfigList[formIndex].inventorySelect.attributes.hint = "";
+  }
+
   calculateAmount(array) {
     const initialValue = 0;
     const sumWithInitial = array.reduce(
@@ -133,7 +191,7 @@ export class AddSaleComponent implements OnInit {
     return sumWithInitial;
   }
 
-  valueChanged(type: any, index: number) {
+  valueChanged(type: any, index?: number) {
     console.log(this.calc);
     switch (type) {
       case "qty":
@@ -156,6 +214,20 @@ export class AddSaleComponent implements OnInit {
     // }
   }
 
+  onDeleteExchangeLineItemClick(i) {
+    this.exchangeLineItemListForm = this.exchangeLineItemForm.get(
+      "exchangeLineItemList"
+    ) as FormArray;
+    // if (
+    //   this.lineItemForm.get("lineItemList").value[i].qty &&
+    //   this.lineItemForm.get("lineItemList").value[i].rate
+    // ) {
+    this.exchangeLineItemListForm.removeAt(i);
+    this.exchangeLineItems.splice(i, 1);
+    this.exchangeLineItemFormConfigList.splice(i, 1);
+    // }
+  }
+
   selectionChanged(type: any, event?: any, i?: number) {
     switch (type) {
       case "customer":
@@ -166,37 +238,31 @@ export class AddSaleComponent implements OnInit {
         console.log(this.lineItems);
         this.lineItems[i].rate = event?.selectedObj?.Car_Detail?.maxPrice;
         this.lineItems[i].carDetails = event?.selectedObj;
-        // this.selectedInventory = event.selectedObj;
-        // setTimeout(() => {
-        //   this.lineItems[i].amount = this.calculateAmount(
-        //     this.lineItemForm.get("lineItemList").value
-        //   );
-        // }, 100);
-        // this.updateLineItemRate(event.selectedObj, i);
+
+        break;
+      case "sale-inventory":
+        this.saleItem.rate = event?.selectedObj?.Car_Detail?.maxPrice;
+        this.saleItem.carDetails = event?.selectedObj;
         break;
     }
   }
 
-  updateLineItemRate(inventory: any, i: number) {
-    // console.log(inventory?.Car_Detail?.maxPrice);
-    // Get the FormArray and the specific FormGroup at the given index
-    // const lineItemListForm = this.lineItemForm.get("lineItemList") as FormArray;
-    // const lineItemGroup = lineItemListForm.at(i) as FormGroup;
-    // lineItemGroup.get("rate").patchValue(inventory?.Car_Detail?.maxPrice);
-  }
+  updateLineItemRate(inventory: any, i: number) {}
 
   // Drawer Action Events
   actionEvent(event) {
     // let eventData = null;
     const customers = this.saleConfig.customerSelect.options;
     const places = this.saleConfig.placeOfSupplySelect.options;
-    const customer = customers.find(cus => cus?.customerId == this.saleDetails.customerId);
-    const place = places.find(cus => cus?.posId == this.saleDetails.posId);
+    const customer = customers.find(
+      (cus) => cus?.customerId == this.saleDetails.customerId
+    );
+    const place = places.find((cus) => cus?.posId == this.saleDetails.posId);
     let data: any = {
       customer: customer,
       place: place,
       saleDetails: this.saleDetails,
-      listItems: this.lineItems
+      listItems: this.lineItems,
     };
     switch (event) {
       case "preview":
@@ -227,6 +293,7 @@ export class AddSaleComponent implements OnInit {
         return {
           ...row,
           name: `${row["firstName"]} ${row["lastName"]}`,
+          nameAndPhone: `${row["firstName"]} ${row["lastName"]} (${row["phone"]})`,
         };
       });
     });
@@ -243,7 +310,7 @@ export class AddSaleComponent implements OnInit {
           name: row["Car_Detail"]["name"],
         };
       });
-      // this.saleConfig.inventorySelect.option
+      this.saleConfig.inventorySelect.options = [...this.inventory];
     });
   }
 }

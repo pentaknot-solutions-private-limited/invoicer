@@ -3,6 +3,13 @@
     <div class="col-12">
       <h3>Basic Details</h3>
     </div>
+    <div class="col-12">
+      <vsa-radio
+        [config]="customerConfig?.customerTypeOption"
+        [dataModel]="customerDetails"
+        (onChange)="customerTypeChanged($event)"
+      ></vsa-radio>
+    </div>
     <div class="col-3">
       <vsa-select
         [config]="customerConfig?.salutationSelect"
@@ -32,7 +39,7 @@
       >
       </vsa-input>
     </div>
-    <div class="col-9">
+    <div class="col-9" *ngIf="isBusiness">
       <vsa-input
         [config]="customerConfig?.companyName"
         [dataModel]="customerDetails"
@@ -88,11 +95,27 @@
       </vsa-input>
     </div>
     <div class="col-3">
-      <vsa-input [config]="customerConfig?.phone" [dataModel]="customerDetails">
-      </vsa-input>
+      <vsa-select
+        [config]="customerConfig?.placeOfSupplySelect"
+        [dataModel]="customerDetails"
+        (onSelectionChange)="selectionChanged('pos', $event)"
+      >
+      </vsa-select>
     </div>
   </div>
   <div class="row">
+    <div class="col-3">
+      <vsa-input [config]="customerConfig?.phone" [dataModel]="customerDetails">
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-input [config]="customerConfig?.altPhone" [dataModel]="customerDetails">
+      </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-input [config]="customerConfig?.email" [dataModel]="customerDetails">
+      </vsa-input>
+    </div>
     <div class="col-3">
       <vsa-input [config]="customerConfig?.panNo" [dataModel]="customerDetails">
       </vsa-input>
@@ -100,14 +123,6 @@
     <div class="col-3">
       <vsa-input [config]="customerConfig?.gstNo" [dataModel]="customerDetails">
       </vsa-input>
-    </div>
-    <div class="col-3">
-      <vsa-select
-        [config]="customerConfig?.placeOfSupplySelect"
-        [dataModel]="customerDetails"
-        (onSelectionChange)="selectionChanged('pos', $event)"
-      >
-      </vsa-select>
     </div>
   </div>
   <!-- <p>add-customer works! {{ customerData | json }}</p> -->

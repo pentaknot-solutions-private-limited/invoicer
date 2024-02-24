@@ -13,7 +13,7 @@ import { LoginService } from "src/app/shared/_http/login.service";
 //Config Imports
 import {
   LoginIdInput,
-  LoginPasswordInput
+  LoginPasswordInput,
 } from "../../configs/plugin-components/login-form.config";
 import { LoginModel } from "./login.model";
 
@@ -21,9 +21,7 @@ import { LoginModel } from "./login.model";
   selector: "login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
-  providers: [
-    VSAToastyService
-  ],
+  providers: [VSAToastyService],
 })
 export class LoginComponent implements OnInit {
   isLoading?: boolean;
@@ -33,12 +31,12 @@ export class LoginComponent implements OnInit {
 
   // Configs
   loginForm: FormGroup = new FormGroup({
-    emailId: new FormControl('', Validators.required),
-    password: new FormControl('', Validators.required)
+    emailId: new FormControl("", Validators.required),
+    password: new FormControl("", Validators.required),
   });
   public loginInputConfig = {
     LoginIdInput,
-    LoginPasswordInput
+    LoginPasswordInput,
   };
   toastyConfig: any;
 
@@ -59,7 +57,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     new EncryptedStorage().clearAll();
     this.setupToasty();
-    this.loginDetails()
+    this.loginDetails();
   }
 
   setupToasty() {
@@ -71,32 +69,27 @@ export class LoginComponent implements OnInit {
     // Submit login
     this.isLoading = true;
     this.loginService
-      .login(this.loginModel,this.loginCredentials)
-      .subscribe(
-        (res: IResponseSchema) => {
-          if (res.error) {
-            this.toasty.error(res.message);
-            this.isLoading = false;
-          } else {
-            
-            this.toasty.success(res.message);
-            // this.router.navigate(['/dashboard']);
-            this.router.navigate(['/invoices']);
-            
-            this.isLoading = false;
-          }
-          
-          // Reset Form
+      .login(this.loginModel, this.loginCredentials)
+      .subscribe((res: IResponseSchema) => {
+        if (res.error) {
+          this.toasty.error(res.message);
+          this.isLoading = false;
+        } else {
+          this.toasty.success(res.message);
+          // this.router.navigate(['/dashboard']);
+          // this.router.navigate(['/invoices']);
+          this.router.navigate([new GlobalConfig().dashboardRoute]);
+
+          this.isLoading = false;
         }
-      );
+
+        // Reset Form
+      });
   }
 
   loginDetails() {
-    this.loginService.loginDetails().subscribe(
-      (res: any) => {
-        this.loginCredentials = res
-        
-      }
-    );
+    this.loginService.loginDetails().subscribe((res: any) => {
+      this.loginCredentials = res;
+    });
   }
 }

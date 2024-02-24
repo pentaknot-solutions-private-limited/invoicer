@@ -84,10 +84,22 @@
           [iconSize]="'small'"
           size="small"
           (onClick)="onAddNewLineItemClick(true)"
-          >Add Line Item +
+        >
+          Sale Item +
+        </vsa-button>
+        <vsa-button
+          [type]="'button'"
+          [role]="'tertiary'"
+          [icon]="'add-1'"
+          [iconSize]="'small'"
+          size="small"
+          (onClick)="onAddNewExchangeLineItemClick(true)"
+        >
+          Exchange Item +
         </vsa-button>
       </h3>
     </div>
+    <!-- Sale Items -->
     <form [formGroup]="lineItemForm">
       <ng-container
         formArrayName="lineItemList"
@@ -185,6 +197,138 @@
               [src]="lineItems[i]?.carDetails?.Car_Images[0]?.imageLink"
               alt="car image"
             />
+          </div>
+          <!-- <div class="col-2">
+            <vsa-input
+              [config]="lineItemFormConfigList[i]?.amount"
+              formControlName="amount"
+              [dataModel]="getLineItem(i)"
+              (onBlur)="valueChanged('amount', i)"
+            >
+            </vsa-input>
+          </div> -->
+
+          <!-- 
+
+          123 * 1
+          123 * 12
+
+         -->
+          <!-- Unit -->
+          <!-- <div class="col-1">
+            <vsa-select
+              [config]="rateDetailsConfig?.unitConfig"
+              [dataModel]="getLineItem(i)"
+              [fControl]="lineItemForm.get('unitId')"
+              (onSelectionChange)="selectionChanged('unit', $event, i)"
+            ></vsa-select>
+          </div> -->
+          <!-- Rate -->
+          <!-- <div class="col-1">
+            <vsa-input
+              [config]="lineItemFormConfig?.rate"
+              formControlName="rate"
+              [dataModel]="getLineItem(i)"
+              (onBlur)="valueChanged('rate', i)"
+            >
+            </vsa-input>
+          </div> -->
+          <div class="col-1 singleItem">
+            <!-- <vsa-button
+              [type]="'button'"
+              [role]="'primary'"
+              color="red"
+              size="small"
+              [disabled]="lineItems.length < 2"
+              (onClick)="onDeleteLineItemClick(i)"
+              >Delete
+            </vsa-button> -->
+            <vsa-icon
+              icon="delete-bin-1"
+              customColor="#DE350B"
+              [disabled]="lineItems.length < 2"
+              (onClick)="onDeleteLineItemClick(i)"
+              state="hover"
+            ></vsa-icon>
+          </div>
+          <div class="col-12 divider mt-2 mb-2"></div>
+        </div>
+      </ng-container>
+    </form>
+
+    <!-- Exchange Items -->
+    <form [formGroup]="exchangeLineItemForm">
+      <ng-container
+        formArrayName="exchangeLineItemList"
+        *ngFor="
+          let address of exchangeLineItemForm.get('exchangeLineItemList')[
+            'controls'
+          ];
+          let i = index
+        "
+      >
+        <div [formGroupName]="i" class="row spacer">
+          <div class="col-1 singleItem">
+            <p class="srno">#{{ i + 1 }}</p>
+          </div>
+          <!-- Title  -->
+          <div class="col-2 title-input">
+            <vsa-input
+              [config]="exchangeLineItemFormConfigList[i]?.title"
+              formControlName="title"
+              [dataModel]="getExchangeLineItem(i)"
+            >
+            </vsa-input>
+          </div>
+          <!-- Year  -->
+          <div class="col-2 year">
+            <vsa-input
+              [config]="exchangeLineItemFormConfigList[i]?.year"
+              formControlName="year"
+              [dataModel]="getExchangeLineItem(i)"
+            >
+            </vsa-input>
+          </div>
+          <!-- Car No.  -->
+          <div class="col-2 carNo">
+            <vsa-input
+              [config]="exchangeLineItemFormConfigList[i]?.carNo"
+              formControlName="carNo"
+              [dataModel]="getExchangeLineItem(i)"
+            >
+            </vsa-input>
+          </div>
+          <!-- HSN -->
+          <!-- <div class="col-2">
+            <vsa-input
+              [config]="lineItemFormConfigList[i]?.hsnSacCode"
+              formControlName="hsnSacCode"
+              [dataModel]="getLineItem(i)"
+            >
+            </vsa-input>
+          </div> -->
+          <!-- Quantity (in Kgs) -->
+          <!-- <div class="col-2">
+            <vsa-input
+              [config]="lineItemFormConfigList[i]?.qty"
+              formControlName="qty"
+              [dataModel]="getLineItem(i)"
+              (onBlur)="valueChanged('qty', i)"
+            >
+            </vsa-input>
+          </div> -->
+          <!-- Rate -->
+          <div class="col-2">
+            <vsa-input
+              [config]="exchangeLineItemFormConfigList[i]?.rate"
+              formControlName="rate"
+              [dataModel]="getExchangeLineItem(i)"
+              (onBlur)="valueChanged('rate', i)"
+            >
+            </vsa-input>
+          </div>
+          <div class="col-3 center-text">
+            <small>{{ numToText(exchangeLineItems[i]?.rate) }}</small>
           </div>
           <!-- <div class="col-2">
             <vsa-input

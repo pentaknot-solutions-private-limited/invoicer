@@ -54,6 +54,19 @@ export class SaleItem {
   amount?: string | number;
 }
 
+export class ExchangeItem {
+  exchangeItemId?: string | number;
+  title?: string | any;
+  year?: string | number;
+  carNo?: string | any;
+  carDetails?: any;
+  hsnSacCode?: string | number;
+  qty?: number; // default 1
+  rate?: string | number;
+  taxId?: string | number; //NA
+  amount?: string | number;
+}
+
 
 export class LineItem {
   serviceTypeId: number;

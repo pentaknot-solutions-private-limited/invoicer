@@ -12,9 +12,27 @@ export class AddCustomerComponent implements OnInit {
   @Output() onBtnClick: EventEmitter<any> = new EventEmitter();
   customerConfig: CustomerConfig = new CustomerConfig();
   customerDetails: CustomerDetails = new CustomerDetails();
-  constructor() {}
+  isBusiness: boolean;
+  constructor() {
+    this.customerDetails.customerTypeId = 1; // Default  Add
+  }
 
   ngOnInit(): void {}
+
+  customerTypeChanged(value: any) {
+    switch (value) {
+      case 1:
+        // Individual
+        this.isBusiness = false;
+        break;
+      case 2:
+        // Business
+        this.isBusiness = true;
+        break;
+      default:
+        break;
+    }
+  }
 
   selectionChanged(type: any, event?: any, i?: number) {
     switch (type) {

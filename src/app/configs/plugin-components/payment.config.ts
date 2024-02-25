@@ -13,7 +13,10 @@ export class PaymentConfig {
     },
     dataKey: "name",
     returnKey: "customerId",
-    options: [],
+    options: [{
+      customerId: 1,
+      name: 'Kantilal Patel'
+    }],
     searchBy: [
       {
         key: "name",

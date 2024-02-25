@@ -15,12 +15,12 @@ export class SaleComponent implements OnInit {
   @ViewChild("drawerTemplate") drawerTemplate: TemplateRef<any>;
 
   // Variables
-
   showGrid: boolean = true;
 
   pageComponentVisibility = {
     showAddSale: false,
     showRecordPayment: false,
+    showPaymentSchedule: false,
   };
 
   loading!: boolean;
@@ -29,6 +29,7 @@ export class SaleComponent implements OnInit {
   customerConfig: CustomerConfig = new CustomerConfig();
   saleConfig: SaleConfig = new SaleConfig();
   rowData: any[];
+  lastScreen: string;
 
   constructor(
     private drawerControllerService: DrawerPanelService,
@@ -51,6 +52,10 @@ export class SaleComponent implements OnInit {
     console.log(event);
     switch (event.event) {
       case "record-payment":
+        this.selectedSale = event.data;
+        this.openDrawer(event.event);
+        break;
+      case "payment-schedule":
         this.selectedSale = event.data;
         this.openDrawer(event.event);
         break;
@@ -82,8 +87,21 @@ export class SaleComponent implements OnInit {
         this.drawerControllerService.toggleDrawer(true);
         this.drawerControllerService.showCloseButton(false);
         this.drawerControllerService.setEscClose(false);
-        this.drawerControllerService.setTitle(`Record Payment for ${this.selectedSale?.invoiceNumber}`);
+        this.drawerControllerService.setTitle(
+          `Record Payment for ${this.selectedSale?.invoiceNumber}`
+        );
         this.drawerControllerService.changeDrawerSize("extra-small");
+        break;
+      case "payment-schedule":
+        this.pageComponentVisibility.showPaymentSchedule = true;
+        this.drawerControllerService.createContainer(this.drawerTemplate);
+        this.drawerControllerService.toggleDrawer(true);
+        this.drawerControllerService.showCloseButton(false);
+        this.drawerControllerService.setEscClose(false);
+        this.drawerControllerService.setTitle(
+          `Payment Schedule for ${this.selectedSale?.invoiceNumber}`
+        );
+        this.drawerControllerService.changeDrawerSize("small");
         break;
       default:
         break;
@@ -91,6 +109,7 @@ export class SaleComponent implements OnInit {
   }
 
   clearDrawerData() {
+    this.lastScreen = "";
     this.customerData = {};
     this.selectedSale = {};
     this.pageComponentVisibility.showAddSale = false;
@@ -109,11 +128,21 @@ export class SaleComponent implements OnInit {
 
   drawerAction(event: any) {
     switch (event) {
+      case "export-payment-schedule":
+        break;
+      case "record-payment":
+        this.lastScreen = "payment-schedule";
+        this.openDrawer(event);
+        break;
+      case "payment-schedule":
+        this.lastScreen = '';
+        this.openDrawer(event);
+        break;
       default:
         this.clearDrawerData();
         break;
     }
-    this.clearDrawerData();
+    // this.clearDrawerData();
   }
 
   // Methods

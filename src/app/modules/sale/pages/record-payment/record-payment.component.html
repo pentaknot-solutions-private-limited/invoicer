@@ -1,6 +1,13 @@
 <div class="drawer-body">
   <div class="row">
     <div class="col-6">
+      <vsa-input
+        [config]="paymentConfig?.paymentNumber"
+        [dataModel]="paymentDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-6">
       <vsa-select
         [config]="paymentConfig?.customerSelect"
         [dataModel]="paymentDetails"
@@ -8,29 +15,8 @@
       >
       </vsa-select>
     </div>
-    <div class="col-2">
-      <vsa-input
-        [config]="paymentConfig?.paymentNumber"
-        [dataModel]="paymentDetails"
-      >
-      </vsa-input>
-    </div>
   </div>
   <div class="row">
-    <div class="col-6">
-      <vsa-input
-        [config]="paymentConfig?.amountReceived"
-        [dataModel]="paymentDetails"
-      >
-      </vsa-input>
-    </div>
-    <div class="col-6">
-      <vsa-input
-        [config]="paymentConfig?.bankCharges"
-        [dataModel]="paymentDetails"
-      >
-      </vsa-input>
-    </div>
     <div class="col-6">
       <vsa-input
         [config]="paymentConfig?.paymentDate"
@@ -46,6 +32,21 @@
       >
       </vsa-select>
     </div>
+    <div class="col-6">
+      <vsa-input
+        [config]="paymentConfig?.amountReceived"
+        [dataModel]="paymentDetails"
+      >
+      </vsa-input>
+    </div>
+    <div class="col-6">
+      <vsa-input
+        [config]="paymentConfig?.bankCharges"
+        [dataModel]="paymentDetails"
+      >
+      </vsa-input>
+    </div>
+
     <div class="col-6">
       <vsa-input
         [config]="paymentConfig?.referenceNumber"

@@ -17,7 +17,7 @@ import {
 } from "@angular/core";
 import { SortEvent } from "primeng/api";
 import { EditableColumn, Table } from "primeng/table";
-import { IGridConfig } from "./vsa-grid.model";
+import { IGridColDef, IGridConfig } from "./vsa-grid.model";
 import {
   AUTO_STYLE,
   animate,
@@ -30,7 +30,6 @@ import {
 import { findDistinctValues } from "../../utils/distinct.values";
 const DEFAULT_DURATION = 300;
 import * as FileSaver from "file-saver";
-
 
 @Component({
   selector: "vsa-grid",
@@ -75,7 +74,7 @@ export class VSAGridComponent implements OnInit, OnChanges {
 
   // Variables
   paginationCount = 10;
-  searchValue: string = '';
+  searchValue: string = "";
   showTable: boolean = true;
 
   editCell: boolean = false;
@@ -125,9 +124,25 @@ export class VSAGridComponent implements OnInit, OnChanges {
     this.cdref.detectChanges();
   }
 
-  exportExcel(fileName) {
+  exportExcel(fileName: string = "TEST") {
+    // #1. Check if row is checked
+    const exportableRows =
+      this.selectedRows?.length > 0 ? this.selectedRows : this.rowData;
+    // #2. Filter visible columns
+    const visibleColumns = this.config.colDefs
+      .filter((col: IGridColDef) => col.colType != "actions")
+      .map((column: IGridColDef) => column);
     import("xlsx").then((xlsx) => {
-      const worksheet = xlsx.utils.json_to_sheet(this.rowData);
+      // Export visible columns only
+      const filteredData = exportableRows.map((row) => {
+        const filteredRow = {};
+        visibleColumns.forEach((column) => {
+          filteredRow[column.field] = row[column.field];
+        });
+        return filteredRow;
+      });
+      // const worksheet = xlsx.utils.json_to_sheet(this.rowData);
+      const worksheet = xlsx.utils.json_to_sheet(filteredData);
       const workbook = { Sheets: { data: worksheet }, SheetNames: ["data"] };
       const excelBuffer: any = xlsx.write(workbook, {
         bookType: "xlsx",

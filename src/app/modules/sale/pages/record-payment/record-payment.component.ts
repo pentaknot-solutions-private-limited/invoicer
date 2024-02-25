@@ -12,11 +12,17 @@ export class RecordPaymentComponent implements OnInit {
   @Output() onBtnClick: EventEmitter<any> = new EventEmitter();
   paymentConfig: PaymentConfig = new PaymentConfig();
   paymentDetails: PaymentDetails = new PaymentDetails();
+  lastPaymentId: number;
+  lastScreen: string;
   constructor() {
     this.paymentDetails.paymentModeId = 1; //Default: Cash
+    this.lastPaymentId = 1012;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.paymentDetails.paymentNumber = Number(this.lastPaymentId) + 1;
+    this.paymentDetails.customerId = 1;
+  }
 
   selectionChanged(type: any, event?: any, i?: number) {
     switch (type) {
@@ -30,7 +36,7 @@ export class RecordPaymentComponent implements OnInit {
     let data: any = {};
     switch (event) {
       default:
-        this.onBtnClick.emit("close");
+        this.onBtnClick.emit(this.lastScreen || "close");
         break;
     }
   }

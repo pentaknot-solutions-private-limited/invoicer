@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import { IDateTimeConfig } from "src/app/shared/components/vsa-datetime-picker/vsa-datetime-picker.model";
 import { IGridConfig } from "src/app/shared/components/vsa-grid/vsa-grid.model";
 import { ITextConfig } from "src/app/shared/components/vsa-input/vsa-input.model";
@@ -48,6 +49,44 @@ export class SaleConfig {
     ],
     isMultiple: false,
   };
+  dueTermSelect: ISelectConfig = {
+    fieldKey: "dueTermId",
+    attributes: {
+      class: "header-item",
+      title: "Due Term",
+      isMandatory: false,
+    },
+    dataKey: "name",
+    returnKey: "id",
+    options: [
+      {
+        id: 1,
+        name: "7 Days",
+        days: 7,
+      },
+      {
+        id: 2,
+        name: "14 Days",
+        days: 14,
+      },
+      {
+        id: 3,
+        name: "30 Days",
+        days: 30,
+      },
+      {
+        id: 4,
+        name: "Custom",
+        days: 0,
+      },
+    ],
+    searchBy: [
+      {
+        key: "name",
+      },
+    ],
+    isMultiple: false,
+  };
 
   invoiceNumber: ITextConfig = {
     fieldKey: "invoiceNumber",
@@ -62,6 +101,8 @@ export class SaleConfig {
       title: "Proforma Date",
       type: "datepicker",
       isMandatory: false,
+      // For Normal User
+      minDate: moment().subtract(1, 'day').format(),
     },
   };
   paymentTermSelect: ISelectConfig = {
@@ -103,6 +144,7 @@ export class SaleConfig {
       title: "Due Date",
       type: "datepicker",
       isMandatory: false,
+      minDate: moment().subtract(1, 'day').format(),
     },
   };
   inventorySelect: ISelectConfig = {
@@ -353,6 +395,13 @@ export class SaleConfig {
                 title: "Record Payment",
                 // type: "edit",
                 // disabled: row.showSteps,
+              },
+              {
+                // icon: "content-file",
+                icon: "file-multiple",
+                action: "payment-schedule",
+                tooltip: "Payment Schedule",
+                title: "Payment Schedule",
               },
             ],
           };

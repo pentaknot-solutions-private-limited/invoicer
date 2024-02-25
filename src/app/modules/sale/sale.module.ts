@@ -14,9 +14,10 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { VSAIconModule } from "src/app/shared/components/vsa-icon/package.module";
 import { SaleService } from "src/app/shared/_http/sale.service";
 import { RecordPaymentComponent } from './pages/record-payment/record-payment.component';
+import { PaymentScheduleComponent } from "./pages/payment-schedule/payment-schedule.component";
 
 @NgModule({
-  declarations: [SaleComponent, AddSaleComponent, RecordPaymentComponent],
+  declarations: [SaleComponent, AddSaleComponent, RecordPaymentComponent, PaymentScheduleComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -1,0 +1,10 @@
+.grid-header {
+    align-items: baseline;
+}
+.top-actions {
+  display: flex;
+  justify-content: flex-end;
+  .add-button {
+    margin-left: 0.5rem;
+  }
+}

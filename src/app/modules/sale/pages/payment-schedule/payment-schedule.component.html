@@ -1,0 +1,61 @@
+<div class="drawer-body">
+  <div class="row grid-header">
+    <div class="col-7">
+      <grid-search-input
+        #gridSearch
+        class="w-100"
+        [tablesRef]="grid"
+        placeholder="Search..."
+        (onInputChanged)="onInputChanged($event)"
+      ></grid-search-input>
+    </div>
+    <div class="col-1"></div>
+    <div class="col-4 top-actions">
+      <vsa-button
+        [type]="'button'"
+        [role]="'secondary'"
+        size="small"
+        (onClick)="actionEvent('export-payment-schedule')"
+        >Export</vsa-button
+      >
+      <!-- <vsa-button
+        [type]="'button'"
+        [role]="'primary'"
+        size="small"
+        (onClick)="actionEvent('record-payment')"
+        class="add-button"
+        >Add +</vsa-button
+      > -->
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="grid">
+        <vsa-grid
+          #grid
+          [rowData]="rowData"
+          [config]="paymentScheduleConfig.paymentScheduleGrid"
+          (onLinkClick)="onLinkClick($event)"
+          (actionClicked)="actionClicked($event)"
+        ></vsa-grid>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="drawer-footer">
+  <vsa-button
+    [type]="'button'"
+    [role]="'tertiary'"
+    size="small"
+    customColor="red"
+    (onClick)="actionEvent('cancel')"
+    >Close</vsa-button
+  >
+  <!-- <vsa-button
+    [type]="'button'"
+    [role]="'primary'"
+    size="small"
+    (onClick)="actionEvent('save')"
+    >Save</vsa-button
+  > -->
+</div>

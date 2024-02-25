@@ -13,6 +13,8 @@ import { minLengthArray } from "src/app/shared/utils/custom-validators";
 import * as _ from "lodash";
 import { convertAmountToWords } from "src/app/shared/utils/convert-amount-to-words";
 import { InvoicePDF } from "src/app/shared/invoice-template/view-invoice-template";
+import { addDaysToPassedDate } from "src/app/shared/utils/date-utils";
+import * as moment from "moment";
 
 @Component({
   selector: "add-sale",
@@ -244,7 +246,23 @@ export class AddSaleComponent implements OnInit {
         this.saleItem.rate = event?.selectedObj?.Car_Detail?.maxPrice;
         this.saleItem.carDetails = event?.selectedObj;
         break;
+      case "proformaDate":
+        console.log(this.saleDetails.invoiceDate);
+        this.saleConfig.dueDate.attributes.minDate =
+          this.saleDetails.invoiceDate;
+        break;
+      case "dueTerm":
+        this.updateDueDateValue(event?.selectedObj);
+        break;
     }
+  }
+  updateDueDateValue(selectedObj: any) {
+    const newDueDate = addDaysToPassedDate(
+      this.saleDetails.invoiceDate,
+      selectedObj?.days
+    );
+    console.log(newDueDate);
+    this.saleDetails.dueDate = newDueDate;
   }
 
   updateLineItemRate(inventory: any, i: number) {}
@@ -311,6 +329,8 @@ export class AddSaleComponent implements OnInit {
         };
       });
       this.saleConfig.inventorySelect.options = [...this.inventory];
+      // Add Default
+      this.onAddNewLineItemClick(true);
     });
   }
 }

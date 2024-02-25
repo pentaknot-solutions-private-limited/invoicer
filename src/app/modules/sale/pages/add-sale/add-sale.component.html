@@ -36,21 +36,29 @@
     <!-- <div class="col-12">
       <h3>Invoice Details</h3>
     </div> -->
-    <div class="col-3">
+    <!-- <div class="col-3">
       <vsa-select
         [config]="saleConfig?.placeOfSupplySelect"
         [dataModel]="saleDetails"
         (onSelectionChange)="selectionChanged('pos', $event)"
       >
       </vsa-select>
-    </div>
+    </div> -->
     <div class="col-3">
       <vsa-input [config]="saleConfig?.invoiceNumber" [dataModel]="saleDetails">
       </vsa-input>
     </div>
     <div class="col-3">
-      <vsa-input [config]="saleConfig?.invoiceDate" [dataModel]="saleDetails">
+      <vsa-input [config]="saleConfig?.invoiceDate" [dataModel]="saleDetails" (onDateChange)="selectionChanged('proformaDate', $event)">
       </vsa-input>
+    </div>
+    <div class="col-3">
+      <vsa-select
+        [config]="saleConfig?.dueTermSelect"
+        [dataModel]="saleDetails"
+        (onSelectionChange)="selectionChanged('dueTerm', $event)"
+      >
+      </vsa-select>
     </div>
 
     <div class="col-3">
@@ -77,7 +85,7 @@
       <!-- {{lineItemForm.get("lineItemList").value | json}} -->
       <h3 class="rate-setup-header">
         <span> Rate Setup </span>
-        <vsa-button
+        <!-- <vsa-button
           [type]="'button'"
           [role]="'tertiary'"
           [icon]="'add-1'"
@@ -86,7 +94,7 @@
           (onClick)="onAddNewLineItemClick(true)"
         >
           Sale Item +
-        </vsa-button>
+        </vsa-button> -->
         <vsa-button
           [type]="'button'"
           [role]="'tertiary'"
@@ -233,16 +241,7 @@
             >
             </vsa-input>
           </div> -->
-          <div class="col-1 singleItem">
-            <!-- <vsa-button
-              [type]="'button'"
-              [role]="'primary'"
-              color="red"
-              size="small"
-              [disabled]="lineItems.length < 2"
-              (onClick)="onDeleteLineItemClick(i)"
-              >Delete
-            </vsa-button> -->
+          <!-- <div class="col-1 singleItem">
             <vsa-icon
               icon="delete-bin-1"
               customColor="#DE350B"
@@ -250,7 +249,7 @@
               (onClick)="onDeleteLineItemClick(i)"
               state="hover"
             ></vsa-icon>
-          </div>
+          </div> -->
           <div class="col-12 divider mt-2 mb-2"></div>
         </div>
       </ng-container>
@@ -269,7 +268,7 @@
       >
         <div [formGroupName]="i" class="row spacer">
           <div class="col-1 singleItem">
-            <p class="srno">#{{ i + 1 }}</p>
+            <p class="srno">#{{ i + 2 }}</p>
           </div>
           <!-- Title  -->
           <div class="col-2 title-input">
@@ -327,7 +326,7 @@
             >
             </vsa-input>
           </div>
-          <div class="col-3 center-text">
+          <div class="col-2 center-text">
             <small>{{ numToText(exchangeLineItems[i]?.rate) }}</small>
           </div>
           <!-- <div class="col-2">
@@ -378,8 +377,8 @@
             <vsa-icon
               icon="delete-bin-1"
               customColor="#DE350B"
-              [disabled]="lineItems.length < 2"
-              (onClick)="onDeleteLineItemClick(i)"
+              [disabled]="lineItems.length < 1"
+              (onClick)="onDeleteExchangeLineItemClick(i)"
               state="hover"
             ></vsa-icon>
           </div>

@@ -53,11 +53,20 @@
     *ngIf="pageComponentVisibility?.showAddSale"
   >
   </add-sale>
- 
+
   <record-payment
     [saleDetails]="selectedSale"
     (onBtnClick)="drawerAction($event)"
     *ngIf="pageComponentVisibility?.showRecordPayment"
+    [lastScreen]="lastScreen"
   >
   </record-payment>
+
+  <payment-schedule
+    [saleDetails]="selectedSale"
+    (onBtnClick)="drawerAction($event)"
+    *ngIf="pageComponentVisibility?.showPaymentSchedule"
+  >
+  </payment-schedule>
+
 </ng-template>

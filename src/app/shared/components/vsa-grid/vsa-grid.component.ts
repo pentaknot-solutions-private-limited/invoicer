@@ -91,7 +91,7 @@ export class VSAGridComponent implements OnInit, OnChanges {
     if (this.config.pagination && this.gridComp) {
       return this.gridComp.rows;
     }
-    return this.rowData?.length;
+    return this.rowData?.length || 0;
   }
 
   updateRowGroupMetaData(rowData, key) {

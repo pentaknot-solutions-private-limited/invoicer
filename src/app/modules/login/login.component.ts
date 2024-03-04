@@ -69,17 +69,26 @@ export class LoginComponent implements OnInit {
     // Submit login
     this.isLoading = true;
     this.loginService
-      .login(this.loginModel, this.loginCredentials)
+      // .login(this.loginModel, this.loginCredentials)
+      .login(this.loginModel.emailId, this.loginModel.password)
       .subscribe((res: IResponseSchema) => {
         if (res.error) {
           this.toasty.error(res.message);
           this.isLoading = false;
         } else {
           this.toasty.success(res.message);
-          // this.router.navigate(['/dashboard']);
-          // this.router.navigate(['/invoices']);
-          this.router.navigate([new GlobalConfig().dashboardRoute]);
+          new EncryptedStorage().setItem(
+            '_vsa-u',
+            JSON.stringify(res?.data?.access_token),
+            true
+          );
+          new EncryptedStorage().setItem(
+            new GlobalConfig().authTokenLSName,
+            JSON.stringify(res?.data?.access_token),
+            true
+          );
 
+          this.router.navigate([new GlobalConfig().dashboardRoute]);
           this.isLoading = false;
         }
 

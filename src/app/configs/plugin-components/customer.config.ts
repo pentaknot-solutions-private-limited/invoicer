@@ -14,14 +14,14 @@ export class CustomerConfig {
       isMandatory: true,
     },
     options: [
-      {
-        value: 1,
-        label: "Individual",
-      },
-      {
-        value: 2,
-        label: "Business",
-      },
+      // {
+      //   value: 1,
+      //   label: "Individual",
+      // },
+      // {
+      //   value: 2,
+      //   label: "Business",
+      // },
     ],
   };
   salutationSelect: ISelectConfig = {
@@ -32,20 +32,20 @@ export class CustomerConfig {
       isMandatory: false,
     },
     dataKey: "name",
-    returnKey: "salutationId",
+    returnKey: "_id",
     options: [
-      {
-        salutationId: 1,
-        name: "Mr.",
-      },
-      {
-        salutationId: 2,
-        name: "Ms.",
-      },
-      {
-        salutationId: 3,
-        name: "Mrs.",
-      },
+      // {
+      //   salutationId: 1,
+      //   name: "Mr.",
+      // },
+      // {
+      //   salutationId: 2,
+      //   name: "Ms.",
+      // },
+      // {
+      //   salutationId: 3,
+      //   name: "Mrs.",
+      // },
       // {
       //   salutationId: 4,
       //   name: "M/s.",
@@ -125,12 +125,12 @@ export class CustomerConfig {
       isMandatory: false,
     },
     dataKey: "name",
-    returnKey: "stateId",
+    returnKey: "_id",
     options: [
-      {
-        stateId: 1,
-        name: "Maharashtra",
-      },
+      // {
+      //   stateId: 1,
+      //   name: "Maharashtra",
+      // },
     ],
     searchBy: [
       {
@@ -143,12 +143,13 @@ export class CustomerConfig {
     fieldKey: "pincode",
     attributes: {
       title: "Pincode",
+      type: "number",
       //   showBorder: true,
       isMandatory: false,
     },
   };
   phone: ITextConfig = {
-    fieldKey: "phone",
+    fieldKey: "mobileNo",
     attributes: {
       title: "Mobile No.",
       //   showBorder: true,
@@ -156,7 +157,7 @@ export class CustomerConfig {
     },
   };
   altPhone: ITextConfig = {
-    fieldKey: "altPhone",
+    fieldKey: "altMobileNo",
     attributes: {
       title: "Alternate Mobile No.",
       //   showBorder: true,
@@ -167,12 +168,16 @@ export class CustomerConfig {
     fieldKey: "email",
     attributes: {
       title: "Email address",
+      type: "email",
       //   showBorder: true,
+      pattern:
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      customPatternMessage: "Please enter a valid email address.",
       isMandatory: true,
     },
   };
   panNo: ITextConfig = {
-    fieldKey: "panNo",
+    fieldKey: "pan",
     attributes: {
       title: "PAN",
       //   showBorder: true,
@@ -180,7 +185,7 @@ export class CustomerConfig {
     },
   };
   gstNo: ITextConfig = {
-    fieldKey: "gstNo",
+    fieldKey: "gst",
     attributes: {
       title: "GST (if applicable)",
       //   showBorder: true,
@@ -188,19 +193,19 @@ export class CustomerConfig {
     },
   };
   placeOfSupplySelect: ISelectConfig = {
-    fieldKey: "posId",
+    fieldKey: "placeOfSupplyId",
     attributes: {
       class: "header-item",
       title: "Place of supply",
       isMandatory: false,
     },
     dataKey: "name",
-    returnKey: "posId",
+    returnKey: "_id",
     options: [
-      {
-        posId: 1,
-        name: "(MH) - Maharashtra",
-      },
+      // {
+      //   posId: 1,
+      //   name: "(MH) - Maharashtra",
+      // },
     ],
     searchBy: [
       {
@@ -224,24 +229,42 @@ export class CustomerConfig {
         colType: "link",
         searchByFormatter: true,
         valueFormatter: (value, row, col) => {
-          return `${row.firstName} ${row.lastName}`;
+          return (
+            (value
+              ? `${row.firstName} ${row?.middleName || ""} ${
+                  row.lastName || ""
+                }`
+              : row["companyName"]) || "-"
+          );
           // return row.invoiceNo ? row.invoiceNo : "-";
         },
       },
+      // {
+      //   field: "companyName",
+      //   headerName: "Company",
+      //   colType: "text",
+      //   searchByFormatter: true,
+      //   valueFormatter: (val: any) => val || "-",
+      // },
       {
-        field: "companyName",
-        headerName: "Company",
-        colType: "text",
-        searchByFormatter: true,
-        valueFormatter: (val: any) => val || "-",
-      },
-      {
-        field: "phone",
+        field: "mobileNo",
         headerName: "Mobile No.",
         colType: "text",
         searchByFormatter: true,
       },
-
+      // {
+      //   field: "altMobileNo",
+      //   headerName: "Alt Mobile No.",
+      //   colType: "text",
+      //   searchByFormatter: true,
+      //   valueFormatter: (value, row, col) => value || "-",
+      // },
+      {
+        field: "email",
+        headerName: "Email",
+        colType: "text",
+        searchByFormatter: true,
+      },
       {
         field: "totalDue",
         headerName: "Receivable",
@@ -249,10 +272,20 @@ export class CustomerConfig {
         searchByFormatter: true,
         valueFormatter: (value, row, col) => {
           // return row.totalDue ? row.totalDue : "-";
-          return formatIndianCurrency(row.totalDue);
+          return value ? formatIndianCurrency(row.totalDue) : "-";
         },
       },
-
+      {
+        field: "updatedAt",
+        headerName: "Last Modified",
+        // showSelectFilter: true,
+        colType: "text",
+        searchByFormatter: true,
+        valueFormatter: (value, row, col) => {
+          return value ? dateFormatter(value, "DD MMM yyyy, hh:mm A") : "-";
+        },
+        sortByFormatter: true,
+      },
       {
         headerName: "Action",
         colType: "actions",

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import {
   HttpInterceptor,
   HttpEvent,
@@ -7,8 +7,8 @@ import {
   HttpHandler,
   HttpErrorResponse,
   HttpHeaders,
-} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+} from "@angular/common/http";
+import { Observable, throwError } from "rxjs";
 import {
   map,
   filter,
@@ -16,11 +16,11 @@ import {
   retryWhen,
   tap,
   finalize,
-} from 'rxjs/operators';
-import { GlobalConfig } from 'src/app/configs/global-config';
-import { EncryptedStorage } from '../utils/encrypted-storage';
-import { Router } from '@angular/router';
-import { VSAToastyService } from '../components/vsa-toasty/vsa-toasty/vsa-toasty.service';
+} from "rxjs/operators";
+import { GlobalConfig } from "src/app/configs/global-config";
+import { EncryptedStorage } from "../utils/encrypted-storage";
+import { Router } from "@angular/router";
+import { VSAToastyService } from "../components/vsa-toasty/vsa-toasty/vsa-toasty.service";
 
 @Injectable()
 export class AuthTokenInterceptor implements HttpInterceptor {
@@ -33,18 +33,23 @@ export class AuthTokenInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     let time = 0;
-    const Authorization = new EncryptedStorage().findItemFromAllStorage(
-      new GlobalConfig().authTokenLSName
-    );
+    const token = (
+      new EncryptedStorage().findItemFromAllStorage(
+        new GlobalConfig().authTokenLSName
+      ) as String
+    )
+      ?.replace(`"`, "")
+      ?.replace(`"`, "");
+    const Authorization = token ? `Bearer ${token}` : "";
     if (Authorization) {
       let timer = setInterval(() => {
         time += 1;
         if (time >= 5) {
           this.toastyService.clear();
           this.toastyService.info(
-            'Please Wait, Server is taking time more than expected',
+            "Please Wait, Server is taking time more than expected",
             null,
-            { positionClass: 'toast-bottom-right', closeButton: true }
+            { positionClass: "toast-bottom-right", closeButton: true }
           );
           clearInterval(timer);
         }
@@ -60,17 +65,17 @@ export class AuthTokenInterceptor implements HttpInterceptor {
           if (err instanceof HttpErrorResponse) {
             if (err.status === 403) {
               this.toastyService.error(
-                'Your session is timeout, please login again.',
+                "Your session is timeout, please login again.",
                 null,
-                { positionClass: 'toast-bottom-right' }
+                { positionClass: "toast-bottom-right" }
               );
               new EncryptedStorage().removeItemFromAllStorage(
                 new GlobalConfig().authTokenLSName
               );
               this.router.navigate([new GlobalConfig().loginRoute]);
             } else if (err.status === 504) {
-              this.toastyService.error('API Gateway Error', null, {
-                positionClass: 'toast-bottom-center',
+              this.toastyService.error("API Gateway Error", null, {
+                positionClass: "toast-bottom-center",
               });
             }
           }
@@ -84,9 +89,9 @@ export class AuthTokenInterceptor implements HttpInterceptor {
           if (err instanceof HttpErrorResponse) {
             if (err.status === 403) {
               this.toastyService.error(
-                'Your session is timeout, please login again.',
+                "Your session is timeout, please login again.",
                 null,
-                { positionClass: 'toast-bottom-right' }
+                { positionClass: "toast-bottom-right" }
               );
               new EncryptedStorage().removeItemFromAllStorage(
                 new GlobalConfig().authTokenLSName

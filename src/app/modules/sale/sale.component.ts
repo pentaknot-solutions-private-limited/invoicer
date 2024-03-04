@@ -79,7 +79,7 @@ export class SaleComponent implements OnInit {
         this.drawerControllerService.showCloseButton(false);
         this.drawerControllerService.setEscClose(false);
         this.drawerControllerService.setTitle(`New Sale`);
-        this.drawerControllerService.changeDrawerSize("medium");
+        this.drawerControllerService.changeDrawerSize("large");
         break;
       case "record-payment":
         this.pageComponentVisibility.showRecordPayment = true;

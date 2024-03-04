@@ -48,7 +48,7 @@
 
 <ng-template #drawerTemplate>
   <add-customer
-    [customerData]="customerData"
+    [customerDetails]="customerData"
     (onBtnClick)="drawerAction($event)"
     *ngIf="pageComponentVisibility?.showAddCustomer"
   >

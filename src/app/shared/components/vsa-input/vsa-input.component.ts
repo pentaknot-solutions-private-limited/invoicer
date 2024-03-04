@@ -44,6 +44,7 @@ export class VSAInputComponent
 
   constructor(@Self() @Optional() public control: NgControl) {
     this.control && (this.control.valueAccessor = this);
+    this.errorMessages.set("max", () => `Value is higher than expected.`);
     this.errorMessages.set("required", () => `This Field is required.`);
     this.errorMessages.set(
       "minlength",
@@ -64,6 +65,7 @@ export class VSAInputComponent
 
   ngAfterViewInit() {
     this.control && (this.control.valueAccessor = this);
+    this.errorMessages.set("max", () => `Value is higher than expected.`);
     this.errorMessages.set("required", () => `This Field is required.`);
     this.errorMessages.set(
       "minlength",
@@ -101,6 +103,11 @@ export class VSAInputComponent
           ]);
         }
       }
+
+      // Check for the max attribute
+      if (this.config?.attributes.max) {
+        this.control?.control?.setValidators([(Validators.max(this.config.attributes.max))]);
+    }
   }
 
   // Set Errors on Validation

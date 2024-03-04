@@ -219,7 +219,9 @@ export class SaleConfig {
     fieldKey: "year",
     attributes: {
       title: "Year",
+      type: "number",
       isMandatory: true,
+      max: moment().year()
     },
   };
   exchangeCarNoInput: ITextConfig = {
@@ -239,6 +241,7 @@ export class SaleConfig {
       isMandatory: true,
       // readonly: true,
       // disable: true,
+      max: 2000000
     },
   };
   amountInput: ITextConfig = {

@@ -36,7 +36,7 @@
       [paginator]="config.pagination"
       [rows]="paginationCount"
       [showCurrentPageReport]="true"
-      currentPageReportTemplate="Total {{ rowData.length }} entries"
+      currentPageReportTemplate="Total {{ rowData?.length }} entries"
       (sortFunction)="customSort($event)"
       [customSort]="true"
       [alwaysShowPaginator]="config.pagination"

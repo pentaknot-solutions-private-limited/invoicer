@@ -1,6 +1,7 @@
 export interface IResponseSchema {
-    message?: string;
-    error?: string;
-    data?: any;
-    status: string;
+  message?: string;
+  error?: string;
+  data?: any;
+  statusCode?: number;
+  status: string;
 }

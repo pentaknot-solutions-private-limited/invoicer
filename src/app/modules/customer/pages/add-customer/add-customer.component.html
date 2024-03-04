@@ -18,21 +18,21 @@
       >
       </vsa-select>
     </div>
-    <div class="col-3">
+    <div class="col-3" *ngIf="!isBusiness">
       <vsa-input
         [config]="customerConfig?.firstName"
         [dataModel]="customerDetails"
       >
       </vsa-input>
     </div>
-    <div class="col-3">
+    <div class="col-3" *ngIf="!isBusiness">
       <vsa-input
         [config]="customerConfig?.middleName"
         [dataModel]="customerDetails"
       >
       </vsa-input>
     </div>
-    <div class="col-3">
+    <div class="col-3" *ngIf="!isBusiness">
       <vsa-input
         [config]="customerConfig?.lastName"
         [dataModel]="customerDetails"
@@ -109,7 +109,10 @@
       </vsa-input>
     </div>
     <div class="col-3">
-      <vsa-input [config]="customerConfig?.altPhone" [dataModel]="customerDetails">
+      <vsa-input
+        [config]="customerConfig?.altPhone"
+        [dataModel]="customerDetails"
+      >
       </vsa-input>
     </div>
     <div class="col-3">

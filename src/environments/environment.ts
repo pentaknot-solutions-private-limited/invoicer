@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   // apiUrl: "http://13.64.196.20:8080",
-  apiURL: "https://test-api-ci.mversesolutions.com",
+  // apiURL: "https://test-api-ci.mversesolutions.com",
+  apiURL: "https://localhost:3000",
   IRN_GENERATION_API_ENDPOINT: "http://3.7.83.136:8087",
   // apiURL: "http://localhost:8080",
 };

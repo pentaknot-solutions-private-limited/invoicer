@@ -198,9 +198,34 @@ export class AddSaleComponent implements OnInit {
     switch (type) {
       case "qty":
       case "rate":
-      // this.lineItems[index].amount = this.calculateAmount(
-      //   this.lineItemForm.get("lineItemList").value
-      // );
+        // this.lineItems[index].amount = this.calculateAmount(
+        //   this.lineItemForm.get("lineItemList").value
+        // );
+        break;
+      case "exchangeRate":
+        const saleAmount = this.lineItems
+          .map((sale: LineItem) => Number(sale?.rate))
+          .reduce((a: any, b: any) => a + b);
+        console.log("saleAmount: ", saleAmount);
+
+        const exchangeAmount = this.exchangeLineItems
+          .map((exchange: ExchangeItem) => Number(exchange?.rate))
+          .reduce((a: any, b: any) => a + b);
+        console.log("saleAmount: ", saleAmount);
+        console.log("exchangeAmount: ", exchangeAmount);
+        console.log(
+          "current exchange value: ",
+          this.exchangeLineItems[index]?.rate
+        );
+        console.log(
+          Number(this.exchangeLineItems[index]?.rate) <= saleAmount
+            ? `✅ Valid`
+            : `❌ Invalid`
+        );
+        // if (Number(this.exchangeLineItems[index]?.rate) <= saleAmount) {
+        //   this.exchangeLineItemFormConfigList[index].rate.errorMessage = 'Value is higher than total sale!';
+        // }
+        break;
     }
   }
 
@@ -281,6 +306,7 @@ export class AddSaleComponent implements OnInit {
       place: place,
       saleDetails: this.saleDetails,
       listItems: this.lineItems,
+      exchangeListItems: this.exchangeLineItems,
     };
     switch (event) {
       case "preview":

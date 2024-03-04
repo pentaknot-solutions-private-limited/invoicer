@@ -4,8 +4,9 @@ import * as moment from 'moment';
 // import moment from 'moment';
 import * as pdf from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { SaleDetails, SaleItem } from 'src/app/modules/sale/model/sale.model';
+import { ExchangeItem, SaleDetails, SaleItem } from 'src/app/modules/sale/model/sale.model';
 import { convertAmountToWords } from '../utils/convert-amount-to-words';
+import { IndianCurrencyPipe } from '../pipes/indian-currency-pipe';
 const pdfMake = pdf;
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
@@ -14,6 +15,7 @@ interface invoiceDataModel {
     place: any;
     saleDetails: SaleDetails;
     listItems: SaleItem[];
+    exchangeListItems: ExchangeItem[];
 }
 
 export class InvoicePDF {
@@ -172,7 +174,7 @@ export class InvoicePDF {
                 {
                     width: '*',
                     fontSize: 40,
-                    text: "INVOICE",
+                    text: "PROFORMA",
                     decoration: 'overline',
                     decorationColor: '#f7f3d0'
                 },
@@ -235,7 +237,7 @@ export class InvoicePDF {
                                 body: [
                                     [
                                         {
-                                            text: "Invoice No:",
+                                            text: "Proforma#:",
                                             color: highlightColor,
                                             alignment: "right"
                                         },
@@ -246,7 +248,7 @@ export class InvoicePDF {
                                     ],
                                     [
                                         {
-                                            text: "Invoice Date:",
+                                            text: "Proforma Date:",
                                             color: highlightColor,
                                             alignment: "right"
                                         },
@@ -308,7 +310,9 @@ export class InvoicePDF {
         const bgColor = '#f4f4f4';
         const headerColor = "#640e27";
         const totalAmount = invoiceData.listItems.reduce((total ,item) => total + (Number(item.rate) * item.qty), 0);
-        const tcs1Perc = (totalAmount/100)*1;
+        const totalExchangeAmount = invoiceData.exchangeListItems.reduce((total ,item) => total + (Number(item.rate) * item.qty), 0);
+        const calculatedSubTotalAmount = (Number(totalAmount) - Number(totalExchangeAmount));
+        const tcs1Perc = (calculatedSubTotalAmount/100)*1;
         const template = {
             table: {
                 widths: ['auto','*',50,25,'auto',20,'auto'],
@@ -347,6 +351,7 @@ export class InvoicePDF {
                         }
                     ],
                 ].concat(
+                    // Sale List Items 
                     invoiceData.listItems.map<any>((item, index) => {
                         return [
                             {
@@ -426,13 +431,78 @@ export class InvoicePDF {
                                 text: item.qty
                             }, 
                             {
-                                text: new DecimalPipe("en-US").transform(item.rate, '.2')
+                                // text: new DecimalPipe("en-IN").transform(item.rate, '.2')
+                                text: new IndianCurrencyPipe().transform(Number(item.rate))
                             },
                             {
                                 text: "QTY"
                             },
                             {
-                                text: new CurrencyPipe("en-US").transform(Number(item.rate) * item.qty, "INR"),
+                                // text: new CurrencyPipe("en-IN").transform(Number(item.rate) * item.qty, "INR"),
+                                text: new IndianCurrencyPipe().transform(Number(item.rate) * item.qty),
+                                alignment: "right"
+                            }
+                        ]
+                    }),
+                    // Exchange List Items
+                    invoiceData.exchangeListItems.map<any>((item, index) => {
+                        return [
+                            {
+                                // BY DEFAULT ONLY 1 ITEM SOLD
+                                text: index + 2
+                            },
+                            {
+                                stack: [
+                                    {
+                                        // Car Title
+                                        text: `${item?.title} (exchange)`,
+                                        bold: true,
+                                        fontSize: 10,
+                                        margin: [0,0,0,5]
+                                    },
+                                    {
+                                        table: {
+                                            body: [
+                                                [
+                                                    {
+                                                        text: "Vehicle No:"
+                                                    },
+                                                    {
+                                                        text: item?.carNo
+                                                    }
+                                                ],
+                                                [
+                                                    {
+                                                        text: "Year:"
+                                                    },
+                                                    {
+                                                        text: item?.year
+                                                    }
+                                                ],
+                                            ]
+                                        },
+                                        fontSize: 8,
+                                        margin: [0,0,0,10],
+                                        layout: "noBorders",
+                                    }
+                                ]
+                            }, 
+                            {
+                                text: '998313'
+                            },
+                            {
+                                text: item.qty
+                            }, 
+                            {
+                                // text: new DecimalPipe("en-IN").transform(item.rate, '.2')
+                                text: new IndianCurrencyPipe().transform(Number(item.rate))
+                            },
+                            {
+                                text: "QTY"
+                            },
+                            {
+                                // text: new CurrencyPipe("en-IN").transform(Number(item.rate) * item.qty, "INR"),
+                                text: `- ${new IndianCurrencyPipe().transform(Number(item.rate) * item.qty)}`,
                                 alignment: "right"
                             }
                         ]
@@ -465,12 +535,13 @@ export class InvoicePDF {
                                 },
                                 {
                                     fontSize: 8,
-                                    text: new DecimalPipe("en-US").transform(tcs1Perc, ".2"),
+                                    text: new DecimalPipe("en-IN").transform(tcs1Perc, ".2"),
                                     alignment: 'right',
                                     margin: [0,0,0,5]
                                 },
                                 {
-                                    text: new DecimalPipe("en-US").transform(totalAmount, ".2"),
+                                    // text: new DecimalPipe("en-IN").transform(calculatedSubTotalAmount, ".2"),
+                                    text: new IndianCurrencyPipe().transform(Number(calculatedSubTotalAmount)),
                                     alignment: 'right',
                                 }
                             ],
@@ -486,7 +557,8 @@ export class InvoicePDF {
                         {
                             bold: true,
                             fontSize: 12,
-                            text: new CurrencyPipe('en-US').transform(totalAmount + tcs1Perc, 'INR')
+                            // text: new CurrencyPipe('en-IN').transform(calculatedSubTotalAmount + tcs1Perc, 'INR')
+                            text: new IndianCurrencyPipe().transform(Number(calculatedSubTotalAmount + tcs1Perc)),
                         }
                     ],
                 ] as any)
@@ -589,8 +661,10 @@ export class InvoicePDF {
 
     private createRemark(invoiceData: any) {
         const totalAmount = invoiceData.listItems.reduce((total ,item) => total + (Number(item.rate) * item.qty), 0);
-        const tcs1Perc = (totalAmount/100)*1;
-        const finalTotal = totalAmount + tcs1Perc;
+        const exchangeTotalAmount = invoiceData.exchangeListItems.reduce((total ,item) => total + (Number(item.rate) * item.qty), 0);
+        const calculatedTotalAmount = Number(totalAmount) - Number(exchangeTotalAmount);
+        const tcs1Perc = (calculatedTotalAmount/100)*1;
+        const finalTotal = (calculatedTotalAmount) + tcs1Perc;
         const template = {
             columns: [
                 {

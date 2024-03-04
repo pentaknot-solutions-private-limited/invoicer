@@ -4,13 +4,16 @@ import { Observable, of } from "rxjs";
 import { IResponseSchema } from "src/app/configs/api-config";
 import { EncryptedStorage } from "../utils/encrypted-storage";
 import * as CryptoJS from "crypto-js";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class LoginService {
   baseUrl: string = "";
+  liveURL: any;
   // secretKey = "YourSecretKeyForEncryption&Descryption";
   constructor(private http: HttpClient) {
     this.baseUrl = "../../../assets/data";
+    this.liveURL = environment.apiURL;
   }
 
   // encrypt(value : string) : string{
@@ -26,16 +29,24 @@ export class LoginService {
     // visa-contract-ai-frontend/Source/src/assets/data/1-Logins.json
   }
 
-  login(payLoad: any, loginCredentials: any[]): Observable<any> {
+  login(username: any, password: any): Observable<any> {
+    return this.http.post(`${this.liveURL}/auth/login`, { username, password });
+  }
+
+  loginOLD(payLoad: any, loginCredentials: any[]): Observable<any> {
     let res: IResponseSchema | any = {};
     const data = loginCredentials.find(
       (item: any) => item.email == payLoad.emailId
     );
-    if (data && data.email == payLoad.emailId && data.password == payLoad.password) {
-        data.loginTime = new Date().toLocaleString()
-        res = { message: "Logged In Successfully!", data: data };
-        // Persist Logged In user data
-        new EncryptedStorage().setItem("_vsa-u", JSON.stringify(data), true);
+    if (
+      data &&
+      data.email == payLoad.emailId &&
+      data.password == payLoad.password
+    ) {
+      data.loginTime = new Date().toLocaleString();
+      res = { message: "Logged In Successfully!", data: data };
+      // Persist Logged In user data
+      new EncryptedStorage().setItem("_vsa-u", JSON.stringify(data), true);
     } else {
       res = { message: "Invalid Credentials!", error: "Invalid Credentials!" };
     }

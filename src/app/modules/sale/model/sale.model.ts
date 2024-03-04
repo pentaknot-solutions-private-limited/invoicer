@@ -34,6 +34,7 @@ export class SaleDetails {
   salesPersonId?: string | number;
   subject?: string;
   saleItems?: Array<SaleItem>;
+  exchangeItems?: Array<ExchangeItem>;
   subTotalAmount?: string;
   discount?: string | number;
   deducationTypeId?: string | number; // TCS/ TDS

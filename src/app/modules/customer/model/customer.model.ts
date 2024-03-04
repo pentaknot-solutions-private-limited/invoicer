@@ -1,5 +1,6 @@
 export class CustomerDetails {
-  customerId: string | number;
+  _id?: string;
+  customerId?: string | number;
   // type (business/ individual)
   customerTypeId?: string | number;
   salutationId?: string | number;
@@ -20,4 +21,8 @@ export class CustomerDetails {
   // docs
   panNo?: string;
   gstNo?: string;
+  // common
+  isActive?: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

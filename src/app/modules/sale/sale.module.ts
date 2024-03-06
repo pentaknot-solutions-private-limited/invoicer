@@ -13,11 +13,17 @@ import { InventoryService } from "src/app/shared/_http/inventory.service";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { VSAIconModule } from "src/app/shared/components/vsa-icon/package.module";
 import { SaleService } from "src/app/shared/_http/sale.service";
-import { RecordPaymentComponent } from './pages/record-payment/record-payment.component';
+import { RecordPaymentComponent } from "./pages/record-payment/record-payment.component";
 import { PaymentScheduleComponent } from "./pages/payment-schedule/payment-schedule.component";
+import { SaleResolver } from "src/app/shared/resolvers/sale.resolver";
 
 @NgModule({
-  declarations: [SaleComponent, AddSaleComponent, RecordPaymentComponent, PaymentScheduleComponent],
+  declarations: [
+    SaleComponent,
+    AddSaleComponent,
+    RecordPaymentComponent,
+    PaymentScheduleComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,

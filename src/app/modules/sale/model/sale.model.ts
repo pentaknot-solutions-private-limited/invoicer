@@ -20,14 +20,14 @@ export class CustomerDetails {
   gstNo?: string;
 }
 
-
 export class SaleDetails {
+  _id?: string;
   saleId?: string | number;
   customerId?: string | number;
   placeOfSupplyId?: string | number;
   posId?: string | number;
   dueTermId?: string | number;
-  invoiceNumber?: string | number;
+  invoiceNo?: string | number;
   invoiceDate?: Date;
   dueDate?: Date;
   // REL with Sales Person Table
@@ -35,14 +35,25 @@ export class SaleDetails {
   subject?: string;
   saleItems?: Array<SaleItem>;
   exchangeItems?: Array<ExchangeItem>;
-  subTotalAmount?: string;
-  discount?: string | number;
-  deducationTypeId?: string | number; // TCS/ TDS
-  deductionRateId?: string | number; // 1%, 5%, 10%
-  totalAmount?: string;
-  customerNotes?: string;
+  saleTotal?: number;
+  exchangeTotal?: number;
+  subTotal?: number;
+  tcsRateInPercentage?: number = 1; //1%
+  tcs?: number;
+  // subTotalAmount?: string;
+  // discount?: string | number;
+  // deducationTypeId?: string | number; // TCS/ TDS
+  // deductionRateId?: string | number; // 1%, 5%, 10%
+  totalAmount?: number;
+  amountInWords?: string;
+  notes?: string =
+    "This is just a proforma, final invoice with signature will be produced against full payment.";
   termsAndConditions?: string;
-  status?: string | number; // saved, sent, partially_paid, paid, void
+  saleStatusId?: string | number; // saved, sent, partially_paid, paid, void
+
+
+  customer?: any;
+  status?; any;
 }
 
 export class SaleItem {
@@ -64,11 +75,10 @@ export class ExchangeItem {
   carDetails?: any;
   hsnSacCode?: string | number;
   qty?: number; // default 1
-  rate?: string | number;
+  rate?: number;
   taxId?: string | number; //NA
   amount?: string | number;
 }
-
 
 export class LineItem {
   serviceTypeId: number;
@@ -80,7 +90,5 @@ export class LineItem {
   unitId: number;
   unitName?: string;
   rate: number;
-  invoiceId?: number
+  invoiceId?: number;
 }
-
-

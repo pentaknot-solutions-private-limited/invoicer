@@ -42,7 +42,7 @@ export class DrawerPanelService {
 
   // Service message commands
   createContainer(containerTemplate: TemplateRef<any>) {
-    console.log("Drawer Init");
+    // console.log("Drawer Init");
     this.drawerContainerSource.next(containerTemplate);
   }
 
@@ -55,7 +55,7 @@ export class DrawerPanelService {
   }
 
   toggleDrawer(enableDrawer: boolean) {
-    console.log(enableDrawer);
+    // console.log(enableDrawer);
     this.isActiveSource.next(enableDrawer);
   }
 

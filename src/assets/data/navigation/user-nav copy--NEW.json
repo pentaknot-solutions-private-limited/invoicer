@@ -36,6 +36,13 @@
         "isActive": false,
         "size": "medium",
         "route": "/expense"
+      },
+      {
+        "name": "Reports",
+        "icon": "insert_chart",
+        "isActive": false,
+        "size": "medium",
+        "route": "/report"
       }
     ],
     "bottom": [

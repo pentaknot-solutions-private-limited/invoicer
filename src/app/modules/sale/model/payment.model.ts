@@ -4,7 +4,7 @@ export class PaymentDetails {
   customerId?: string | number;
   saleId?: string | number; // InvoiceId
   inventoryId?: string | number;
-  invoiceNumber?: string | number;
+  invoiceNo?: string | number;
   amountReceived?: number;
   bankCharges?: number;
   paymentDate?: Date;

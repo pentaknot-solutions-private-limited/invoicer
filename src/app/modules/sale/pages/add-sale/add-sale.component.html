@@ -11,24 +11,26 @@
       >
       </vsa-select>
     </div>
-    <div class="col-9" *ngIf="this.selectedCustomer">
+    <div class="col-9" *ngIf="saleDetails?.customer">
       <div class="row">
         <div class="col-12">
           Address:
-          {{ formatAddress(this.selectedCustomer) }}
+          {{ formatAddress(saleDetails?.customer) }}
         </div>
 
         <div
           class="col-12 mt-2"
-          *ngIf="this.selectedCustomer?.gstNo; else panNoTemplate"
+          *ngIf="saleDetails?.customer?.gstNo; else panNoTemplate"
         >
-          GST: {{ this.selectedCustomer?.gstNo }}
+          GST: {{ saleDetails?.customer?.gstNo }}
         </div>
         <ng-template #panNoTemplate>
-          <div class="col-12 mt-2">PAN: {{ this.selectedCustomer?.panNo }}</div>
+          <div class="col-12 mt-2">PAN: {{ saleDetails?.customer?.pan }}</div>
         </ng-template>
 
-        <div class="col-12 mt-2">Phone: {{ this.selectedCustomer?.phone }}</div>
+        <div class="col-12 mt-2">
+          Phone: {{ saleDetails?.customer?.mobileNo }}
+        </div>
       </div>
     </div>
   </div>
@@ -45,7 +47,7 @@
       </vsa-select>
     </div> -->
     <div class="col-3">
-      <vsa-input [config]="saleConfig?.invoiceNumber" [dataModel]="saleDetails">
+      <vsa-input [config]="saleConfig?.invoiceNo" [dataModel]="saleDetails">
       </vsa-input>
     </div>
     <div class="col-3">
@@ -260,8 +262,12 @@
     </form>
 
     <!-- Exchange Items -->
-    <form [formGroup]="exchangeLineItemForm" class="exchange-form" [hidden]="exchangeLineItemListForm?.length < 1">
-      <h4 class="grid-title" >Exchange</h4>
+    <form
+      [formGroup]="exchangeLineItemForm"
+      class="exchange-form"
+      [hidden]="exchangeLineItemListForm?.length < 1"
+    >
+      <h4 class="grid-title">Exchange</h4>
       <ng-container
         formArrayName="exchangeLineItemList"
         *ngFor="

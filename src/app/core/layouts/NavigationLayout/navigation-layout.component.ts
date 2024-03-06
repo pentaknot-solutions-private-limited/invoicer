@@ -314,19 +314,21 @@ export class NavigationLayoutComponent implements OnInit, AfterViewInit {
         this.menuList = res[0].top;
         this.bottomList = res[0].bottom;
         // If the user is admin below if condition will be true
-        if (this.router.url.includes("invoices")) {
-            this.menuList[0].isActive = true;
-        // if (this.router.url.includes("dashboard")) {
-        //   this.menuList[1].isActive = true;
-        // } else if (this.router.url.includes("extract-ai")) {
-        //   this.menuList[2].isActive = true;
-        // } else if (this.router.url.includes("search")) {
-        //   this.menuList[0].isActive = true;
-        // } else if (this.router.url.includes("policies")) {
-        //   this.menuList[3].isActive = true;
-        // } else if (this.router.url.includes("wip")) {
+        if (this.router.url.includes("customer")) {
+          this.menuList[0].isActive = true;
+        } else if (this.router.url.includes("sale")) {
+          this.menuList[1].isActive = true;
+        } else if (this.router.url.includes("purchase")) {
+          this.menuList[2].isActive = true;
+        } else if (this.router.url.includes("mechanical")) {
+          this.menuList[0].isActive = true;
+        } else if (this.router.url.includes("expense")) {
+          this.menuList[3].isActive = true;
+        } 
+        // else if (this.router.url.includes("reports")) {
         //   this.menuList[4].isActive = true;
-        } else {
+        // } 
+        else {
           this.menuList[1].isActive = true;
         }
         // else if (this.router.url.includes("project")) {

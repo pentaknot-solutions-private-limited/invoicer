@@ -14,7 +14,7 @@
         "stateId": 27,
         "name": "Maharashtra"
       },
-      "invoiceNumber": "INV-23/24/001",
+      "invoiceNo": "INV-23/24/001",
       "invoiceDate": "2023-12-28",
       "dueDate": "2023-12-28",
       "saleItems": [
@@ -48,7 +48,7 @@
         "stateId": 27,
         "name": "Maharashtra"
       },
-      "invoiceNumber": "INV-23/24/002",
+      "invoiceNo": "INV-23/24/002",
       "invoiceDate": "2023-12-29",
       "dueDate": "2023-12-29",
       "saleItems": [

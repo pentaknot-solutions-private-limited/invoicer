@@ -17,7 +17,7 @@ export class SaleConfig {
       type: "select-search",
     },
     dataKey: "nameAndPhone",
-    returnKey: "customerId",
+    returnKey: "_id",
     options: [],
     searchBy: [
       {
@@ -57,25 +57,25 @@ export class SaleConfig {
       isMandatory: false,
     },
     dataKey: "name",
-    returnKey: "id",
+    returnKey: "_id",
     options: [
       {
-        id: 1,
+        _id: "65e6f7efc1e1cd3be6832af5",
         name: "7 Days",
         days: 7,
       },
       {
-        id: 2,
+        _id: "65e6f826c1e1cd3be6832af6",
         name: "14 Days",
         days: 14,
       },
       {
-        id: 3,
+        _id: "65e6f838c1e1cd3be6832af7",
         name: "30 Days",
         days: 30,
       },
       {
-        id: 4,
+        _id: "65e6f854c1e1cd3be6832af8",
         name: "Custom",
         days: 0,
       },
@@ -88,8 +88,8 @@ export class SaleConfig {
     isMultiple: false,
   };
 
-  invoiceNumber: ITextConfig = {
-    fieldKey: "invoiceNumber",
+  invoiceNo: ITextConfig = {
+    fieldKey: "invoiceNo",
     attributes: {
       title: "Proforma#", //   showBorder: true,
       isMandatory: true,
@@ -102,7 +102,7 @@ export class SaleConfig {
       type: "datepicker",
       isMandatory: false,
       // For Normal User
-      minDate: moment().subtract(1, 'day').format(),
+      minDate: moment().subtract(1, "day").format(),
     },
   };
   paymentTermSelect: ISelectConfig = {
@@ -144,7 +144,7 @@ export class SaleConfig {
       title: "Due Date",
       type: "datepicker",
       isMandatory: false,
-      minDate: moment().subtract(1, 'day').format(),
+      minDate: moment().subtract(1, "day").format(),
     },
   };
   inventorySelect: ISelectConfig = {
@@ -221,7 +221,7 @@ export class SaleConfig {
       title: "Year",
       type: "number",
       isMandatory: true,
-      max: moment().year()
+      max: moment().year(),
     },
   };
   exchangeCarNoInput: ITextConfig = {
@@ -241,7 +241,6 @@ export class SaleConfig {
       isMandatory: true,
       // readonly: true,
       // disable: true,
-      max: 2000000
     },
   };
   amountInput: ITextConfig = {
@@ -281,12 +280,12 @@ export class SaleConfig {
     emptyMessage: "No records found.",
     colDefs: [
       {
-        field: "invoiceNumber",
+        field: "invoiceNo",
         headerName: "Invoice No",
         colType: "link",
         searchByFormatter: true,
         valueFormatter: (value, row, col) => {
-          return row.invoiceNumber ? row.invoiceNumber : "-";
+          return value || "-";
         },
       },
       {
@@ -352,6 +351,7 @@ export class SaleConfig {
             fontWeight: 500,
           };
         },
+        valueFormatter: (value, row, col) => value?.name || "-",
         // valueFormatter: (value, row, col) => {
         //   return row.isIrnGenerated == 1
         //     ? "Completed"
@@ -359,6 +359,17 @@ export class SaleConfig {
         //     ? "Cancelled"
         //     : "Pending";
         // },
+      },
+      {
+        field: "updatedAt",
+        headerName: "Last Modified",
+        // showSelectFilter: true,
+        colType: "text",
+        searchByFormatter: true,
+        valueFormatter: (value, row, col) => {
+          return value ? dateFormatter(value, "DD MMM yyyy, hh:mm A") : "-";
+        },
+        sortByFormatter: true,
       },
       {
         headerName: "Action",

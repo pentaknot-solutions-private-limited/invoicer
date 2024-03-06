@@ -48,7 +48,7 @@
 
 <ng-template #drawerTemplate>
   <add-sale
-    [customerData]="customerData"
+    [saleDetails]="selectedSale"
     (onBtnClick)="drawerAction($event)"
     *ngIf="pageComponentVisibility?.showAddSale"
   >
@@ -68,5 +68,4 @@
     *ngIf="pageComponentVisibility?.showPaymentSchedule"
   >
   </payment-schedule>
-
 </ng-template>

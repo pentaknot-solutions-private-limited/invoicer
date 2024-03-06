@@ -22,4 +22,8 @@ export class InventoryService {
       `${this.liveUrl}/car/complete/car/detail`
     );
   }
+
+  getInventoryById(id: any): Observable<any> {
+    return this.http.get(`${this.liveUrl}/car/completeCarDetailById/${id}`);
+  }
 }
